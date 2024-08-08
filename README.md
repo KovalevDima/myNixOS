@@ -1,4 +1,3 @@
-# Kovalev Dima
 I'm a software developer who loves everything related to programming, especailly:
 1. computer science
 2. programming languages
