@@ -6,4 +6,4 @@ I'm a software developer who loves everything related to programming, especailly
 5. data processing
 
 
-Author and maintainer of [ClickHaskell](https://github.com/GetShopTV/ClickHaskell) - ClickHouse client library for Haskell
+Author and maintainer of [ClickHaskell](https://github.com/GetShopTV/ClickHaskell) - ClickHouse driver for Haskell
