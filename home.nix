@@ -7,8 +7,10 @@
 
     users.dmitry = {
       imports = [
-        (import ) 
+        ./home/alacritty.nix
       ];
+
+      module.alacritty.enable = true;
 
       programs.home-manager.enable = true;
 
