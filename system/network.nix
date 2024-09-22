@@ -3,14 +3,12 @@
 , ...
 }:
 
-with lib;
-
 let cfg = config.module.network;
 in {
   options = {
-    module.network.enable = mkEnableOption "Enables network";
+    module.network.enable = lib.mkEnableOption "Enables network";
   };
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     # Open ports in the firewall.
     # networking.firewall.allowedTCPPorts = [ ... ];
     # networking.firewall.allowedUDPPorts = [ ... ];

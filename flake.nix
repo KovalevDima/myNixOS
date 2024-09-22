@@ -14,14 +14,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
   };
 
-  outputs = inputs: {
+  outputs = { nixpkgs, self, ... } @ inputs:
+  let
+    username = "dmitry";
+  in
+  {
     nixosConfigurations = {
 
       nixos = inputs.nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs username; };
         modules = [
           (import ./hardware.nix)
           (import ./home.nix)

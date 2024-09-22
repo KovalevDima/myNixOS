@@ -1,10 +1,11 @@
-{ config, pkgs, lib, ... }:
+{ inputs, config, pkgs, lib, ... }:
 
 
 {
   imports = [
     ./system/network.nix
     ./system/zapret.nix
+    ./system/displayServer.nix
   ];
 
 # ==============
@@ -14,15 +15,16 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-# ==============
-#   Networking
-# ==============
-  
+# ==================
+#   System modules
+# ==================
+
   module.network.enable = true;
   module.zapret = {
     enable = true;
     wan = "wlp1s0";
   };
+  module.displayServer.enable = true;
 
 # ========================
 #   Internationalisation
@@ -41,21 +43,6 @@
     LC_TELEPHONE = "ru_RU.UTF-8";
     LC_TIME = "ru_RU.UTF-8";
   };
-
-# =======
-#   X11
-# =======
-
-  services.xserver = {
-    enable = true;
-    xkb.layout = "us,ru";
-    xkbOptions = "grp:win_space_toggle";
-    desktopManager = {
-      xfce.enable = true;
-    };
-  };
-  
-  services.displayManager.defaultSession = "xfce";
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dmitry = {
