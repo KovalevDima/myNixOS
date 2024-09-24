@@ -4,8 +4,7 @@
 {
   imports = [
     ./system/network.nix
-    ./system/zapret.nix
-    ./system/displayServer.nix
+    ./system/display.nix
   ];
 
 # ==============
@@ -19,12 +18,11 @@
 #   System modules
 # ==================
 
-  module.network.enable = true;
-  module.zapret = {
+  module.network = {
     enable = true;
     wan = "wlp1s0";
   };
-  module.displayServer.enable = true;
+  module.display.enable = true;
 
 # ========================
 #   Internationalisation
@@ -49,7 +47,6 @@
     isNormalUser = true;
     description = "dmitry";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
   };
 
 # ============
@@ -61,14 +58,13 @@
     "yandex-cloud"
     "google-chrome"
     "telegram-desktop"
+    "discord"
   ];
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # network
     google-chrome
-    telegram-desktop
     
     # terminal tools
     htop
@@ -76,7 +72,6 @@
     gnutar
 
     # programming
-    vscode
     yandex-cloud
     git
   ];

@@ -15,6 +15,9 @@
     };
 
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+    swww.url = "github:LGFae/swww";
+
+    nix-colors.url = "github:misterio77/nix-colors";
   };
 
   outputs = { nixpkgs, self, ... } @ inputs:
@@ -28,13 +31,39 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs username; };
         modules = [
-          (import ./hardware.nix)
-          (import ./home.nix)
+          (import ./system/hardware.nix)
           (import ./system.nix)
           inputs.home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+          
+              users.dmitry = {
+                imports = [
+                  inputs.nix-colors.homeManagerModules.default
+                  ./home/display.nix
+                  ./home/communication.nix
+                  ./home/editor.nix
+                ];
+
+                module.communication.enable = true;
+                module.display.enable = true;
+                module.editor.enable = true;
+          
+                programs.home-manager.enable = true;
+          
+                colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
+          
+                home = {
+                  homeDirectory = "/home/dmitry";
+                  stateVersion = "24.05";
+                };
+              };
+            };
+          }
         ];
       };
-
     };
   };
 }

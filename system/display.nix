@@ -8,10 +8,10 @@
 
 {
   options = {
-    module.displayServer.enable = lib.mkEnableOption "Enables display server";
+    module.display.enable = lib.mkEnableOption "Enables display server";
   };
 
-  config = lib.mkIf config.module.displayServer.enable {
+  config = lib.mkIf config.module.display.enable {
     services = {
       xserver = {
         enable = true;
@@ -24,11 +24,20 @@
       libinput.enable = true;
     };
 
+    environment.sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+    };
+
     programs.hyprland = {
       enable = true;
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;
       portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
     };
+
+    programs.waybar = {
+      enable = true;
+    };
+
     xdg.portal = {
       enable = true;
       wlr.enable = true;
@@ -39,7 +48,8 @@
     };
 
     environment.systemPackages = [
-      pkgs.kitty
+      inputs.swww.packages.${pkgs.system}.swww
+      
     ];
   };
 }
