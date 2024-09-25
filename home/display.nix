@@ -45,9 +45,7 @@
           exec-once = [
             "swww-daemon & sleep 1 && swww img ${./display/wallpaper.gif}"
           ];
-          "$termial " = "alacritty";
           "$fileManager" = "dolphin";
-          "$browser" = "google-chrome-stable";
 
           # See https://wiki.hyprland.org/Configuring/Monitors/
           monitor = ",preferred,auto,auto";
@@ -114,11 +112,6 @@
           dwindle = {
             pseudotile = true; # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
             preserve_split = true; # You probably want this
-          };
-
-          # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
-          master = {
-            new_status = "master";
           };
           
           # https://wiki.hyprland.org/Configuring/Variables/#misc

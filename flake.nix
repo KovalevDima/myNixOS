@@ -20,20 +20,55 @@
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { nixpkgs, self, ... } @ inputs:
-  let
-    username = "dmitry";
-  in
-  {
+  outputs = { nixpkgs, self, ... } @ inputs: {
     nixosConfigurations = {
-
       nixos = inputs.nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs username; };
+        specialArgs = { inherit inputs; };
         modules = [
           (import ./system/hardware.nix)
-          (import ./system.nix)
           inputs.home-manager.nixosModules.home-manager
+          (
+            {inputs, config, pkgs, lib, ...} : {
+              imports = [
+                ./system/network.nix
+                ./system/display.nix
+                ./system/gaming.nix
+                ./system/i18n.nix
+                ./system/unfreeSoftware.nix
+              ];
+              module.network = {
+                enable = true;
+                wan = "wlp1s0";
+              };
+              module.display =  {
+                enable = true;
+                initialUser = "dmitry";
+              };
+              module.gaming.enable = false;
+              module.i18n.enable = true;
+              module.unfreeSoftware.enable = true;
+
+              boot.loader.systemd-boot.enable = true;
+              boot.loader.efi.canTouchEfiVariables = true;
+
+              users.users.dmitry = {
+                isNormalUser = true;
+                description = "dmitry";
+                extraGroups = [ "networkmanager" "wheel" ];
+              };
+
+              environment.systemPackages = with pkgs; [
+                google-chrome
+                git
+              ];
+
+              time.timeZone = "Europe/Moscow";
+              # Before changing this value read the documentation for this option
+              # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+              system.stateVersion = "24.05"; # Did you read the comment?
+            }
+          )
           {
             home-manager = {
               useGlobalPkgs = true;
@@ -42,10 +77,10 @@
               users.dmitry = {
                 imports = [
                   inputs.nix-colors.homeManagerModules.default
-                  ./home/display.nix
                   ./home/communication.nix
-                  ./home/editor.nix
                   ./home/cli-tools.nix
+                  ./home/display.nix
+                  ./home/editor.nix
                 ];
 
                 module.communication.enable = true;
@@ -54,9 +89,9 @@
                 module.editor.enable = true;
 
                 programs.home-manager.enable = true;
-          
+
                 colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
-          
+
                 home = {
                   homeDirectory = "/home/dmitry";
                   stateVersion = "24.05";

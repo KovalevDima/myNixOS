@@ -2,13 +2,19 @@
 , pkgs
 , lib
 , config
-, username
 , ...
 }:
 
 {
   options = {
-    module.display.enable = lib.mkEnableOption "Enables display server";
+    module.display = {
+      enable = lib.mkEnableOption "Enables display server";
+      initialUser = lib.mkOption {
+        type = lib.types.str;
+        default = "root";
+        description = "Sets user to auto login";
+      };
+    };
   };
 
   config = lib.mkIf config.module.display.enable {
@@ -19,7 +25,7 @@
       };
       displayManager.autoLogin = {
         enable = true;
-        user = "${username}";
+        user = "${config.module.display.initialUser}";
       };
       libinput.enable = true;
     };
