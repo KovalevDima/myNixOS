@@ -45,12 +45,14 @@
                   ./home/display.nix
                   ./home/communication.nix
                   ./home/editor.nix
+                  ./home/cli-tools.nix
                 ];
 
                 module.communication.enable = true;
+                module.cli-tools.enable = true;
                 module.display.enable = true;
                 module.editor.enable = true;
-          
+
                 programs.home-manager.enable = true;
           
                 colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;

@@ -49,7 +49,7 @@
 
     environment.systemPackages = [
       inputs.swww.packages.${pkgs.system}.swww
-      
+      pkgs.rofi-wayland
     ];
   };
 }

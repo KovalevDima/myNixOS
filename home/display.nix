@@ -43,7 +43,7 @@
         enable = true;
         settings = {
           exec-once = [
-            "swww-daemon & sleep 1 && swww img ${./wallpaper.gif}"
+            "swww-daemon & sleep 1 && swww img ${./display/wallpaper.gif}"
           ];
           "$termial " = "alacritty";
           "$fileManager" = "dolphin";
@@ -132,7 +132,7 @@
             kb_layout = "us,ru";
             kb_variant = "";
             kb_model = "";
-            kb_options = "";
+            kb_options = "grp:win_space_toggle";
             kb_rules = "";
 
             follow_mouse = 1;
@@ -157,7 +157,7 @@
             "$mainMod, B, exec, google-chrome-stable"
             "$mainMod, E, exec, $fileManager"
             "$mainMod, V, togglefloating,"
-            "$mainMod, R, exec, $menu"
+            "$mainMod, R, exec, rofi -show drun"
             "$mainMod, P, pseudo," # dwindle
             "$mainMod, J, togglesplit," # dwindle
             # Move focus with mainMod + arrow keys
