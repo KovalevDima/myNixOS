@@ -14,6 +14,7 @@
       # devops
       k9s
       kubernetes-helm
+      kubectl
       yandex-cloud
       # system info
       neofetch
