@@ -28,6 +28,13 @@
         user = "${config.module.display.initialUser}";
       };
       libinput.enable = true;
+      pipewire = {
+        enable = true;
+	      alsa.enable = true;
+	      alsa.support32Bit = true;
+        pulse.enable = true;
+        jack.enable = true;
+      };
     };
 
     environment.sessionVariables = {
