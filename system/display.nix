@@ -18,6 +18,9 @@
   };
 
   config = lib.mkIf config.module.display.enable {
+
+    hardware.graphics.enable = true;
+
     services = {
       xserver = {
         enable = true;
@@ -30,8 +33,8 @@
       libinput.enable = true;
       pipewire = {
         enable = true;
-	      alsa.enable = true;
-	      alsa.support32Bit = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
         pulse.enable = true;
         jack.enable = true;
       };
