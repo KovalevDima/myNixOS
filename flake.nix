@@ -36,6 +36,7 @@
                 ./system/gaming.nix
                 ./system/i18n.nix
                 ./system/unfreeSoftware.nix
+                ./system/nix.nix
               ];
               module.network = {
                 enable = true;
@@ -48,6 +49,7 @@
               module.gaming.enable = false;
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
+	      module.nix.enable = true;
 
               boot.loader.systemd-boot.enable = true;
               boot.loader.efi.canTouchEfiVariables = true;
