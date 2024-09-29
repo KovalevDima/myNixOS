@@ -25,8 +25,5 @@
         )
       ];
     };
-    programs.vscode = {
-      enable = true;
-    };
   };
 }
