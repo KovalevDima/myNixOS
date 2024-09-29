@@ -16,28 +16,37 @@
 
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     swww.url = "github:LGFae/swww";
-
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { nixpkgs, self, ... } @ inputs: {
+  outputs = { nixpkgs, self, ... } @ inputs: 
+  let
+    homeModules = [
+      inputs.nix-colors.homeManagerModules.default
+      ./home/communication.nix
+      ./home/cli-tools.nix
+      ./home/display.nix
+      ./home/editor.nix
+    ];
+    systemModules = [
+      ./system/network.nix
+      ./system/display.nix
+      ./system/gaming.nix
+      ./system/i18n.nix
+      ./system/unfreeSoftware.nix
+      ./system/nix.nix
+    ];
+  in {
     nixosConfigurations = {
       nixos = inputs.nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
-          (import ./system/hardware.nix)
+          (import ./hosts/laptop.nix)
           inputs.home-manager.nixosModules.home-manager
           (
             {inputs, config, pkgs, lib, ...} : {
-              imports = [
-                ./system/network.nix
-                ./system/display.nix
-                ./system/gaming.nix
-                ./system/i18n.nix
-                ./system/unfreeSoftware.nix
-                ./system/nix.nix
-              ];
+              imports = systemModules;
               module.network = {
                 enable = true;
                 wan = "wlp1s0";
@@ -49,7 +58,7 @@
               module.gaming.enable = false;
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
-	      module.nix.enable = true;
+              module.nix.enable = true;
 
               boot.loader.systemd-boot.enable = true;
               boot.loader.efi.canTouchEfiVariables = true;
@@ -75,29 +84,20 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-          
+
               users.dmitry = {
-                imports = [
-                  inputs.nix-colors.homeManagerModules.default
-                  ./home/communication.nix
-                  ./home/cli-tools.nix
-                  ./home/display.nix
-                  ./home/editor.nix
-                ];
+                imports = homeModules;
+                programs.home-manager.enable = true;
+                home = {
+                  homeDirectory = "/home/dmitry";
+                  stateVersion = "24.05";
+                };
+                colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
 
                 module.communication.enable = true;
                 module.cli-tools.enable = true;
                 module.display.enable = true;
                 module.editor.enable = true;
-
-                programs.home-manager.enable = true;
-
-                colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
-
-                home = {
-                  homeDirectory = "/home/dmitry";
-                  stateVersion = "24.05";
-                };
               };
             };
           }

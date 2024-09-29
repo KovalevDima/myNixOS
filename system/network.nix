@@ -7,7 +7,11 @@
 let cfg = config.module.network;
 in {
   options = {
-    module.network.enable = lib.mkEnableOption "Enables network";
+    module.network.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether to disable network";
+    };
 
     module.network.wan = lib.mkOption {
       type = lib.types.str;
