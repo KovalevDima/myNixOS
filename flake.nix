@@ -42,7 +42,7 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
-          (import ./hosts/laptop.nix)
+          (import ./hardware/laptop.nix)
           inputs.home-manager.nixosModules.home-manager
           (
             {inputs, config, pkgs, lib, ...} : {
