@@ -55,7 +55,7 @@
                 enable = true;
                 initialUser = "dmitry";
               };
-              module.gaming.enable = false;
+              module.gaming.enable = true;
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;

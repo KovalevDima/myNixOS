@@ -42,6 +42,10 @@
 
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";
+      SDL_VIDEODRIVER = "wayland";
+      XDG_SESSION_TYPE = "wayland";
+      GDK_BACKEND = "wayland";
+      CLUTTER_BACKEND = "wayland";
     };
 
     programs.hyprland = {
