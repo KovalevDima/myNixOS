@@ -7,10 +7,10 @@
 
 {
   options = {
-    module.display.enable = lib.mkEnableOption "Enables configuration for display server";
+    module.hyprland.enable = lib.mkEnableOption "Enables configuration for display server";
   };
 
-  config = lib.mkIf config.module.display.enable {
+  config = lib.mkIf config.module.hyprland.enable {
       programs.alacritty = {
         enable = true;
 
@@ -43,6 +43,7 @@
         enable = true;
         settings = {
           exec-once = [
+            "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
             "swww-daemon & sleep 1 && swww img ${./display/wallpaper.gif}"
           ];
           "$fileManager" = "dolphin";

@@ -25,12 +25,12 @@
       inputs.nix-colors.homeManagerModules.default
       ./home/communication.nix
       ./home/cli-tools.nix
-      ./home/display.nix
+      ./home/hyprland.nix
       ./home/editor.nix
     ];
     systemModules = [
       ./system/network.nix
-      ./system/display.nix
+      ./system/hyprland.nix
       ./system/gaming.nix
       ./system/i18n.nix
       ./system/unfreeSoftware.nix
@@ -51,7 +51,7 @@
                 enable = true;
                 wan = "wlp1s0";
               };
-              module.display =  {
+              module.hyprland =  {
                 enable = true;
                 initialUser = "dmitry";
               };
@@ -96,7 +96,7 @@
 
                 module.communication.enable = true;
                 module.cli-tools.enable = true;
-                module.display.enable = true;
+                module.hyprland.enable = true;
                 module.editor.enable = true;
               };
             };
