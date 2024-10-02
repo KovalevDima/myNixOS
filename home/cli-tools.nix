@@ -17,10 +17,11 @@
       kubectl
       yandex-cloud
       # system info
-      neofetch
       btop
       # fun
       cmatrix
+      cbonsai
+      fastfetch
       # compression
       gnutar
     ];

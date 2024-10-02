@@ -48,9 +48,6 @@
           ];
           "$fileManager" = "dolphin";
 
-          # See https://wiki.hyprland.org/Configuring/Monitors/
-          monitor = ",preferred,auto,auto";
-
           env = [
             "XCURSOR_SIZE,24"
             "HYPRCURSOR_SIZE,24"
