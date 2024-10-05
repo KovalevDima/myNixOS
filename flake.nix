@@ -23,10 +23,11 @@
   let
     homeModules = [
       inputs.nix-colors.homeManagerModules.default
-      ./home/communication.nix
+      ./home/telegram.nix
       ./home/cli-tools.nix
       ./home/hyprland.nix
       ./home/editor.nix
+      ./home/discord.nix
     ];
     systemModules = [
       ./system/network.nix
@@ -35,6 +36,7 @@
       ./system/i18n.nix
       ./system/unfreeSoftware.nix
       ./system/nix.nix
+      ./system/docker.nix
     ];
   in {
     nixosConfigurations = {
@@ -53,11 +55,12 @@
               module.hyprland =  {
                 enable = true;
                 initialUser = "dmitry";
-	      };
+              };
               module.gaming.enable = true;
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
+              module.docker.enable = true;
 
               networking.hostName = "desktop";
               services.xserver.videoDrivers = ["nvidia"];
@@ -72,7 +75,7 @@
               users.users.dmitry = {
                 isNormalUser = true;
                 description = "dmitry";
-                extraGroups = [ "networkmanager" "wheel" ];
+                extraGroups = [ "networkmanager" "wheel" "docker" ];
               };
 
               environment.systemPackages = with pkgs; [
@@ -104,7 +107,8 @@
                   "DP-2, 2560x1440@165, 2560x0, 1"
                 ];
 
-                module.communication.enable = true;
+                module.telegram.enable = true;
+                module.discord.enable = true;
                 module.cli-tools.enable = true;
                 module.hyprland.enable = true;
                 module.editor.enable = true;
@@ -122,10 +126,7 @@
           (
             {inputs, config, pkgs, lib, ...} : {
               imports = systemModules;
-              module.network = {
-                enable = true;
-                wan = "wlp1s0";
-              };
+              module.network.enable = true;
               module.hyprland =  {
                 enable = true;
                 initialUser = "dmitry";
@@ -134,6 +135,7 @@
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
+	            module.docker.enable = true;
 
               networking.hostName = "nixos";
               boot.loader.systemd-boot.enable = true;
@@ -142,7 +144,7 @@
               users.users.dmitry = {
                 isNormalUser = true;
                 description = "dmitry";
-                extraGroups = [ "networkmanager" "wheel" ];
+                extraGroups = [ "networkmanager" "wheel" "docker" ];
               };
 
               environment.systemPackages = with pkgs; [
@@ -171,10 +173,11 @@
                 colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
                 wayland.windowManager.hyprland.settings.monitor = ",preferred,auto,auto";
 
-                module.communication.enable = true;
+                module.telegram.enable = true;
                 module.cli-tools.enable = true;
                 module.hyprland.enable = true;
                 module.editor.enable = true;
+                module.discord.enable = true;
               };
             };
           }

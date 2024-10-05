@@ -16,6 +16,7 @@
       kubernetes-helm
       kubectl
       yandex-cloud
+      postgresql
       # system info
       btop
       # fun
@@ -24,6 +25,8 @@
       fastfetch
       # compression
       gnutar
+      # network
+      wget
     ];
   };
 }
