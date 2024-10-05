@@ -17,14 +17,19 @@
       kubectl
       yandex-cloud
       postgresql
+
       # system info
       btop
+      fastfetch
+
       # fun
       cmatrix
       cbonsai
-      fastfetch
-      # compression
+
+      # files processing
       gnutar
+      ffmpeg-full
+
       # network
       wget
     ];
