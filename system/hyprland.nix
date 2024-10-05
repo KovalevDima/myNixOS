@@ -25,10 +25,10 @@
       xserver = {
         enable = true;
         xkb.layout = "us,ru";
-        libinput = {
-          enable = true;
-          disableWhileTyping = false;
-        };
+      };
+      libinput = {
+        enable = true;
+        touchpad.disableWhileTyping = false;
       };
       displayManager.autoLogin = {
         enable = true;

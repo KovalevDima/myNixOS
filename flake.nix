@@ -64,6 +64,8 @@
 
               networking.hostName = "desktop";
               services.xserver.videoDrivers = ["nvidia"];
+              services.udisks2.enable = true;
+
               hardware.nvidia = {
                 modesetting.enable = true;
                 nvidiaSettings = true;
