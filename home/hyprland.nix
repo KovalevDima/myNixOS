@@ -18,7 +18,7 @@
           env.TERM = "xterm-256color";
 
           window = {
-            opacity = 0.90;
+            opacity = 0.80;
 
             dimensions = {
               lines = 27;
