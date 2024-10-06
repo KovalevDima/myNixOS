@@ -14,6 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sops-nix.url = "github:Mic92/sops-nix";
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     swww.url = "github:LGFae/swww";
     nix-colors.url = "github:misterio77/nix-colors";
@@ -37,6 +38,8 @@
       ./system/unfreeSoftware.nix
       ./system/nix.nix
       ./system/docker.nix
+      ./system/wireguard.nix
+      inputs.sops-nix.nixosModules.sops
     ];
   in {
     nixosConfigurations = {
@@ -49,9 +52,15 @@
           (
             {inputs, config, pkgs, lib, ...} : {
               imports = systemModules;
-              module.network = {
-                enable = true;
+              sops = {
+                age.keyFile = "/root/.config/sops/age/keys.txt";
+                defaultSopsFile = ./secrets.yaml;
+                secrets = {
+                  "network/wireguardPrivateKey" = {};
+                };
               };
+
+              module.network.enable = true;
               module.hyprland =  {
                 enable = true;
                 initialUser = "dmitry";
@@ -61,6 +70,9 @@
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
               module.docker.enable = true;
+              module.wireguard = {
+                privateKeyFilepath = "${config.sops.secrets."network/wireguardPrivateKey".path}";
+              };
 
               networking.hostName = "desktop";
               services.xserver.videoDrivers = ["nvidia"];
@@ -83,6 +95,9 @@
               environment.systemPackages = with pkgs; [
                 google-chrome
                 git
+                sops
+                age
+                dig
               ];
 
               time.timeZone = "Europe/Moscow";
@@ -137,7 +152,7 @@
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
-	            module.docker.enable = true;
+              module.docker.enable = true;
 
               networking.hostName = "nixos";
               boot.loader.systemd-boot.enable = true;
@@ -152,6 +167,8 @@
               environment.systemPackages = with pkgs; [
                 google-chrome
                 git
+                sops
+                age
               ];
 
               time.timeZone = "Europe/Moscow";
