@@ -57,6 +57,7 @@
                 defaultSopsFile = ./secrets.yaml;
                 secrets = {
                   "network/wireguardPrivateKey" = {};
+                  "network/forwardingRules" = {};
                 };
               };
 
@@ -75,6 +76,9 @@
               };
 
               networking.hostName = "desktop";
+              services.dnscrypt-proxy2.settings = {
+                forwarding_rules = "${config.sops.secrets."network/forwardingRules".path}";
+              };
               services.xserver.videoDrivers = ["nvidia"];
               services.udisks2.enable = true;
 
