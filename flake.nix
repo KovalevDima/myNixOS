@@ -31,7 +31,7 @@
       ./home/discord.nix
     ];
     systemModules = [
-      ./system/network.nix
+      inputs.sops-nix.nixosModules.sops
       ./system/hyprland.nix
       ./system/gaming.nix
       ./system/i18n.nix
@@ -39,7 +39,6 @@
       ./system/nix.nix
       ./system/docker.nix
       ./system/wireguard.nix
-      inputs.sops-nix.nixosModules.sops
     ];
   in {
     nixosConfigurations = {
@@ -62,23 +61,18 @@
               };
 
               module.network.enable = true;
-              module.hyprland =  {
-                enable = true;
-                initialUser = "dmitry";
-              };
               module.gaming.enable = true;
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
               module.docker.enable = true;
-              module.wireguard = {
-                privateKeyFilepath = "${config.sops.secrets."network/wireguardPrivateKey".path}";
+              module.wireguard.privateKeyFilepath = "${config.sops.secrets."network/wireguardPrivateKey".path}";
+              module.hyprland =  {
+                enable = true;
+                initialUser = "dmitry";
               };
 
               networking.hostName = "desktop";
-              services.dnscrypt-proxy2.settings = {
-                forwarding_rules = "${config.sops.secrets."network/forwardingRules".path}";
-              };
               services.xserver.videoDrivers = ["nvidia"];
               services.udisks2.enable = true;
 
@@ -98,9 +92,6 @@
 
               environment.systemPackages = with pkgs; [
                 google-chrome
-                git
-                sops
-                age
                 dig
               ];
 
@@ -147,16 +138,17 @@
           (
             {inputs, config, pkgs, lib, ...} : {
               imports = systemModules;
+
               module.network.enable = true;
-              module.hyprland =  {
-                enable = true;
-                initialUser = "dmitry";
-              };
               module.gaming.enable = true;
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
               module.docker.enable = true;
+              module.hyprland =  {
+                enable = true;
+                initialUser = "dmitry";
+              };
 
               networking.hostName = "nixos";
               boot.loader.systemd-boot.enable = true;
@@ -167,13 +159,6 @@
                 description = "dmitry";
                 extraGroups = [ "networkmanager" "wheel" "docker" ];
               };
-
-              environment.systemPackages = with pkgs; [
-                google-chrome
-                git
-                sops
-                age
-              ];
 
               time.timeZone = "Europe/Moscow";
               # Before changing this value read the documentation for this option
