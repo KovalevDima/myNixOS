@@ -17,6 +17,7 @@
       sops
       age
       git
+      direnv
     ];
   };
 }
