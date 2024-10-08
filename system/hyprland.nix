@@ -44,15 +44,29 @@
       };
     };
 
-    environment.sessionVariables = {
-      NIXOS_OZONE_WL = "1";
-      SDL_VIDEODRIVER = "wayland,windows";
-      XDG_CURRENT_DESKTOP = "Hyprland";
-      XDG_SESSION_TYPE = "wayland";
-      XDG_SESSION_DESKTOP = "Hyprland";
-      GDK_BACKEND = "wayland";
-      CLUTTER_BACKEND = "wayland";
-      WLR_RENDERER = "vulkan";
+    fonts.packages = [
+      pkgs.nerdfonts
+    ];
+
+    environment = {
+      sessionVariables = {
+        NIXOS_OZONE_WL = "1";
+        SDL_VIDEODRIVER = "wayland,windows";
+        XDG_CURRENT_DESKTOP = "Hyprland";
+        XDG_SESSION_TYPE = "wayland";
+        XDG_SESSION_DESKTOP = "Hyprland";
+        GDK_BACKEND = "wayland";
+        CLUTTER_BACKEND = "wayland";
+        WLR_RENDERER = "vulkan";
+      };
+
+      systemPackages = [
+        inputs.swww.packages.${pkgs.system}.swww
+        pkgs.rofi-wayland
+        pkgs.yazi
+        pkgs.bibata-cursors
+        pkgs.waybar
+      ];
     };
 
     programs = {
@@ -69,17 +83,17 @@
       };
     };
 
-    xdg.portal = {
-      enable = true;
-      xdgOpenUsePortal = true;
-      extraPortals = [
-        inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland
+    xdg = {
+      icons.fallbackCursorThemes = [
+        "Bibata-Modern-Classic"
       ];
+      portal = {
+        enable = true;
+        xdgOpenUsePortal = true;
+        extraPortals = [
+          inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland
+        ];
+      };
     };
-
-    environment.systemPackages = [
-      inputs.swww.packages.${pkgs.system}.swww
-      pkgs.rofi-wayland
-    ];
   };
 }

@@ -60,7 +60,6 @@
                 };
               };
 
-              module.network.enable = true;
               module.gaming.enable = true;
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
@@ -139,7 +138,6 @@
             {inputs, config, pkgs, lib, ...} : {
               imports = systemModules;
 
-              module.network.enable = true;
               module.gaming.enable = true;
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
