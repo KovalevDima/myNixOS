@@ -8,9 +8,10 @@ I'm a software development geek
 ClickHouse driver for Haskell
 
 1. Provides high level developer friendly API
-2. Efficiently utilises database resources by using native protocol
-3. Has modern 
+2. Implements native protocol for efficient utilisation of DBMS resources 
+3. Has always up to date API documentation
 
 ### [myNixOS](https://github.com/KovalevDima/myNixOS): <img width="24" src="./assets/nix.svg">
 My NixOS configuration flake
 1. Modularized for configuring 2 hosts
+2. Provides module with hyprland wayland compositor
