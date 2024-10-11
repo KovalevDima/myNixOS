@@ -148,7 +148,7 @@
             "$mainMod, B, exec, google-chrome-stable"
             "$mainMod, E, exec, $fileManager"
             "$mainMod, V, togglefloating,"
-            "$mainMod, R, exec, rofi -show drun"
+            "$mainMod, R, exec, wofi --show drun"
             "$mainMod, P, pseudo," # dwindle
             "$mainMod, J, togglesplit," # dwindle
             # Move focus with mainMod + arrow keys

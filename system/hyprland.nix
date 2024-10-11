@@ -62,7 +62,7 @@
 
       systemPackages = [
         inputs.swww.packages.${pkgs.system}.swww
-        pkgs.rofi-wayland
+        pkgs.wofi
         pkgs.yazi
         pkgs.bibata-cursors
         pkgs.waybar
