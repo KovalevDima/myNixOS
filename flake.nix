@@ -104,6 +104,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              extraSpecialArgs = {inherit inputs;};
 
               users.dmitry = {
                 imports = homeModules;
@@ -168,6 +169,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              extraSpecialArgs = {inherit inputs;};
 
               users.dmitry = {
                 imports = homeModules;
@@ -176,7 +178,7 @@
                   homeDirectory = "/home/dmitry";
                   stateVersion = "24.05";
                 };
-                colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
+                colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
                 wayland.windowManager.hyprland.settings.monitor = ",preferred,auto,auto";
 
                 module.telegram.enable = true;

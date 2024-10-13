@@ -1,10 +1,13 @@
 { lib
 , config
 , pkgs
+, inputs
 , ...
 }:
 
-{
+let inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) vimThemeFromScheme;
+    in
+    {
   options = {
     module.editor.enable = lib.mkEnableOption "Enables editor";
   };
@@ -23,6 +26,10 @@
             p.tree-sitter-markdown
           ])
         )
+        {
+          plugin = vimThemeFromScheme {scheme = config.colorScheme;};
+          config = "colorscheme nix-${config.colorScheme.slug}";
+        }
       ];
     };
     programs.vscode = {
