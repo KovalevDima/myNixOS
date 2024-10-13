@@ -39,6 +39,7 @@
       ./system/nix.nix
       ./system/docker.nix
       ./system/wireguard.nix
+      ./system/networking.nix
     ];
   in {
     nixosConfigurations = {
@@ -144,6 +145,7 @@
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
               module.docker.enable = true;
+              module.networking.enable = true;
               module.hyprland =  {
                 enable = true;
                 initialUser = "dmitry";
@@ -158,6 +160,11 @@
                 description = "dmitry";
                 extraGroups = [ "networkmanager" "wheel" "docker" ];
               };
+
+              environment.systemPackages = with pkgs; [
+                google-chrome
+                dig
+              ];
 
               time.timeZone = "Europe/Moscow";
               # Before changing this value read the documentation for this option
@@ -178,7 +185,7 @@
                   homeDirectory = "/home/dmitry";
                   stateVersion = "24.05";
                 };
-                colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
+                colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
                 wayland.windowManager.hyprland.settings.monitor = ",preferred,auto,auto";
 
                 module.telegram.enable = true;
