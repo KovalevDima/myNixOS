@@ -27,12 +27,35 @@ in
             name = "topbar";
             modules-left = [ "hyprland/workspaces" ];
             modules-right = [
+              "tray"
+              "network"
+              "pulseaudio"
+              "battery"
               "clock"
             ];
-    
-            "clock" = {
+            battery = {
+              bat = "BAT0";
+              format = "{capacity}% {icon}";
+              format-icons = [ "" "" "" "" "" ];
+            };
+            clock = {
               interval = 1;
               format = "{:%I:%M %p}";
+            };
+            network = {
+              "format-wifi" = "{essid} ({signalStrength}%) ";
+              "format-ethernet" = "{ifname}";
+            };
+
+            pulseaudio = {
+              format = "{volume}% {icon} {format_source}";
+              format-muted = "Muted  {format_source}";
+              format-icons = {
+                headphones = "";
+                default = [ "" "" ];
+              };
+              format-source = "- ";
+              format-source-muted = "- ";
             };
 
             "hyprland/workspaces" = { };
@@ -41,7 +64,11 @@ in
     
         style = with config.colorScheme.palette; ''
           .modules-left {
-            padding: 4px;
+            background-color: #${base01};
+            font-style: italic;
+          }
+
+          .modules-right {
             background-color: #${base01};
             font-style: italic;
           }
@@ -51,7 +78,15 @@ in
             background-color: #${base01};
             color: #${base06};
           }
-    
+
+          #network,
+          #battery,
+          #pulseaudio {
+            padding: 0 10px;
+            background-color: #${base01};
+            color: #${base06};
+          }
+
           #workspaces button {
             background-color: #${base01};
             color: #${base08};
