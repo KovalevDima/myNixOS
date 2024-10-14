@@ -5,9 +5,10 @@
 , ...
 }:
 
-let inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) vimThemeFromScheme;
-    in
-    {
+let
+  inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) vimThemeFromScheme;
+in
+{
   options = {
     module.editor.enable = lib.mkEnableOption "Enables editor";
   };

@@ -64,17 +64,12 @@
         inputs.swww.packages.${pkgs.system}.swww
         pkgs.wofi
         pkgs.yazi
-        pkgs.bibata-cursors
-        pkgs.waybar
       ];
     };
 
     programs = {
       xwayland= {
         enable = true;
-      };
-      waybar = {
-        enable = false;
       };
       hyprland = {
         enable = true;
@@ -84,9 +79,6 @@
     };
 
     xdg = {
-      icons.fallbackCursorThemes = [
-        "Bibata-Modern-Classic"
-      ];
       portal = {
         enable = true;
         xdgOpenUsePortal = true;
