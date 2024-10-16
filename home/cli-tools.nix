@@ -16,6 +16,7 @@
       kubernetes-helm
       kubectl
       yandex-cloud
+      awscli2
       postgresql
 
       # system info
