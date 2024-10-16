@@ -34,6 +34,8 @@
 
       # network
       wget
+      tcpdump
+      tcpflow
     ];
   };
 }
