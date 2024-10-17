@@ -60,10 +60,12 @@
         WLR_RENDERER = "vulkan";
       };
 
-      systemPackages = [
-        pkgs.swww
-        pkgs.wofi
-        pkgs.yazi
+      systemPackages = with pkgs; [
+        swww
+        wofi
+        yazi
+        swaynotificationcenter
+        hyprshot
       ];
     };
 

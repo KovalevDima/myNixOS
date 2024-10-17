@@ -13,9 +13,6 @@ in
   };
 
   config = lib.mkIf config.module.hyprland.enable {
-    home.packages = [
-      pkgs.hyprshot
-    ];
     programs = {
       waybar = {
         enable = true;
@@ -166,6 +163,7 @@ in
         exec-once = [
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "swww-daemon & sleep 1 && swww img ${./display/wallpaper.jpeg}"
+          "swaynotificationcenter"
         ];
 
         env = [
@@ -268,6 +266,7 @@ in
           "$mainMod, R, exec, wofi --show drun"
           "$mainMod, P, pseudo," # dwindle
           "$mainMod, J, togglesplit," # dwindle
+          "$mainMod, N, exec, swaync-client -t -sw"
 
           ", PRINT, exec, hyprshot -m region"
           # Move focus with mainMod + arrow keys
