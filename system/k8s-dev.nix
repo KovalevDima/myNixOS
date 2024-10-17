@@ -17,6 +17,7 @@
       kubectl
       yandex-cloud
       awscli2
+      minikube
     ];
   };
 }
