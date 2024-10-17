@@ -61,7 +61,7 @@
       };
 
       systemPackages = [
-        inputs.swww.packages.${pkgs.system}.swww
+        pkgs.swww
         pkgs.wofi
         pkgs.yazi
       ];
@@ -73,8 +73,6 @@
       };
       hyprland = {
         enable = true;
-        package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-        portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
       };
     };
 
@@ -83,7 +81,7 @@
         enable = true;
         xdgOpenUsePortal = true;
         extraPortals = [
-          inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland
+          pkgs.xdg-desktop-portal-hyprland
         ];
       };
     };

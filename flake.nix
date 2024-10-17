@@ -2,10 +2,7 @@
   description = "My nixos configuration";
 
   inputs = {
-
-    master.url = "github:NixOS/nixpkgs/master";
     unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    stable.url = "github:NixOS/nixpkgs/nixos-24.05";
 
     nixpkgs.follows = "unstable";
 
@@ -15,8 +12,6 @@
     };
 
     sops-nix.url = "github:Mic92/sops-nix";
-    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-    swww.url = "github:LGFae/swww";
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
