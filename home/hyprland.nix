@@ -13,6 +13,9 @@ in
   };
 
   config = lib.mkIf config.module.hyprland.enable {
+    home.packages = [
+      pkgs.hyprshot
+    ];
     programs = {
       waybar = {
         enable = true;
@@ -164,11 +167,10 @@ in
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "swww-daemon & sleep 1 && swww img ${./display/wallpaper.jpeg}"
         ];
-        "$fileManager" = "yazi";
 
         env = [
-          "XCURSOR_SIZE, 24;"
-          "HYPRCURSOR_SIZE, 24;"
+          "XCURSOR_SIZE, 24"
+          "HYPRCURSOR_SIZE, 24"
         ];
 
         general = with config.colorScheme.palette; {
@@ -261,11 +263,13 @@ in
           "$mainMod, M, exit,"
           "$mainMod, D, exec, discord"
           "$mainMod, B, exec, google-chrome-stable"
-          "$mainMod, E, exec, $fileManager"
+          "$mainMod, E, exec, yazi"
           "$mainMod, V, togglefloating,"
           "$mainMod, R, exec, wofi --show drun"
           "$mainMod, P, pseudo," # dwindle
           "$mainMod, J, togglesplit," # dwindle
+
+          ", PRINT, exec, hyprshot -m region"
           # Move focus with mainMod + arrow keys
           "$mainMod, left, movefocus, l"
           "$mainMod, right, movefocus, r"

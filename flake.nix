@@ -40,6 +40,7 @@
       ./system/docker.nix
       ./system/wireguard.nix
       ./system/networking.nix
+      ./system/k8s-dev.nix
     ];
   in {
     nixosConfigurations = {
@@ -66,6 +67,7 @@
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
               module.docker.enable = true;
+              module.k8s-dev.enable = true;
               module.wireguard.privateKeyFilepath = "${config.sops.secrets."network/wireguardPrivateKey".path}";
               module.hyprland =  {
                 enable = true;

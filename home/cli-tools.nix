@@ -11,14 +11,6 @@
 
   config = lib.mkIf config.module.cli-tools.enable {
     home.packages = with pkgs; [
-      # devops
-      k9s
-      kubernetes-helm
-      kubectl
-      yandex-cloud
-      awscli2
-      postgresql
-
       # system info
       btop
       fastfetch
@@ -36,6 +28,7 @@
       wget
       tcpdump
       tcpflow
+      termshark
     ];
   };
 }
