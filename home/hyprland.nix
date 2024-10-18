@@ -172,7 +172,7 @@ in
         ];
         
         cursor = {
-          no_hardware_cursors = true;
+          allow_dumb_copy = true;
         };
 
         general = with config.colorScheme.palette; {
