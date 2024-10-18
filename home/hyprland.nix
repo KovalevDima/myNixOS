@@ -170,6 +170,10 @@ in
           "XCURSOR_SIZE, 24"
           "HYPRCURSOR_SIZE, 24"
         ];
+        
+        cursor = {
+          no_hardware_cursors = true;
+        };
 
         general = with config.colorScheme.palette; {
           gaps_in = 0;
