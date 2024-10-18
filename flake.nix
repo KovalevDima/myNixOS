@@ -145,6 +145,7 @@
                 enable = true;
                 initialUser = "dmitry";
               };
+              networking.networkmanager.enable = true;
 
               networking.hostName = "nixos";
               boot.loader.systemd-boot.enable = true;
