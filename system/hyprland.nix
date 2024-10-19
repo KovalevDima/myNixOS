@@ -26,10 +26,6 @@
         enable = true;
         xkb.layout = "us,ru";
       };
-      libinput = {
-        enable = true;
-        touchpad.disableWhileTyping = false;
-      };
       displayManager.autoLogin = {
         enable = true;
         user = "${config.module.hyprland.initialUser}";
