@@ -66,6 +66,7 @@
         yazi
         swaynotificationcenter
         hyprshot
+        amberol
       ];
     };
 
