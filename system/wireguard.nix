@@ -7,25 +7,15 @@
 let cfg = config.module.wireguard;
 in {
   options = {
-    module.wireguard.privateKeyFilepath = lib.mkOption {
+    module.wireguard.configFilepath = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
-      description = "Wireguard private key";
+      description = "Wireguard preshared key";
     };
   };
-  config = lib.mkIf (cfg.privateKeyFilepath != null) {
+  config = lib.mkIf (cfg.configFilepath != null) {
     networking = {
-      firewall = {
-        allowedUDPPorts = [ 51820 ];
-      };
-
-      wireguard.interfaces = {
-        wg0 = {
-          ips = [ "10.100.0.2/24" ];
-          listenPort = 51820;
-          privateKeyFile = cfg.privateKeyFilepath;
-        };
-      };
+      wg-quick.interfaces.wg0.configFile = cfg.configFilepath;
     };
   };
 }

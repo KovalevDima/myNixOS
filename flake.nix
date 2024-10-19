@@ -51,7 +51,7 @@
                 age.keyFile = "/root/.config/sops/age/keys.txt";
                 defaultSopsFile = ./secrets.yaml;
                 secrets = {
-                  "network/wireguardPrivateKey" = {};
+                  "network/wireguardConfigFile" = {};
                   "network/forwardingRules" = {};
                 };
               };
@@ -62,7 +62,9 @@
               module.nix.enable = true;
               module.docker.enable = true;
               module.k8s-dev.enable = true;
-              module.wireguard.privateKeyFilepath = "${config.sops.secrets."network/wireguardPrivateKey".path}";
+              module.wireguard = {
+                configFilepath = "${config.sops.secrets."network/wireguardConfigFile".path}";
+              };
               module.hyprland =  {
                 enable = true;
                 initialUser = "dmitry";
