@@ -137,6 +137,14 @@
           (
             {inputs, config, pkgs, lib, ...} : {
               imports = systemModules;
+              sops = {
+                age.keyFile = "/root/.config/sops/age/keys.txt";
+                defaultSopsFile = ./secrets.yaml;
+                secrets = {
+                  "network/wireguardConfigFile" = {};
+                  "network/forwardingRules" = {};
+                };
+              };
 
               module.gaming.enable = true;
               module.i18n.enable = true;
@@ -147,6 +155,7 @@
                 enable = true;
                 initialUser = "dmitry";
               };
+              module.wireguard.configFilepath = "${config.sops.secrets."network/wireguardConfigFile".path}";
               networking.networkmanager.enable = true;
 
               networking.hostName = "nixos";

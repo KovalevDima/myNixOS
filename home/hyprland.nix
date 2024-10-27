@@ -34,7 +34,7 @@ in
               "clock"
             ];
             battery = {
-              bat = "BAT0";
+              bat = "BAT1";
               format = "{capacity}% {icon}";
               format-icons = [ "" "" "" "" "" ];
             };
