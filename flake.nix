@@ -151,6 +151,7 @@
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
               module.docker.enable = true;
+              module.k8s-dev.enable = true;
               module.hyprland =  {
                 enable = true;
                 initialUser = "dmitry";
