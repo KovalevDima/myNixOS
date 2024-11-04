@@ -25,6 +25,7 @@ in
             p.tree-sitter-json
             p.tree-sitter-yaml
             p.tree-sitter-markdown
+            p.tree-sitter-haskell
           ])
         )
         {

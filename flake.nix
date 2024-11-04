@@ -73,6 +73,11 @@
               networking.hostName = "desktop";
               services.xserver.videoDrivers = ["nvidia"];
               services.udisks2.enable = true;
+              services.openssh = {
+                enable = true;
+                ports = [22];
+                settings.AllowUsers = null;
+              };
 
               hardware.nvidia = {
                 modesetting.enable = true;

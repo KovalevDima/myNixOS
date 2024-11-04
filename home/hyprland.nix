@@ -272,7 +272,7 @@ in
           "$mainMod, J, togglesplit," # dwindle
           "$mainMod, N, exec, swaync-client -t -sw"
 
-          ", PRINT, exec, hyprshot -m region"
+          ", PRINT, exec, hyprshot -m region --clipboard-only"
           # Move focus with mainMod + arrow keys
           "$mainMod, left, movefocus, l"
           "$mainMod, right, movefocus, r"
