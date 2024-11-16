@@ -18,6 +18,7 @@
       "steam"
       "steam-original"
       "steam-run"
+      "steam-unwrapped"
       "nvidia-x11"
       "nvidia-settings"
     ];
