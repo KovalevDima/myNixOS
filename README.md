@@ -14,7 +14,7 @@ ClickHouse driver for Haskell
 4. Always up-to-date documentation
 5. Well automated contribution environment
 
-### [myNixOS](https://github.com/KovalevDima/myNixOS): <img width="24" src="./assets/nix.svg">
+### [myNixOS](https://github.com/KovalevDima/myNixOS): <img width="24" src="./assets/programming-languages/nix.svg">
 My NixOS configuration flake
 1. Modularization for configuring 2 hosts
 2. Module with hyprland wayland compositor
