@@ -4,7 +4,7 @@ Interested in mathematics, hardware and software
 
 ## My opensource projects
 
-### [ClickHaskell](https://github.com/GetShopTV/ClickHaskell): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/databases/clickhouse.svg"> <img width="24" src="./assets/nix.svg">
+### [ClickHaskell](https://github.com/GetShopTV/ClickHaskell): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/databases/clickhouse.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
 
 ClickHouse driver for Haskell
 
@@ -16,6 +16,7 @@ ClickHouse driver for Haskell
 
 ### [myNixOS](https://github.com/KovalevDima/myNixOS): <img width="24" src="./assets/programming-languages/nix.svg">
 My NixOS configuration flake
+
 1. Modularization for configuring 2 hosts
 2. Module with hyprland wayland compositor
 
@@ -24,13 +25,13 @@ My NixOS configuration flake
 
 ## Technologies I was working with:
 
-| Category         | ⭐⭐⭐ | ⭐⭐ |
+| Category         | Tier1 | Tier2 |
 |------------------|-------|-------|
 | Languages        | <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/programming-languages/nix.svg"> <img width="24" src="./assets/programming-languages/typescript.svg"> | <img width="24" src="./assets/programming-languages/python.svg"> <img width="24" src="./assets/programming-languages/cpp.svg"> |
 | CI/CD tools      | <img width="24" src="./assets/ci-cd-tools/k8s.svg"> <img width="24" src="./assets/ci-cd-tools/argocd.svg"> <img width="24" src="./assets/ci-cd-tools/docker.svg"> <img width="24" src="./assets/ci-cd-tools/gitlab.svg"> <img width="24" src="./assets/ci-cd-tools/github.svg"> | <img width="24" src="assets/ci-cd-tools/ansible.svg" > |
 | Databases        | <img width="24" src="./assets/databases/clickhouse.svg"> <img width="24" src="./assets/databases/postgresql.svg"> | <img width="24" src="./assets/databases/redis.svg"> |
 | SRE tools        | <img width="24" src="./assets/sre-tools/grafana.svg"> <img width="24" src="./assets/sre-tools/prometheus.svg"> |  |
-| Cloud providers  | <img width="24" src="./assets/cloud-providers//yandex-cloud.svg"> <img width="24" src="./assets/cloud-providers/aws.svg">  | <img width="24" src="./assets/ci-cd-tools/circle-cd.svg"> |
+| Cloud providers  | <img width="24" src="./assets/cloud-providers/yandex-cloud.svg"> <img width="24" src="./assets/cloud-providers/aws.svg">  | <img width="24" src="./assets/ci-cd-tools/circle-cd.svg"> |
 | Package managers | <img width="24" src="./assets/package-managers/cabal.svg"> <img width="24" src="./assets/package-managers/nix.svg"> <img width="24" src="./assets/package-managers/helm.svg"> | <img width="24" src="./assets/package-managers/npm.svg"> |
 | Linux distros    | <img width="24" src="./assets/linux-distros/nix.svg"> <img width="24" src="./assets/linux-distros/ubuntu.svg"> |
 | Specifications   | <img width="24" src="./assets/specifications/markdown.svg"> <img width="24" src="./assets/specifications/openapi.svg"> <img width="24" src="./assets/specifications/yaml.svg"> <img width="24" src="./assets/specifications/json.svg"> | <img width="24" src="./assets/specifications/graphviz.svg"> |
