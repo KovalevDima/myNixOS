@@ -18,8 +18,11 @@ compiler = do
       route (constRoute "index.html")
       compile $
         pandocCompiler
+          >>= loadAndApplyTemplate "./templates/main.html" defaultContext
           >>= relativizeUrls
 
     match "assets/**" $ do
         route idRoute
         compile copyFileCompiler
+
+    match "templates/**" $ compile templateCompiler
