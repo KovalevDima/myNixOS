@@ -67,12 +67,8 @@
     };
 
     programs = {
-      xwayland= {
-        enable = true;
-      };
-      hyprland = {
-        enable = true;
-      };
+      xwayland.enable = true;
+      hyprland.enable = true;
     };
 
     xdg = {

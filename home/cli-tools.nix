@@ -18,7 +18,7 @@
       # fun
       cmatrix
       cbonsai
-      cava
+      ### cava
 
       # files processing
       gnutar
