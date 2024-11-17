@@ -26,17 +26,16 @@ My NixOS configuration flake
 
 | Category         | ⭐⭐⭐ | ⭐⭐ |
 |------------------|-------|-------|
-| Languages        | <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/nix.svg"> <img width="24" src="./assets/programming-languages/typescript.svg"> | <img width="24" src="./assets/programming-languages/python.svg"> <img width="24" src="./assets/programming-languages/cpp.svg"> |
+| Languages        | <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/programming-languages/nix.svg"> <img width="24" src="./assets/programming-languages/typescript.svg"> | <img width="24" src="./assets/programming-languages/python.svg"> <img width="24" src="./assets/programming-languages/cpp.svg"> |
 | CI/CD tools      | <img width="24" src="./assets/ci-cd-tools/k8s.svg"> <img width="24" src="./assets/ci-cd-tools/argocd.svg"> <img width="24" src="./assets/ci-cd-tools/docker.svg"> <img width="24" src="./assets/ci-cd-tools/gitlab.svg"> <img width="24" src="./assets/ci-cd-tools/github.svg"> | <img width="24" src="assets/ci-cd-tools/ansible.svg" > |
 | Databases        | <img width="24" src="./assets/databases/clickhouse.svg"> <img width="24" src="./assets/databases/postgresql.svg"> | <img width="24" src="./assets/databases/redis.svg"> |
+| SRE tools        | <img width="24" src="./assets/sre-tools/grafana.svg"> <img width="24" src="./assets/sre-tools/prometheus.svg"> |  |
 | Cloud providers  | <img width="24" src="./assets/cloud-providers//yandex-cloud.svg"> <img width="24" src="./assets/cloud-providers/aws.svg">  | <img width="24" src="./assets/ci-cd-tools/circle-cd.svg"> |
-| Package managers | <img width="24" src="./assets/nix.svg"> <img width="24" src="./assets/helm.svg"> | <img width="24" src="./assets/package-managers/npm.svg"> |
-| Linux distros    | <img width="24" src="./assets/nix.svg"> <img width="24" src="./assets/ubuntu.svg"> |
-| Specifications   | <img width="24" src="./assets/specifications/yaml.svg"> <img width="24" src="./assets/specifications/json.svg"> <img width="24" src="./assets/openapi.svg"> | 
+| Package managers | <img width="24" src="./assets/package-managers/nix.svg"> <img width="24" src="./assets/package-managers/helm.svg"> | <img width="24" src="./assets/package-managers/npm.svg"> |
+| Linux distros    | <img width="24" src="./assets/linux-distros/nix.svg"> <img width="24" src="./assets/linux-distros/ubuntu.svg"> |
+| Specifications   | <img width="24" src="./assets/specifications/yaml.svg"> <img width="24" src="./assets/specifications/json.svg"> <img width="24" src="./assets/specifications/openapi.svg"> | <img width="24" src="./assets/specifications/graphviz.svg"> |
 | Proxy servers    | <img width="24" src="./assets/proxy-servers/nginx.svg"> | <img width="24" src="./assets/proxy-servers/traefik.svg"> |
 | Text editors     | <img width="24" src="./assets/text-editors/vscode.svg"> | <img width="24" src="./assets/text-editors/neovim.svg"> |
-
-
 
 
 
