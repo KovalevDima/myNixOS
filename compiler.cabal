@@ -1,0 +1,21 @@
+cabal-version:   3.0
+
+name:            compiler
+version:         0.1.0.0
+author:          Kovalev Dmitry
+maintainer:      joe@example.com
+
+license:         BSD-3-Clause
+license-file:    ./LICENSE
+copyright:       2024 Kovalev Dmitry
+
+build-type:      Simple
+
+
+executable compiler
+    ghc-options:      -Wall -O2 -threaded -rtsopts -main-is compiler
+    main-is:          compiler.hs
+    build-depends:
+        base
+    hs-source-dirs:   .
+    default-language: Haskell2010
