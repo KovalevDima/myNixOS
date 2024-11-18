@@ -2,7 +2,7 @@ name: "Personal page"
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 permissions:
   contents: read
@@ -10,7 +10,7 @@ permissions:
   id-token: write
 
 jobs:
-  handle-push-to-master:
+  handle-push-to-main:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch repo
@@ -31,7 +31,7 @@ jobs:
           path: result/_site/
 
   deploy-docs:
-    needs: [handle-push-to-master]
+    needs: [handle-push-to-main]
     runs-on: ubuntu-latest
 
     steps:
