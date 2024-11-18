@@ -9,7 +9,7 @@
       systems = nixpkgs.lib.systems.flakeExposed;
       imports = [ inputs.haskell-flake.flakeModule ];
 
-      perSystem = { self', pkgs, ... }: {
+      perSystem = { self', pkgs, lib, ... }: {
 
         haskellProjects.default = {
           # The base package set representing a specific GHC version.
@@ -43,6 +43,20 @@
           };
         };
 
+        packages."personal-page" = pkgs.stdenv.mkDerivation {
+          name = "personal-page";
+          buildInputs = [];
+          src = pkgs.nix-gitignore.gitignoreSourcePure [] ./.;
+
+          buildPhase = ''
+            ${lib.getExe' self'.packages.compiler "compiler"} build --verbose
+          '';
+
+          installPhase = ''
+            mkdir -p "$out"
+            cp -r ./_site "$out"
+          '';
+        };
         # haskell-flake doesn't set the default package, but you can do it here.
         packages.default = self'.packages.example;
       };

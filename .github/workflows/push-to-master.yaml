@@ -1,0 +1,44 @@
+name: "Personal page"
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  handle-push-to-master:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch repo
+        uses: actions/checkout@v4
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v26
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      
+      - name: Build personal page
+        run: nix build .#personal-page
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          name: github-pages
+          path: result/_site/
+
+  deploy-docs:
+    needs: [handle-push-to-master]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
