@@ -1,5 +1,6 @@
 # Kovalev Dmitry
 24 y.o.\
+Russia, Rostov-on-Don\
 Infrastructure engineer\
 Passionate about software, hardware and mathematics\
 Telegram: [@onarainydayillwinanyway](https://t.me/onarainydayillwinanyway)
@@ -8,7 +9,8 @@ Telegram: [@onarainydayillwinanyway](https://t.me/onarainydayillwinanyway)
 
 ### [ClickHaskell](https://github.com/GetShopTV/ClickHaskell): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/databases/clickhouse.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
 
-ClickHouse driver for Haskell
+ClickHouse driver for Haskell\
+Still under heavy development
 
 Key features:
 
@@ -25,6 +27,14 @@ Key features:
 
 - Modularization for configuring 2 hosts
 - Module with hyprland wayland compositor
+
+### [KovalevDima](https://github.com/KovalevDima/KovalevDima): <img width="24" src="./assets/programming-languages/nix.svg">
+Fixed point of this page repository link :)
+
+Key features:
+
+- CI/CD with GitHub pages hosting
+- Hakyll static compiler from Markdown to HTML
 
 
 
