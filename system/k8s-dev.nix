@@ -18,6 +18,7 @@
       yandex-cloud
       awscli2
       minikube
+      postgresql
     ];
   };
 }
