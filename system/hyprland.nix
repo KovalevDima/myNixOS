@@ -63,6 +63,7 @@
         swaynotificationcenter
         hyprshot
         amberol
+        brightnessctl
       ];
     };
 
