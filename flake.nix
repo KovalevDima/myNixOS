@@ -161,8 +161,14 @@
               networking = {
                 hostName = "nixos";
                 networkmanager.enable = true;
+                networkmanager.dns = "none";
+                useDHCP = false;
+                dhcpcd.enable = false;
+                dhcpcd.extraConfig = "nohook resolv.conf";
+                nameservers = [ "8.8.8.8" "8.8.4.4"];
                 wg-quick.interfaces.wg0.configFile = "${config.sops.secrets."network/wireguardConfigFile".path}";
               };
+              services.resolved.enable = false;
 
               boot.loader.systemd-boot.enable = true;
               boot.loader.efi.canTouchEfiVariables = true;
