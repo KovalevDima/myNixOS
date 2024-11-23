@@ -17,11 +17,6 @@
 
   outputs = { nixpkgs, self, ... } @ inputs: 
   let
-    homeModules = [
-      inputs.nix-colors.homeManagerModules.default
-      ./home/tui.nix
-      ./home/gui
-    ];
     systemModules = [
       inputs.sops-nix.nixosModules.sops
       ./system/hyprland.nix
@@ -106,8 +101,16 @@
                 extraSpecialArgs = {inherit inputs;};
 
                 users.dmitry = {
-                  imports = homeModules;
-                  programs.home-manager.enable = true;
+                  imports = [
+                    inputs.nix-colors.homeManagerModules.default
+                    ./home/tui.nix
+                    ./home/gui
+                    ./home/gui/obs-studio.nix
+                  ];
+                  programs = {
+                    home-manager.enable = true;
+                    vscode.enable = true;
+                  };
                   home = {
                     homeDirectory = "/home/dmitry";
                     stateVersion = "24.05";
@@ -196,8 +199,15 @@
                 extraSpecialArgs = {inherit inputs;};
 
                 users.dmitry = {
-                  imports = homeModules;
-                  programs.home-manager.enable = true;
+                  imports =  [
+                    inputs.nix-colors.homeManagerModules.default
+                    ./home/tui.nix
+                    ./home/gui
+                  ];
+                  programs = {
+                    home-manager.enable = true;
+                    vscode.enable = true;
+                  };
                   home = {
                     homeDirectory = "/home/dmitry";
                     stateVersion = "24.05";
