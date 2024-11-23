@@ -10,10 +10,10 @@ let
 in
 {
   options = {
-    module.cli-tools.enable = lib.mkEnableOption "Enables CLI tools packages";
+    module.tui.enable = lib.mkEnableOption "Enables CLI tools packages";
   };
 
-  config = lib.mkIf config.module.cli-tools.enable {
+  config = lib.mkIf config.module.tui.enable {
     programs.neovim = {
       enable = true;
       plugins = with pkgs.vimPlugins; [

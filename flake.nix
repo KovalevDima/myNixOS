@@ -19,7 +19,7 @@
   let
     homeModules = [
       inputs.nix-colors.homeManagerModules.default
-      ./home/cli-tools.nix
+      ./home/tui.nix
       ./home/gui
     ];
     systemModules = [
@@ -122,7 +122,7 @@
                     "DP-2, 2560x1440@165, 2560x0, 1"
                   ];
 
-                  module.cli-tools.enable = true;
+                  module.tui.enable = true;
                   module.gui.enable = true;
                 };
               };
@@ -209,7 +209,7 @@
                   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
                   wayland.windowManager.hyprland.settings.monitor = ",preferred,auto,auto";
 
-                  module.cli-tools.enable = true;
+                  module.tui.enable = true;
                   module.gui.enable = true;
                 };
               };
