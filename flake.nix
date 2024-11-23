@@ -19,11 +19,9 @@
   let
     homeModules = [
       inputs.nix-colors.homeManagerModules.default
-      ./home/telegram.nix
       ./home/cli-tools.nix
       ./home/display
       ./home/editor.nix
-      ./home/discord.nix
     ];
     systemModules = [
       inputs.sops-nix.nixosModules.sops
@@ -101,33 +99,37 @@
               system.stateVersion = "24.05"; # Did you read the comment?
             }
           )
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = {inherit inputs;};
+          (
+            {inputs, config, pkgs, lib, ...} : {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = {inherit inputs;};
 
-              users.dmitry = {
-                imports = homeModules;
-                programs.home-manager.enable = true;
-                home = {
-                  homeDirectory = "/home/dmitry";
-                  stateVersion = "24.05";
+                users.dmitry = {
+                  imports = homeModules;
+                  programs.home-manager.enable = true;
+                  home = {
+                    homeDirectory = "/home/dmitry";
+                    stateVersion = "24.05";
+                    packages = with pkgs; [
+                      telegram-desktop
+                      vesktop
+                    ];
+                  };
+                  colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
+                  wayland.windowManager.hyprland.settings.monitor = [
+                    "DP-1, 2560x1440@165, 0x0, 1"
+                    "DP-2, 2560x1440@165, 2560x0, 1"
+                  ];
+
+                  module.cli-tools.enable = true;
+                  module.display.enable = true;
+                  module.editor.enable = true;
                 };
-                colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
-                wayland.windowManager.hyprland.settings.monitor = [
-                  "DP-1, 2560x1440@165, 0x0, 1"
-                  "DP-2, 2560x1440@165, 2560x0, 1"
-                ];
-
-                module.telegram.enable = true;
-                module.discord.enable = true;
-                module.cli-tools.enable = true;
-                module.display.enable = true;
-                module.editor.enable = true;
               };
-            };
-          }
+            }
+          )
         ];
       };
       laptop = inputs.nixpkgs.lib.nixosSystem {
@@ -182,30 +184,34 @@
               system.stateVersion = "24.05"; # Did you read the comment?
             }
           )
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = {inherit inputs;};
+          (
+            {inputs, config, pkgs, lib, ...} : {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = {inherit inputs;};
 
-              users.dmitry = {
-                imports = homeModules;
-                programs.home-manager.enable = true;
-                home = {
-                  homeDirectory = "/home/dmitry";
-                  stateVersion = "24.05";
+                users.dmitry = {
+                  imports = homeModules;
+                  programs.home-manager.enable = true;
+                  home = {
+                    homeDirectory = "/home/dmitry";
+                    stateVersion = "24.05";
+                    packages = with pkgs; [
+                      telegram-desktop
+                      vesktop
+                    ];
+                  };
+                  colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
+                  wayland.windowManager.hyprland.settings.monitor = ",preferred,auto,auto";
+
+                  module.cli-tools.enable = true;
+                  module.display.enable = true;
+                  module.editor.enable = true;
                 };
-                colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
-                wayland.windowManager.hyprland.settings.monitor = ",preferred,auto,auto";
-
-                module.telegram.enable = true;
-                module.cli-tools.enable = true;
-                module.display.enable = true;
-                module.editor.enable = true;
-                module.discord.enable = true;
               };
-            };
-          }
+            }
+          )
         ];
       };
     };
