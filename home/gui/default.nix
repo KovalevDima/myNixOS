@@ -48,14 +48,14 @@ in
             };
 
             pulseaudio = {
-              format = "{volume}% {icon} {format_source}";
+              format = "{volume}% {icon}  {format_source}";
               format-muted = "Muted  {format_source}";
               format-icons = {
                 headphones = "";
                 default = [ "" "" ];
               };
-              format-source = "- ";
-              format-source-muted = "- ";
+              format-source = "";
+              format-source-muted = "";
             };
 
             "hyprland/workspaces" = { };
