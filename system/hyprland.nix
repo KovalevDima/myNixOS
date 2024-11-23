@@ -7,8 +7,8 @@
 
 {
   options = {
-    module.display = {
-      enable = lib.mkEnableOption "Enables display server";
+    module.gui = {
+      enable = lib.mkEnableOption "Enables gui server";
       initialUser = lib.mkOption {
         type = lib.types.str;
         default = "root";
@@ -17,7 +17,7 @@
     };
   };
 
-  config = lib.mkIf config.module.display.enable {
+  config = lib.mkIf config.module.gui.enable {
 
     hardware.graphics.enable = true;
 
@@ -28,7 +28,7 @@
       };
       displayManager.autoLogin = {
         enable = true;
-        user = "${config.module.display.initialUser}";
+        user = "${config.module.gui.initialUser}";
       };
       pipewire = {
         enable = true;

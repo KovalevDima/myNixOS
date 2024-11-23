@@ -9,10 +9,10 @@ let
 in
 {
   options = {
-    module.display.enable = lib.mkEnableOption "Enables configuration for display server";
+    module.gui.enable = lib.mkEnableOption "Enables configuration for gui server";
   };
 
-  config = lib.mkIf config.module.display.enable {
+  config = lib.mkIf config.module.gui.enable {
     programs = {
       waybar = {
         enable = true;

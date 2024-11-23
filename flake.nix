@@ -20,7 +20,7 @@
     homeModules = [
       inputs.nix-colors.homeManagerModules.default
       ./home/cli-tools.nix
-      ./home/display
+      ./home/gui
       ./home/editor.nix
     ];
     systemModules = [
@@ -56,7 +56,7 @@
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
               module.k8s-dev.enable = true;
-              module.display =  {
+              module.gui =  {
                 enable = true;
                 initialUser = "dmitry";
               };
@@ -124,7 +124,7 @@
                   ];
 
                   module.cli-tools.enable = true;
-                  module.display.enable = true;
+                  module.gui.enable = true;
                   module.editor.enable = true;
                 };
               };
@@ -154,7 +154,7 @@
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
               module.k8s-dev.enable = true;
-              module.display =  {
+              module.gui =  {
                 enable = true;
                 initialUser = "dmitry";
               };
@@ -206,7 +206,7 @@
                   wayland.windowManager.hyprland.settings.monitor = ",preferred,auto,auto";
 
                   module.cli-tools.enable = true;
-                  module.display.enable = true;
+                  module.gui.enable = true;
                   module.editor.enable = true;
                 };
               };
