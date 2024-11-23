@@ -99,6 +99,10 @@ in
         '';
       };
 
+      vscode = {
+        enable = true;
+      };
+
       alacritty = {
         enable = true;
         settings = {

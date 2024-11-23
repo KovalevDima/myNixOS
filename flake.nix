@@ -21,7 +21,6 @@
       inputs.nix-colors.homeManagerModules.default
       ./home/cli-tools.nix
       ./home/gui
-      ./home/editor.nix
     ];
     systemModules = [
       inputs.sops-nix.nixosModules.sops
@@ -125,7 +124,6 @@
 
                   module.cli-tools.enable = true;
                   module.gui.enable = true;
-                  module.editor.enable = true;
                 };
               };
             }
@@ -213,7 +211,6 @@
 
                   module.cli-tools.enable = true;
                   module.gui.enable = true;
-                  module.editor.enable = true;
                 };
               };
             }
