@@ -166,7 +166,7 @@ in
       settings = {
         exec-once = [
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-          "swww-daemon & sleep 1 && swww img ${./vim_wallpaper.webp}"
+          "swww-daemon & sleep 1 && swww img ${./wallpapers/vim.webp}"
           "swaynotificationcenter"
         ];
 
