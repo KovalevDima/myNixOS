@@ -13,19 +13,13 @@
       extraOptions = "experimental-features = nix-command flakes";
     };
 
-    environment.systemPackages = with pkgs; [
-      sops
-      age
-      git
-    ];
+    environment.systemPackages = with pkgs; [sops age git];
 
     programs = {
       direnv = {
         enable = true;
         loadInNixShell = true;
-        nix-direnv = {
-          enable = true;
-        };
+        nix-direnv.enable = true;
       };
     };
   };

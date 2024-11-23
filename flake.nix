@@ -21,7 +21,7 @@
       inputs.nix-colors.homeManagerModules.default
       ./home/telegram.nix
       ./home/cli-tools.nix
-      ./home/hyprland.nix
+      ./home/display
       ./home/editor.nix
       ./home/discord.nix
     ];
@@ -32,8 +32,6 @@
       ./system/i18n.nix
       ./system/unfreeSoftware.nix
       ./system/nix.nix
-      ./system/docker.nix
-      ./system/wireguard.nix
       ./system/k8s-dev.nix
     ];
   in {
@@ -52,7 +50,6 @@
                 defaultSopsFile = ./secrets.yaml;
                 secrets = {
                   "network/wireguardConfigFile" = {};
-                  "network/forwardingRules" = {};
                 };
               };
 
@@ -60,17 +57,17 @@
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
-              module.docker.enable = true;
               module.k8s-dev.enable = true;
-              module.wireguard = {
-                configFilepath = "${config.sops.secrets."network/wireguardConfigFile".path}";
-              };
-              module.hyprland =  {
+              module.display =  {
                 enable = true;
                 initialUser = "dmitry";
               };
 
-              networking.hostName = "desktop";
+              networking = {
+                hostName = "desktop";
+                wg-quick.interfaces.wg0.configFile = "${config.sops.secrets."network/wireguardConfigFile".path}";
+              };
+
               services.xserver.videoDrivers = ["nvidia"];
               services.udisks2.enable = true;
               services.openssh = {
@@ -126,7 +123,7 @@
                 module.telegram.enable = true;
                 module.discord.enable = true;
                 module.cli-tools.enable = true;
-                module.hyprland.enable = true;
+                module.display.enable = true;
                 module.editor.enable = true;
               };
             };
@@ -147,7 +144,6 @@
                 defaultSopsFile = ./secrets.yaml;
                 secrets = {
                   "network/wireguardConfigFile" = {};
-                  "network/forwardingRules" = {};
                 };
               };
 
@@ -155,16 +151,17 @@
               module.i18n.enable = true;
               module.unfreeSoftware.enable = true;
               module.nix.enable = true;
-              module.docker.enable = true;
               module.k8s-dev.enable = true;
-              module.hyprland =  {
+              module.display =  {
                 enable = true;
                 initialUser = "dmitry";
               };
-              module.wireguard.configFilepath = "${config.sops.secrets."network/wireguardConfigFile".path}";
-              networking.networkmanager.enable = true;
+              networking = {
+                hostName = "nixos";
+                networkmanager.enable = true;
+                wg-quick.interfaces.wg0.configFile = "${config.sops.secrets."network/wireguardConfigFile".path}";
+              };
 
-              networking.hostName = "nixos";
               boot.loader.systemd-boot.enable = true;
               boot.loader.efi.canTouchEfiVariables = true;
 
@@ -203,7 +200,7 @@
 
                 module.telegram.enable = true;
                 module.cli-tools.enable = true;
-                module.hyprland.enable = true;
+                module.display.enable = true;
                 module.editor.enable = true;
                 module.discord.enable = true;
               };

@@ -9,10 +9,10 @@ let
 in
 {
   options = {
-    module.hyprland.enable = lib.mkEnableOption "Enables configuration for display server";
+    module.display.enable = lib.mkEnableOption "Enables configuration for display server";
   };
 
-  config = lib.mkIf config.module.hyprland.enable {
+  config = lib.mkIf config.module.display.enable {
     programs = {
       waybar = {
         enable = true;
@@ -162,7 +162,7 @@ in
       settings = {
         exec-once = [
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-          "swww-daemon & sleep 1 && swww img ${./display/vim_wallpaper.webp}"
+          "swww-daemon & sleep 1 && swww img ${./vim_wallpaper.webp}"
           "swaynotificationcenter"
         ];
 

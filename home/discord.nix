@@ -10,7 +10,7 @@
   
   config = lib.mkIf config.module.discord.enable { 
     home.packages = [
-        pkgs.vesktop
+      pkgs.vesktop
     ];
   };
 }

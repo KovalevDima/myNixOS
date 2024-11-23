@@ -7,7 +7,7 @@
 
 {
   options = {
-    module.hyprland = {
+    module.display = {
       enable = lib.mkEnableOption "Enables display server";
       initialUser = lib.mkOption {
         type = lib.types.str;
@@ -17,7 +17,7 @@
     };
   };
 
-  config = lib.mkIf config.module.hyprland.enable {
+  config = lib.mkIf config.module.display.enable {
 
     hardware.graphics.enable = true;
 
@@ -28,7 +28,7 @@
       };
       displayManager.autoLogin = {
         enable = true;
-        user = "${config.module.hyprland.initialUser}";
+        user = "${config.module.display.initialUser}";
       };
       pipewire = {
         enable = true;
@@ -40,9 +40,7 @@
       };
     };
 
-    fonts.packages = [
-      pkgs.nerdfonts
-    ];
+    fonts.packages = [pkgs.nerdfonts];
 
     environment = {
       sessionVariables = {
@@ -72,14 +70,10 @@
       hyprland.enable = true;
     };
 
-    xdg = {
-      portal = {
-        enable = true;
-        xdgOpenUsePortal = true;
-        extraPortals = [
-          pkgs.xdg-desktop-portal-hyprland
-        ];
-      };
+    xdg.portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+      extraPortals = [pkgs.xdg-desktop-portal-hyprland];
     };
   };
 }

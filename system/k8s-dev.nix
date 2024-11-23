@@ -20,5 +20,7 @@
       minikube
       postgresql
     ];
+
+    virtualisation.docker.enable = true;
   };
 }
