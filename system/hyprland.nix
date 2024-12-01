@@ -40,7 +40,7 @@
       };
     };
 
-    fonts.packages = [pkgs.nerdfonts];
+    fonts.packages = [pkgs.nerd-fonts.hasklug];
 
     environment = {
       sessionVariables = {
