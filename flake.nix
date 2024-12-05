@@ -117,6 +117,8 @@
                     packages = with pkgs; [
                       telegram-desktop
                       vesktop
+                      yarn
+                      nodejs
                     ];
                   };
                   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
