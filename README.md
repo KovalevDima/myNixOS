@@ -28,7 +28,7 @@ Key features:
 - Modularization for configuring 2 hosts
 - Module with hyprland wayland compositor
 
-### [KovalevDima](https://github.com/KovalevDima/KovalevDima): <img width="24" src="./assets/programming-languages/nix.svg">
+### [KovalevDima](https://github.com/KovalevDima/KovalevDima): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
 Fixed point of this page repository link :)
 
 Key features:
