@@ -4,7 +4,6 @@ module Main where
 
 import GHC.IO.Encoding as Encoding (setLocaleEncoding, utf8)
 import Hakyll
-import System.FilePath
 
 configuration :: Configuration
 configuration = defaultConfiguration{providerDirectory = "./"}
