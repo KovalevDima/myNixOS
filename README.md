@@ -84,7 +84,7 @@ I have experience of `end-to-end development` and `team managment` which consist
 
 | date       |  status   | position                  | company    |
 |------------|-----------|---------------------------|------------|
-| 04.12.2024 | unchanged | Infrastructure Engineer   | EnerGO     |
+| 08.12.2024 | unchanged | Infrastructure Engineer   | EnerGO     |
 | 15.07.2024 | employed  | Infrastructure Engineer   | EnerGO     |
 | 05.07.2024 | quit      | -                         | GetShop.TV |
 | 01.07.2023 | promoted  | Lead Software Developer   | GetShop.TV |
