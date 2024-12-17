@@ -85,6 +85,7 @@
               environment.systemPackages = with pkgs; [
                 google-chrome
                 dig
+                nix-tree
               ];
 
               time.timeZone = "Europe/Moscow";
