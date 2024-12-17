@@ -49,6 +49,9 @@
           isNormalUser = true;
           description = "dmitry";
           extraGroups = [ "networkmanager" "wheel" "docker" ];
+          openssh.authorizedKeys.keys = [
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKlwdqhLRKjVCv6+DMxw3GiOCE2qK6o9I8Ed9OTTwVQG dmitry@nixos"
+          ];
         };
         environment.systemPackages = with pkgs; [
           google-chrome
