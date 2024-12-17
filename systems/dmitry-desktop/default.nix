@@ -13,7 +13,7 @@
         imports = systemModules;
         sops = {
           age.keyFile = "/root/.config/sops/age/keys.txt";
-          defaultSopsFile = ../../secrets.yaml;
+          defaultSopsFile = ../dmitry-secrets.yaml;
           secrets = {
             "network/wireguardConfigFile" = {};
           };
