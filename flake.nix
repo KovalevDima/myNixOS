@@ -11,11 +11,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     sops-nix.url = "github:Mic92/sops-nix";
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { nixpkgs, self, ... } @ inputs: 
+  outputs = { nixpkgs, self, disko, ... } @ inputs: 
   let
     systemModules = [
       inputs.sops-nix.nixosModules.sops
@@ -32,6 +37,8 @@
         (import ./systems/dmitry-desktop {inherit inputs systemModules;});
       laptop = inputs.nixpkgs.lib.nixosSystem
         (import ./systems/dmitry-laptop {inherit inputs systemModules;});
+      homeserver = inputs.nixpkgs.lib.nixosSystem
+        (import ./systems/dmitry-homeserver {inherit inputs systemModules disko;});
     };
   };
 }
