@@ -38,6 +38,10 @@
           ports = [22];
           settings.AllowUsers = null;
         };
+        programs.gnupg.agent = {
+          enable = true;
+          enableSSHSupport = true;
+        };
         hardware.nvidia = {
           modesetting.enable = true;
           nvidiaSettings = true;
@@ -56,6 +60,7 @@
         environment.systemPackages = with pkgs; [
           google-chrome
           dig
+          gnupg
           nix-tree
         ];
         time.timeZone = "Europe/Moscow";
