@@ -10,7 +10,6 @@ Telegram: [@onarainydayillwinanyway](https://t.me/onarainydayillwinanyway)
 ### [ClickHaskell](https://github.com/GetShopTV/ClickHaskell): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/databases/clickhouse.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
 
 ClickHouse driver for Haskell\
-Still under heavy development
 
 Key features:
 
