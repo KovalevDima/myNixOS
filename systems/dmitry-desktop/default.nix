@@ -80,11 +80,18 @@
               inputs.nix-colors.homeManagerModules.default
               ../../home/tui.nix
               ../../home/gui
-              ../../home/gui/obs-studio.nix
             ];
             programs = {
               home-manager.enable = true;
               vscode.enable = true;
+              obs-studio = {
+                enable = true;
+                plugins = with pkgs.obs-studio-plugins; [
+                  wlrobs
+                  obs-backgroundremoval
+                  obs-pipewire-audio-capture
+                ];
+              };
             };
             home = {
               homeDirectory = "/home/dmitry";
