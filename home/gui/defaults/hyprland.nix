@@ -19,7 +19,7 @@
       ];
 
       cursor = {
-        allow_dumb_copy = true;
+        use_cpu_buffer = true;
       };
 
       general = with config.colorScheme.palette; {
