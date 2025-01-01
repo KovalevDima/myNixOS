@@ -5,10 +5,7 @@
 }:
 
 {
-  options = {
-    module.gaming.enable = lib.mkEnableOption "Enables CLI tools packages";
-  };
-  config = lib.mkIf config.module.gaming.enable {
+  config = {
     programs.steam = {
       enable = true;
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play

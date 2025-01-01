@@ -5,10 +5,7 @@
 }:
 
 {
-  options = {
-    module.unfreeSoftware.enable = lib.mkEnableOption "Enables unfree software";
-  };
-  config = lib.mkIf config.module.unfreeSoftware.enable {
+  config = {
     nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
       "vscode"
       "yandex-cloud"

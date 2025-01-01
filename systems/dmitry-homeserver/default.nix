@@ -14,9 +14,6 @@
     (
       {inputs, config, pkgs, ...} : {
         imports = systemModules;
-        module.i18n.enable = true;
-        module.unfreeSoftware.enable = true;
-        module.nix.enable = true;
         networking = {
           hostName = "server";
         };
@@ -67,7 +64,6 @@
               ];
             };
             colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
-            module.tui.enable = true;
           };
         };
       }

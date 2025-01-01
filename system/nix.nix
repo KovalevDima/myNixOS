@@ -5,10 +5,7 @@
 }:
 
 {
-  options = {
-    module.nix.enable = lib.mkEnableOption "Enables nix settings";
-  };
-  config = lib.mkIf config.module.nix.enable {
+  config = {
     nix = {
       extraOptions = "experimental-features = nix-command flakes";
     };
@@ -16,6 +13,10 @@
     environment.systemPackages = with pkgs; [sops age git];
 
     programs = {
+      gnupg.agent = {
+        enable = true;
+        enableSSHSupport = true;
+      };
       direnv = {
         enable = true;
         loadInNixShell = true;

@@ -18,13 +18,7 @@
             "network/wireguardConfigFile" = {};
           };
         };
-        module.gaming.enable = true;
-        module.i18n.enable = true;
-        module.unfreeSoftware.enable = true;
-        module.nix.enable = true;
-        module.k8s-dev.enable = true;
         module.gui =  {
-          enable = true;
           initialUser = "dmitry";
         };
         networking = {
@@ -81,8 +75,6 @@
             };
             colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
             wayland.windowManager.hyprland.settings.monitor = ",preferred,auto,auto";
-            module.tui.enable = true;
-            module.gui.enable = true;
           };
         };
       }

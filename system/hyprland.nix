@@ -8,7 +8,6 @@
 {
   options = {
     module.gui = {
-      enable = lib.mkEnableOption "Enables gui server";
       initialUser = lib.mkOption {
         type = lib.types.str;
         default = "root";
@@ -17,8 +16,7 @@
     };
   };
 
-  config = lib.mkIf config.module.gui.enable {
-
+  config = {
     hardware.graphics.enable = true;
 
     services = {

@@ -34,11 +34,43 @@
   in {
     nixosConfigurations = {
       desktop = inputs.nixpkgs.lib.nixosSystem
-        (import ./systems/dmitry-desktop {inherit inputs systemModules;});
+        (import ./systems/dmitry-desktop
+          { inherit inputs;
+            systemModules = [
+              inputs.sops-nix.nixosModules.sops
+              ./system/hyprland.nix
+              ./system/gaming.nix
+              ./system/i18n.nix
+              ./system/unfreeSoftware.nix
+              ./system/nix.nix
+              ./system/k8s-dev.nix
+            ];
+          }
+        );
       laptop = inputs.nixpkgs.lib.nixosSystem
-        (import ./systems/dmitry-laptop {inherit inputs systemModules;});
+        (import ./systems/dmitry-laptop
+          { inherit inputs;
+            systemModules = [
+              inputs.sops-nix.nixosModules.sops
+              ./system/hyprland.nix
+              ./system/gaming.nix
+              ./system/i18n.nix
+              ./system/unfreeSoftware.nix
+              ./system/nix.nix
+              ./system/k8s-dev.nix
+            ];
+          }
+        );
       homeserver = inputs.nixpkgs.lib.nixosSystem
-        (import ./systems/dmitry-homeserver {inherit inputs systemModules disko;});
+        (import ./systems/dmitry-homeserver
+          { inherit inputs disko;
+            systemModules = [
+              inputs.sops-nix.nixosModules.sops
+              ./system/i18n.nix
+              ./system/nix.nix
+            ];
+          }
+        );
     };
   };
 }

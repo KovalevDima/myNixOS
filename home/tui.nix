@@ -9,11 +9,7 @@ let
   inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) vimThemeFromScheme;
 in
 {
-  options = {
-    module.tui.enable = lib.mkEnableOption "Enables CLI tools packages";
-  };
-
-  config = lib.mkIf config.module.tui.enable {
+  config = {
     programs.neovim = {
       enable = true;
       plugins = with pkgs.vimPlugins; [

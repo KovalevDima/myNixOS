@@ -5,10 +5,7 @@
 }:
 
 {
-  options = {
-    module.i18n.enable = lib.mkEnableOption "Enables internationalisation";
-  };
-  config = lib.mkIf config.module.i18n.enable {
+  config = {
     i18n.defaultLocale = "en_US.UTF-8";
 
     i18n.extraLocaleSettings = {

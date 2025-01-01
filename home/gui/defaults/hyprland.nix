@@ -1,15 +1,26 @@
 { lib
 , config
 , pkgs
+, inputs
 , ...
 }:
+let
+  inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) nixWallpaperFromScheme;
+in
 {
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
       exec-once = [
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "swww-daemon & sleep 1 && swww img ${../wallpapers/vim.webp}"
+        "swww-daemon & sleep 1 && swww img ${
+          nixWallpaperFromScheme {
+            scheme = config.colorScheme;
+            width = 2560;
+            height = 1440;
+            logoScale = 5.0;
+          }
+        }"
         "swaynotificationcenter"
       ];
 

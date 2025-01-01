@@ -18,13 +18,7 @@
             "network/wireguardConfigFile" = {};
           };
         };
-        module.gaming.enable = true;
-        module.i18n.enable = true;
-        module.unfreeSoftware.enable = true;
-        module.nix.enable = true;
-        module.k8s-dev.enable = true;
         module.gui =  {
-          enable = true;
           initialUser = "dmitry";
         };
         networking = {
@@ -37,10 +31,6 @@
           enable = true;
           ports = [22];
           settings.AllowUsers = null;
-        };
-        programs.gnupg.agent = {
-          enable = true;
-          enableSSHSupport = true;
         };
         hardware.nvidia = {
           modesetting.enable = true;
@@ -60,7 +50,6 @@
         environment.systemPackages = with pkgs; [
           google-chrome
           dig
-          gnupg
           nix-tree
         ];
         time.timeZone = "Europe/Moscow";
@@ -108,8 +97,6 @@
               "DP-1, 2560x1440@165, 0x0, 1"
               "DP-2, 2560x1440@165, 2560x0, 1"
             ];
-            module.tui.enable = true;
-            module.gui.enable = true;
           };
         };
       }
