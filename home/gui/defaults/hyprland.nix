@@ -18,7 +18,7 @@ in
             scheme = config.colorScheme;
             width = 2560;
             height = 1440;
-            logoScale = 5.0;
+            logoScale = 15.0;
           }
         }"
         "swaynotificationcenter"
