@@ -21,17 +21,7 @@
   };
 
   outputs = { nixpkgs, self, disko, ... } @ inputs: 
-  let
-    systemModules = [
-      inputs.sops-nix.nixosModules.sops
-      ./system/hyprland.nix
-      ./system/gaming.nix
-      ./system/i18n.nix
-      ./system/unfreeSoftware.nix
-      ./system/nix.nix
-      ./system/k8s-dev.nix
-    ];
-  in {
+  {
     nixosConfigurations = {
       desktop = inputs.nixpkgs.lib.nixosSystem
         (import ./systems/dmitry-desktop
