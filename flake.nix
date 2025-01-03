@@ -41,7 +41,6 @@
               ./system/hyprland.nix
               ./system/gaming.nix
               ./system/i18n.nix
-              ./system/unfreeSoftware.nix
               ./system/nix.nix
               ./system/k8s-dev.nix
             ];
@@ -55,7 +54,6 @@
               ./system/hyprland.nix
               ./system/gaming.nix
               ./system/i18n.nix
-              ./system/unfreeSoftware.nix
               ./system/nix.nix
               ./system/k8s-dev.nix
             ];

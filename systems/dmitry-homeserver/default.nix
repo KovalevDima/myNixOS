@@ -38,6 +38,17 @@
         environment.systemPackages = with pkgs; [
           dig
         ];
+        nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+          "vscode"
+          "yandex-cloud"
+          "google-chrome"
+          "telegram-desktop"
+          "discord"
+          "steam"
+          "steam-original"
+          "steam-run"
+          "steam-unwrapped"
+        ];
         time.timeZone = "Europe/Moscow";
         # Before changing this value read the documentation for this option
         # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
