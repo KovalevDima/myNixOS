@@ -9,7 +9,7 @@
     (import ./hardware.nix)
     inputs.home-manager.nixosModules.home-manager
     (
-      {inputs, config, pkgs, ...} : {
+      {inputs, config, pkgs, lib, ...} : {
         imports = systemModules;
         sops = {
           age.keyFile = "/root/.config/sops/age/keys.txt";
@@ -20,6 +20,12 @@
         };
         module.gui =  {
           initialUser = "dmitry";
+        };
+        programs.steam = {
+          enable = true;
+          remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+          dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+          localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
         };
         networking = {
           hostName = "desktop";
@@ -93,12 +99,6 @@
                   obs-backgroundremoval
                   obs-pipewire-audio-capture
                 ];
-              };
-              steam = {
-                enable = true;
-                remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-                dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-                localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
               };
             };
             home = {

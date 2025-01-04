@@ -29,7 +29,6 @@
             systemModules = [
               inputs.sops-nix.nixosModules.sops
               ./system/hyprland.nix
-              ./system/gaming.nix
               ./system/i18n.nix
               ./system/nix.nix
               ./system/k8s-dev.nix
@@ -42,7 +41,6 @@
             systemModules = [
               inputs.sops-nix.nixosModules.sops
               ./system/hyprland.nix
-              ./system/gaming.nix
               ./system/i18n.nix
               ./system/nix.nix
               ./system/k8s-dev.nix

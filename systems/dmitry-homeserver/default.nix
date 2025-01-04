@@ -9,7 +9,7 @@
   modules = [
     disko.nixosModules.disko
     (import ./disk-config.nix)
-    (import ./hardware-configuration.nix)
+    (import ./hardware.nix)
     inputs.home-manager.nixosModules.home-manager
     (
       {inputs, config, pkgs, ...} : {
