@@ -8,7 +8,7 @@ let
   inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme;
 in
 {
-  imports = map (def: ./defaults/${def}) (builtins.attrNames (builtins.readDir ./defaults));
+  imports = map (def: ./gui/${def}) (builtins.attrNames (builtins.readDir ./gui));
 
   config = {
     gtk = {

@@ -87,7 +87,7 @@
             imports = [
               inputs.nix-colors.homeManagerModules.default
               ../../home/tui.nix
-              ../../home/gui
+              ../../home/gui.nix
             ];
             programs = {
               home-manager.enable = true;
