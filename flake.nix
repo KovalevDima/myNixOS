@@ -25,7 +25,7 @@
   {
     nixosConfigurations = {
       desktop = inputs.nixpkgs.lib.nixosSystem
-        (import ./systems/dmitry-desktop
+        (import ./systems/desktop
           { inherit inputs;
             systemModules = [
               inputs.sops-nix.nixosModules.sops
@@ -42,7 +42,7 @@
           }
         );
       laptop = inputs.nixpkgs.lib.nixosSystem
-        (import ./systems/dmitry-laptop
+        (import ./systems/laptop
           { inherit inputs;
             systemModules = [
               inputs.sops-nix.nixosModules.sops
@@ -59,7 +59,7 @@
           }
         );
       homeserver = inputs.nixpkgs.lib.nixosSystem
-        (import ./systems/dmitry-homeserver
+        (import ./systems/homeserver
           { inherit inputs disko;
             systemModules = [
               inputs.sops-nix.nixosModules.sops
