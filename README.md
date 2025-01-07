@@ -7,7 +7,6 @@ In repository you can find:
 
 1. Source code for personal page
 2. My NixOS machines configuration
-3. 
 
 ```text
 ├personal-page/      Personal page source code
