@@ -19,23 +19,17 @@ Key features:
 - Always up-to-date documentation
 - Well automated contribution environment
 
-### [myNixOS](https://github.com/KovalevDima/myNixOS): <img width="24" src="./assets/programming-languages/nix.svg">
-My NixOS configuration flake
-
-Key features:
-
-- Modularization for configuring 3 hosts
-- Hyprland wayland compositor suitable for gaming
-- Wireguard VPN configuration hidden via sops
-
 
 ### [KovalevDima](https://github.com/KovalevDima/KovalevDima): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
-Fixed point of this page repository link :)
+Home infrastructure code and personal page source code
 
 Key features:
 
 - CI/CD with GitHub pages hosting
 - Hakyll static compiler from Markdown to HTML
+- Modularization for configuring 3 hosts
+- Hyprland wayland compositor suitable for gaming
+- Wireguard VPN configuration hidden via sops
 
 
 
