@@ -14,7 +14,7 @@ build-type:      Simple
 data-files:
   ./README.md
   ./assets/**/*.svg
-  ./templates/*.html
+  ./*.html
 
 executable compiler
   default-language: GHC2021

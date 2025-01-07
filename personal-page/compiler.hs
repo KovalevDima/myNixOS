@@ -6,7 +6,7 @@ import GHC.IO.Encoding as Encoding (setLocaleEncoding, utf8)
 import Hakyll
 
 configuration :: Configuration
-configuration = defaultConfiguration{providerDirectory = "./"}
+configuration = defaultConfiguration{providerDirectory = "./personal-page/"}
 
 compiler :: IO ()
 compiler = do
@@ -17,11 +17,11 @@ compiler = do
       route (constRoute "index.html")
       compile $
         pandocCompiler
-          >>= loadAndApplyTemplate "./templates/main.html" defaultContext
+          >>= loadAndApplyTemplate "./main.html" defaultContext
           >>= relativizeUrls
 
     match "assets/**" $ do
         route idRoute
         compile copyFileCompiler
 
-    match "templates/**" $ compile templateCompiler
+    match "main.html" $ compile templateCompiler
