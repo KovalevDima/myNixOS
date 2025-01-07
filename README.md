@@ -11,13 +11,13 @@
  └dmitry-secrets.yaml
 ```
 
-## home/
+## modules/home/
 Home manager modules
 
-## system/
+## modules/system/
 System modules
 
-## systems/
+## systems/*/
 
 **systems/*/default.nix**: Full system configuration
 
