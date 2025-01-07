@@ -1,3 +1,5 @@
+Source code was moved to https://github.com/KovalevDima/KovalevDima
+
 # myNixOS
 
 ```text
