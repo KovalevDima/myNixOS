@@ -1,12 +1,30 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    nixpkgs.follows = "unstable";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    sops-nix.url = "github:Mic92/sops-nix";
+    nix-colors.url = "github:misterio77/nix-colors";
+    nix-bitcoin.url = "github:fort-nix/nix-bitcoin";
+
     flake-parts.url = "github:hercules-ci/flake-parts";
     haskell-flake.url = "github:srid/haskell-flake";
   };
-  outputs = inputs@{ self, nixpkgs, flake-parts, ... }:
+
+  outputs = { self, nixpkgs, flake-parts, disko, ... } @ inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = nixpkgs.lib.systems.flakeExposed;
+      systems = [ "x86_64-linux" ];
       imports = [ inputs.haskell-flake.flakeModule ];
 
       perSystem = { self', pkgs, lib, ... }: {
@@ -34,6 +52,60 @@
         };
         # haskell-flake doesn't set the default package, but you can do it here.
         packages.default = self'.packages.example;
+      };
+  }
+  //
+  {
+    nixosConfigurations = {
+      desktop = inputs.nixpkgs.lib.nixosSystem
+        (import ./systems/desktop
+          { inherit inputs;
+            systemModules = [
+              inputs.sops-nix.nixosModules.sops
+              ./modules/system/hyprland.nix
+              ./modules/system/i18n.nix
+              ./modules/system/nix.nix
+              ./modules/system/k8s-dev.nix
+            ];
+            homeModules = [
+              inputs.nix-colors.homeManagerModules.default
+              ./modules/home/tui.nix
+              ./modules/home/gui.nix
+            ];
+          }
+        );
+      laptop = inputs.nixpkgs.lib.nixosSystem
+        (import ./systems/laptop
+          { inherit inputs;
+            systemModules = [
+              inputs.sops-nix.nixosModules.sops
+              ./modules/hyprland.nix
+              ./modules/i18n.nix
+              ./modules/nix.nix
+              ./modules/k8s-dev.nix
+            ];
+            homeModules = [
+              inputs.nix-colors.homeManagerModules.default
+              ./modules/home/tui.nix
+              ./modules/home/gui.nix
+            ];
+          }
+        );
+      homeserver = inputs.nixpkgs.lib.nixosSystem
+        (import ./systems/homeserver
+          { inherit inputs disko;
+            systemModules = [
+              inputs.sops-nix.nixosModules.sops
+              inputs.nix-bitcoin.nixosModules.default
+              ./modules/system/i18n.nix
+              ./modules/system/nix.nix
+            ];
+            homeModules = [
+              inputs.nix-colors.homeManagerModules.default
+              ./modules/home/tui.nix
+            ];
+          }
+        );
       };
     };
 }
