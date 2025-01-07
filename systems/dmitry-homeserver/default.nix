@@ -1,5 +1,6 @@
 { inputs
 , systemModules
+, homeModules
 , disko
 , ...
 }:
@@ -55,10 +56,7 @@
           useUserPackages = true;
           extraSpecialArgs = {inherit inputs;};
           users.dmitry = {
-            imports = [
-              inputs.nix-colors.homeManagerModules.default
-              ../../home/tui.nix
-            ];
+            imports = homeModules;
             home = {
               homeDirectory = "/home/dmitry";
               stateVersion = "24.05";

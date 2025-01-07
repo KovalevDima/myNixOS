@@ -29,10 +29,15 @@
           { inherit inputs;
             systemModules = [
               inputs.sops-nix.nixosModules.sops
-              ./system/hyprland.nix
-              ./system/i18n.nix
-              ./system/nix.nix
-              ./system/k8s-dev.nix
+              ./modules/system/hyprland.nix
+              ./modules/system/i18n.nix
+              ./modules/system/nix.nix
+              ./modules/system/k8s-dev.nix
+            ];
+            homeModules = [
+              inputs.nix-colors.homeManagerModules.default
+              ./modules/home/tui.nix
+              ./modules/home/gui.nix
             ];
           }
         );
@@ -41,10 +46,15 @@
           { inherit inputs;
             systemModules = [
               inputs.sops-nix.nixosModules.sops
-              ./system/hyprland.nix
-              ./system/i18n.nix
-              ./system/nix.nix
-              ./system/k8s-dev.nix
+              ./modules/hyprland.nix
+              ./modules/i18n.nix
+              ./modules/nix.nix
+              ./modules/k8s-dev.nix
+            ];
+            homeModules = [
+              inputs.nix-colors.homeManagerModules.default
+              ./modules/home/tui.nix
+              ./modules/home/gui.nix
             ];
           }
         );
@@ -54,8 +64,12 @@
             systemModules = [
               inputs.sops-nix.nixosModules.sops
               inputs.nix-bitcoin.nixosModules.default
-              ./system/i18n.nix
-              ./system/nix.nix
+              ./modules/system/i18n.nix
+              ./modules/system/nix.nix
+            ];
+            homeModules = [
+              inputs.nix-colors.homeManagerModules.default
+              ./modules/home/tui.nix
             ];
           }
         );

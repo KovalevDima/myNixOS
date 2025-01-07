@@ -1,5 +1,6 @@
 { inputs
 , systemModules
+, homeModules
 , ...
 }:
 {
@@ -84,11 +85,7 @@
           useUserPackages = true;
           extraSpecialArgs = {inherit inputs;};
           users.dmitry = {
-            imports = [
-              inputs.nix-colors.homeManagerModules.default
-              ../../home/tui.nix
-              ../../home/gui.nix
-            ];
+            imports = homeModules;
             programs = {
               home-manager.enable = true;
               vscode.enable = true;
