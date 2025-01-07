@@ -18,6 +18,7 @@
 
     sops-nix.url = "github:Mic92/sops-nix";
     nix-colors.url = "github:misterio77/nix-colors";
+    nix-bitcoin.url = "github:fort-nix/nix-bitcoin";
   };
 
   outputs = { nixpkgs, self, disko, ... } @ inputs: 
@@ -52,6 +53,7 @@
           { inherit inputs disko;
             systemModules = [
               inputs.sops-nix.nixosModules.sops
+              inputs.nix-bitcoin.nixosModules.default
               ./system/i18n.nix
               ./system/nix.nix
             ];

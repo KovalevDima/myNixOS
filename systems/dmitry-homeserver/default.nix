@@ -14,10 +14,7 @@
     (
       {inputs, config, pkgs, ...} : {
         imports = systemModules;
-        networking = {
-          hostName = "server";
-        };
-        services.udisks2.enable = true;
+        networking.hostName = "server";
         services.openssh = {
           enable = true;
           ports = [22];
@@ -29,6 +26,13 @@
           openssh.authorizedKeys.keys = [
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAMRId+WDlD6u83HZx62o0PrCS0aZSnSJT5kXbKI9CaV dmitry@desktop"
           ];
+        };
+        services.bitcoind.enable = true;
+        services.clightning.enable = true;
+        nix-bitcoin.generateSecrets = true;
+        nix-bitcoin.operator = {
+          enable = true;
+          name = "dmitry";
         };
         users.users.dmitry = {
           isNormalUser = true;
@@ -58,10 +62,7 @@
             home = {
               homeDirectory = "/home/dmitry";
               stateVersion = "24.05";
-              packages = with pkgs; [
-                yarn
-                nodejs
-              ];
+              packages = with pkgs; [];
             };
             colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
           };
