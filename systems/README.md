@@ -1,3 +1,13 @@
+## Deploy to remote NixOS machine after installation
+
+```bash
+nixos-rebuild \
+    --flake .#homeserver \
+    --target-host root@192.168.0.213 \
+    switch
+```
+
+
 ## Remote machine NixOS installation
 ```bash
 export PASS= #Enter your password here

@@ -16,6 +16,7 @@
       {inputs, config, pkgs, ...} : {
         imports = systemModules;
         networking.hostName = "server";
+        networking.firewall.allowedTCPPorts = [ config.services.btcpayserver.port ];
         services.openssh = {
           enable = true;
           ports = [22];
@@ -33,6 +34,11 @@
           prune = 10000;
         };
         services.clightning.enable = true;
+        services.btcpayserver = {
+          enable = true;
+          address = "0.0.0.0";
+        };
+        nix-bitcoin.nodeinfo.enable = true;
         nix-bitcoin.generateSecrets = true;
         nix-bitcoin.operator = {
           enable = true;
