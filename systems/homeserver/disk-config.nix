@@ -2,69 +2,58 @@
 {
   disko.devices = {
     disk = {
-      disk1 = {
-        device = lib.mkDefault "/dev/nvme0n1";
+      system = {
         type = "disk";
+        device = lib.mkDefault "/dev/nvme0n1";
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              name = "boot";
-              size = "1M";
-              type = "EF02";
-            };
             esp = {
-              name = "ESP";
               size = "500M";
               type = "EF00";
               content = {
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
+                mountOptions = [ "umask=0077" ];
               };
             };
-            root = {
-              name = "root";
+            luks = {
               size = "100%";
               content = {
-                type = "lvm_pv";
-                vg = "pool";
+                type = "luks";
+                name = "crypted";
+                settings.allowDiscards = true;
+                passwordFile = "/tmp/disk.key";
+                content = {
+                  type = "filesystem";
+                  format = "ext4";
+                  mountpoint = "/";
+                };
               };
             };
           };
         };
       };
       disk2 = {
-        device = "/dev/sda";
         type = "disk";
+        device = "/dev/sda";
         content = {
           type = "gpt";
           partitions = {
-            root = {
-              name = "root";
+            luks2 = {
               size = "100%";
               content = {
-                type = "lvm_pv";
-                vg = "pool";
+                type = "luks";
+                name = "crypted2";
+                settings.allowDiscards = true;
+                passwordFile = "/tmp/disk.key";
+                content = {
+                  type = "filesystem";
+                  format = "ext4";
+                  mountpoint = "/data";
+                };
               };
-            };
-          };
-        };
-      };
-    };
-    lvm_vg = {
-      pool = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
-            content = {
-              type = "filesystem";
-              format = "ext4";
-              mountpoint = "/";
-              mountOptions = [
-                "defaults"
-              ];
             };
           };
         };

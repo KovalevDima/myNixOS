@@ -28,7 +28,10 @@
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAMRId+WDlD6u83HZx62o0PrCS0aZSnSJT5kXbKI9CaV dmitry@desktop"
           ];
         };
-        services.bitcoind.enable = true;
+        services.bitcoind = {
+          enable = true;
+          dataDir = "/data/bitcoind";
+        };
         services.clightning.enable = true;
         nix-bitcoin.generateSecrets = true;
         nix-bitcoin.operator = {
