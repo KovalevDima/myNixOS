@@ -35,29 +35,6 @@
           };
         };
       };
-      disk2 = {
-        type = "disk";
-        device = "/dev/sda";
-        content = {
-          type = "gpt";
-          partitions = {
-            luks2 = {
-              size = "100%";
-              content = {
-                type = "luks";
-                name = "crypted2";
-                settings.allowDiscards = true;
-                passwordFile = "/tmp/disk.key";
-                content = {
-                  type = "filesystem";
-                  format = "ext4";
-                  mountpoint = "/data";
-                };
-              };
-            };
-          };
-        };
-      };
     };
   };
 }

@@ -30,7 +30,7 @@
         };
         services.bitcoind = {
           enable = true;
-          dataDir = "/data/bitcoind";
+          prune = 10000;
         };
         services.clightning.enable = true;
         nix-bitcoin.generateSecrets = true;
