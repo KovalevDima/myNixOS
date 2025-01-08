@@ -26,10 +26,11 @@ Home infrastructure code and personal page source code
 Key features:
 
 - CI/CD with GitHub pages hosting
-- Hakyll static compiler from Markdown to HTML
 - Modularization for configuring 3 hosts
 - Hyprland wayland compositor suitable for gaming
 - Wireguard VPN configuration hidden via sops
+- Full disk encryption
+- Bitcoin node server
 
 
 
