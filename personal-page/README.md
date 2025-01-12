@@ -7,6 +7,9 @@ Telegram: [@onarainydayillwinanyway](https://t.me/onarainydayillwinanyway)
 
 ## My opensource projects
 
+<div class="projects">
+
+<div class="project">
 ### [ClickHaskell](https://github.com/GetShopTV/ClickHaskell): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/databases/clickhouse.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
 
 ClickHouse driver for Haskell
@@ -18,8 +21,9 @@ Key features:
 - High level developer friendly API
 - Always up-to-date documentation
 - Well automated contribution environment
+</div>
 
-
+<div class="project">
 ### [KovalevDima](https://github.com/KovalevDima/KovalevDima): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
 Home infrastructure code and personal page source code
 
@@ -31,7 +35,9 @@ Key features:
 - Wireguard VPN configuration hidden via sops
 - Full disk encryption
 - Bitcoin node server
+</div>
 
+</div>
 
 
 
