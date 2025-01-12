@@ -10,13 +10,14 @@ Telegram: [@onarainydayillwinanyway](https://t.me/onarainydayillwinanyway)
 <div class="projects">
 
 <div class="project">
+
 ### [ClickHaskell](https://github.com/GetShopTV/ClickHaskell): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/databases/clickhouse.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
 
 ClickHouse driver for Haskell
 
 Key features:
 
-- Native protocol for efficient resources utilisation
+- Native protocol implementation
 - Very low dependency footprint
 - High level developer friendly API
 - Always up-to-date documentation
@@ -24,14 +25,15 @@ Key features:
 </div>
 
 <div class="project">
+
 ### [KovalevDima](https://github.com/KovalevDima/KovalevDima): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
-Home infrastructure code and personal page source code
+Home infrastructure and personal page source code
 
 Key features:
 
 - CI/CD with GitHub pages hosting
 - Modularization for configuring 3 hosts
-- Hyprland wayland compositor suitable for gaming
+- Hyprland wayland compositor
 - Wireguard VPN configuration hidden via sops
 - Full disk encryption
 - Bitcoin node server
