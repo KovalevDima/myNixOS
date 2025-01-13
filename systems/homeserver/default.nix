@@ -33,16 +33,17 @@
           enable = true;
           prune = 10000;
         };
-        services.clightning.enable = true;
         services.btcpayserver = {
           enable = true;
           address = "0.0.0.0";
         };
-        nix-bitcoin.nodeinfo.enable = true;
-        nix-bitcoin.generateSecrets = true;
-        nix-bitcoin.operator = {
-          enable = true;
-          name = "dmitry";
+        nix-bitcoin = {
+          nodeinfo.enable = true;
+          generateSecrets = true;
+          operator = {
+            enable = true;
+            name = "dmitry";
+          };
         };
         users.users.dmitry = {
           isNormalUser = true;
