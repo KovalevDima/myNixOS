@@ -27,13 +27,30 @@
       systems = [ "x86_64-linux" ];
       imports = [ inputs.haskell-flake.flakeModule ];
 
-      perSystem = { self', pkgs, lib, ... }: {
+      perSystem = { self', pkgs, lib, config, ... }: {
 
         haskellProjects.default = {
-          projectRoot = ./personal-page;
-          devShell = {
-            tools = hp: { fourmolu = hp.fourmolu; ghcid = null; };
+          autoWire = [ "packages" ];
+          projectRoot = ./.;
+          settings = {
+            unification-fd = {
+              broken = false;
+            };
+            autoapply = {
+              jailbreak = true;
+              check = false;
+            };
+            graphics = {
+              justStaticExecutables = true;
+              extraBuildDepends = [ pkgs.glslang ];
+            };
           };
+        };
+        devShells.default = pkgs.mkShell {
+          inputsFrom = [
+            config.haskellProjects.default.outputs.devShell
+          ];
+          packages = with pkgs; [ glslang ];
         };
 
         packages."personal-page" = pkgs.stdenv.mkDerivation {
@@ -50,8 +67,6 @@
             cp -r ./_site "$out"
           '';
         };
-        # haskell-flake doesn't set the default package, but you can do it here.
-        packages.default = self'.packages.example;
       };
   }
   //

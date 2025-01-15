@@ -1,0 +1,32 @@
+cabal-version:   3.0
+
+name:            graphics
+version:         0.1.0.0
+author:          Kovalev Dmitry
+maintainer:      joe@example.com
+
+license:         BSD-3-Clause
+license-file:    ./LICENSE
+copyright:       2024 Kovalev Dmitry
+
+build-type:      Simple
+
+executable graphics
+  main-is: graphics.hs
+  hs-source-dirs: .
+  ghc-options: -Wall -O2 -threaded -rtsopts -main-is graphics -with-rtsopts=-N
+  build-depends:
+      JuicyPixels
+    , VulkanMemoryAllocator
+    , autoapply >=0.4
+    , base <5
+    , bytestring
+    , resourcet
+    , safe-exceptions
+    , say
+    , text
+    , transformers
+    , vector
+    , vulkan
+    , vulkan-utils
+  default-language: GHC2021
