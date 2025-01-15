@@ -10,6 +10,7 @@ In repository you can find:
 
 ```text
 ├personal-page/      Personal page source code
+├graphics/           My own graphics related applications
 ├modules/
 |├home/              Home manager modules
 |└system/            System modules
