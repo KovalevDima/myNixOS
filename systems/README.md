@@ -7,6 +7,12 @@ nixos-rebuild \
     switch
 ```
 
+```bash
+nixos-rebuild \
+    --flake .#laptop \
+    --target-host root@192.168.0.147 \
+    switch
+```
 
 ## Remote machine NixOS installation
 ```bash

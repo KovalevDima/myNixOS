@@ -16,7 +16,7 @@
           age.keyFile = "/root/.config/sops/age/keys.txt";
           defaultSopsFile = ../../secrets.yaml;
           secrets = {
-            "network/wireguardConfigFile" = {};
+            "network/wireguardConfigFile2" = {};
           };
         };
         module.gui =  {
@@ -36,7 +36,12 @@
           dhcpcd.enable = false;
           dhcpcd.extraConfig = "nohook resolv.conf";
           nameservers = [ "8.8.8.8" "8.8.4.4"];
-          wg-quick.interfaces.wg0.configFile = "${config.sops.secrets."network/wireguardConfigFile".path}";
+          wg-quick.interfaces.wg0.configFile = "${config.sops.secrets."network/wireguardConfigFile2".path}";
+        };
+        users.users.root = {
+          openssh.authorizedKeys.keys = [
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAMRId+WDlD6u83HZx62o0PrCS0aZSnSJT5kXbKI9CaV dmitry@desktop"
+          ];
         };
         services.resolved.enable = false;
         boot.loader.systemd-boot.enable = true;
