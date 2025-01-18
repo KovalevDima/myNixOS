@@ -16,13 +16,11 @@
 module Main (graphics)
 where
 
-import AutoApply                    (autoapplyDecs)
 import Codec.Picture                as JP (Image, PixelRGBA8 (..), withImage, encodePng)
-import Control.Exception.Safe       (finally, throwString, MonadCatch, MonadMask, MonadThrow)
+import Control.Exception.Safe       (finally, throwString, MonadThrow)
 import Control.Monad.IO.Class       (MonadIO(..))
 import Control.Monad.Trans.Maybe    (MaybeT(..))
-import Control.Monad.Trans.Reader   (ReaderT(..))
-import Control.Monad.Trans.Resource (MonadResource(..), allocate, ResourceT, runResourceT)
+import Control.Monad.Trans.Resource (MonadResource(..), allocate, runResourceT)
 import Data.Bits                    (zeroBits, (.|.), (.&.))
 import Data.ByteString.Lazy         as BSL (writeFile)
 import Data.Foldable                (Foldable(toList), for_, maximumBy)
@@ -55,51 +53,6 @@ import VulkanMemoryAllocator         as VMA hiding (getPhysicalDeviceProperties)
 import VulkanMemoryAllocator         as AllocationCreateInfo (AllocationCreateInfo(..))
 
 ----------------------------------------------------------------
--- Define the monad in which most of the program will run
-----------------------------------------------------------------
-
--- | @V@ keeps track of a bunch of "global" handles and performs resource
--- management.
-newtype V a = V { unV :: ReaderT () (ResourceT IO) a }
-  deriving newtype (Functor, Applicative, Monad, MonadFail, MonadThrow, MonadCatch, MonadMask, MonadIO, MonadResource)
-
-runV :: V a -> ResourceT IO a
-runV v =
-  runReaderT (unV v) ()
-
--- Getters for global handles
-
-noAllocationCallbacks :: Maybe AllocationCallbacks
-noAllocationCallbacks = Nothing
-
---
--- Wrap a bunch of Vulkan commands so that they automatically pull global
--- handles from 'V'
---
--- Wrapped functions are suffixed with "'"
---
-autoapplyDecs
-  (<> "'")
-  [ 'noAllocationCallbacks
-  ]
-  -- Allocate doesn't subsume the continuation type on the "with" commands, so
-  -- put it in the unifying group.
-  ['allocate]
-  [ 'invalidateAllocation
-  , 'withBuffer
-  , 'withCommandBuffers
-  , 'withCommandPool
-  , 'withFence
-  , 'withComputePipelines
-  , 'withInstance
-  , 'withPipelineLayout
-  , 'withShaderModule
-  , 'withDescriptorPool
-  , 'allocateDescriptorSets
-  , 'withDescriptorSetLayout
-  ]
-
-----------------------------------------------------------------
 -- The program
 ----------------------------------------------------------------
 
@@ -107,7 +60,11 @@ graphics :: IO ()
 graphics = runResourceT $ do
   -- Create Instance, PhysicalDevice, Device and Allocator
   inst <- Main.createInstance
-  (pdi, phys) <- pickPhysicalDevice inst physicalDeviceInfo
+
+  (_, devs) <- enumeratePhysicalDevices inst
+  (pdi, phys) <- maximumBy (comparing fst) . catMaybes <$>
+    sequence [fmap (, d) <$> physicalDeviceInfo d | d <- toList devs]
+
   sayErr . ("Using device: " <>) . decodeUtf8 . deviceName
     =<< getPhysicalDeviceProperties phys
   let deviceQueueCreateInfo = 
@@ -135,16 +92,15 @@ graphics = runResourceT $ do
 
   -- Run our application
   -- Wait for the device to become idle before tearing down any resourecs.
-  runV
-    . (`finally` deviceWaitIdle dev)
+  (`finally` deviceWaitIdle dev)
     $ do
         image <- render dev pdi allocator
-        let filename = "julia.png"
-        sayErr $ "Writing " <> T.pack filename
-        liftIO $ BSL.writeFile filename (JP.encodePng image)
+        sayErr "Writing file"
+        liftIO $ BSL.writeFile "julia.png" (JP.encodePng image)
 
 -- Render the Julia set
-render :: Device -> PhysicalDeviceInfo -> Allocator -> V (JP.Image PixelRGBA8)
+render :: (MonadResource io, MonadThrow io, MonadFail io)
+  => Device -> PhysicalDeviceInfo -> Allocator -> io (JP.Image PixelRGBA8)
 render device pdi allocator = do
   -- Some things to reuse, make sure these are the same as the values in the
   -- compute shader. TODO: reduce this duplication.
@@ -158,7 +114,7 @@ render device pdi allocator = do
   --
   -- Use ALLOCATION_CREATE_MAPPED_BIT and MEMORY_USAGE_GPU_TO_CPU to make sure
   -- it's readable on the host and starts in the mapped state
-  (_, (buffer, bufferAllocation, bufferAllocationInfo)) <- withBuffer'
+  (_, (buffer, bufferAllocation, bufferAllocationInfo)) <- withBuffer
     allocator
     zero { size  = fromIntegral $ width * height * 4 * sizeOf (0 :: Float)
          , usage = BUFFER_USAGE_STORAGE_BUFFER_BIT
@@ -166,14 +122,17 @@ render device pdi allocator = do
     zero { AllocationCreateInfo.flags = ALLOCATION_CREATE_MAPPED_BIT
          , usage = MEMORY_USAGE_GPU_TO_CPU
          }
+    allocate
 
   -- Create a descriptor set and layout for this buffer
   (descriptorSet, descriptorSetLayout) <- do
-    (_, descriptorPool) <- withDescriptorPool' device zero
+    (_, descriptorPool) <- withDescriptorPool device zero
       { maxSets   = 1
       , poolSizes = [DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_BUFFER 1]
       }
-    (_, descriptorSetLayout) <- withDescriptorSetLayout' device zero
+      Nothing
+      allocate
+    (_, descriptorSetLayout) <- withDescriptorSetLayout device zero
       { bindings = [ zero { binding         = 0
                           , descriptorType  = DESCRIPTOR_TYPE_STORAGE_BUFFER
                           , descriptorCount = 1
@@ -181,11 +140,13 @@ render device pdi allocator = do
                           }
                    ]
       }
+      Nothing
+      allocate
 
     -- Allocate a descriptor set from the pool with that layout
     -- Don't use `withDescriptorSets` here as the set will be cleaned up when
     -- the pool is destroyed.
-    [descriptorSet] <- allocateDescriptorSets' device zero
+    [descriptorSet] <- allocateDescriptorSets device zero
       { descriptorPool = descriptorPool
       , setLayouts     = [descriptorSetLayout]
       }
@@ -204,24 +165,31 @@ render device pdi allocator = do
 
   -- Create our shader and compute pipeline
   shader              <- createShader device
-  (_, pipelineLayout) <- withPipelineLayout' device zero { PipelineLayoutCreateInfo.setLayouts = [descriptorSetLayout] }
+  (_, pipelineLayout) <- withPipelineLayout
+    device
+    zero{ PipelineLayoutCreateInfo.setLayouts = [descriptorSetLayout] }
+    Nothing
+    allocate
   let pipelineCreateInfo :: ComputePipelineCreateInfo '[]
       pipelineCreateInfo = zero { layout             = pipelineLayout
                                 , stage              = shader
                                 , basePipelineHandle = zero
                                 }
-  (_, (_, [computePipeline])) <- withComputePipelines'
-    device
-    zero
-    [SomeStruct pipelineCreateInfo]
+  (_, (_, [computePipeline])) <-
+    withComputePipelines device zero [SomeStruct pipelineCreateInfo] Nothing allocate
 
   -- Create a command buffer
-  (_, commandPool) <- withCommandPool' device zero{CommandPoolCreateInfo.queueFamilyIndex = pdiComputeQueueFamilyIndex pdi}
+  (_, commandPool) <- withCommandPool
+    device
+    zero{CommandPoolCreateInfo.queueFamilyIndex = pdiComputeQueueFamilyIndex pdi}
+    Nothing
+    allocate
 
   (_, [commandBuffer]) <-
-    withCommandBuffers'
+    withCommandBuffers
       device
       zero{commandPool = commandPool, level = COMMAND_BUFFER_LEVEL_PRIMARY, commandBufferCount = 1}
+      allocate
 
   -- Fill command buffer
   useCommandBuffer commandBuffer zero{CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} $
@@ -235,7 +203,7 @@ render device pdi allocator = do
       1
 
   -- Create a fence so we can know when render is finished
-  (_, fence) <- withFence' device zero
+  (_, fence) <- withFence device zero Nothing allocate
   -- Submit the command buffer and wait for it to execute
   let submitInfo =
         zero { commandBuffers = [commandBufferHandle commandBuffer] }
@@ -248,7 +216,7 @@ render device pdi allocator = do
 
   -- If the buffer allocation is not HOST_COHERENT this will ensure the changes
   -- are present on the CPU.
-  invalidateAllocation' allocator bufferAllocation 0 WHOLE_SIZE
+  invalidateAllocation allocator bufferAllocation 0 WHOLE_SIZE
 
   -- TODO: speed this bit up, it's hopelessly slow
   let pixelAddr :: Int -> Int -> Ptr (FixedArray 4 Float)
@@ -265,7 +233,7 @@ render device pdi allocator = do
     )
 
 -- | Create a compute shader
-createShader :: Device -> V (SomeStruct PipelineShaderStageCreateInfo)
+createShader :: MonadResource io => Device -> io (SomeStruct PipelineShaderStageCreateInfo)
 createShader device = do
   let compCode = [comp|
         #version 450
@@ -330,7 +298,7 @@ createShader device = do
           }
         }
       |]
-  (_, compModule) <- withShaderModule' device zero { code = compCode }
+  (_, compModule) <- withShaderModule device zero { code = compCode } Nothing allocate
   let compShaderStageCreateInfo = zero { stage   = SHADER_STAGE_COMPUTE_BIT
                                        , module' = compModule
                                        , name    = "main"
@@ -348,12 +316,11 @@ myApiVersion = API_VERSION_1_0
 createInstance :: MonadResource m => m Instance
 createInstance = do
   availableExtensionNames <-
-    toList
-    .   fmap extensionName
-    .   snd
+    toList . fmap extensionName . snd
     <$> enumerateInstanceExtensionProperties Nothing
   availableLayerNames <-
-    toList . fmap layerName . snd <$> enumerateInstanceLayerProperties
+    toList . fmap layerName . snd
+    <$> enumerateInstanceLayerProperties
 
   extensions <-
     partitionOptReq
@@ -385,27 +352,13 @@ createInstance = do
           ::& debugMessengerCreateInfo
           :&  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
           :&  ()
-  (_, inst) <- withInstance' instanceCreateInfo
+  (_, inst) <- withInstance instanceCreateInfo Nothing allocate
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   pure inst
 
 ----------------------------------------------------------------
 -- Physical device tools
 ----------------------------------------------------------------
-
--- | Get a single PhysicalDevice deciding with a scoring function
-pickPhysicalDevice
-  :: (MonadIO m, MonadThrow m, Ord a)
-  => Instance
-  -> (PhysicalDevice -> m (Maybe a))
-  -- ^ Some "score" for a PhysicalDevice, Nothing if it is not to be chosen.
-  -> m (a, PhysicalDevice)
-pickPhysicalDevice inst devScore = do
-  (_, devs) <- enumeratePhysicalDevices inst
-  scores    <- catMaybes <$> sequence [ fmap (, d) <$> devScore d | d <- toList devs ]
-  case scores of
-    [] -> throwString "Unable to find appropriate PhysicalDevice"
-    _  -> pure (maximumBy (comparing fst) scores)
 
 -- | The Ord instance prioritises devices with more memory
 data PhysicalDeviceInfo = PhysicalDeviceInfo
