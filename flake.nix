@@ -33,13 +33,6 @@
           autoWire = [ "packages" ];
           projectRoot = ./.;
           settings = {
-            unification-fd = {
-              broken = false;
-            };
-            autoapply = {
-              jailbreak = true;
-              check = false;
-            };
             graphics = {
               justStaticExecutables = true;
               extraBuildDepends = [ pkgs.glslang ];
