@@ -21,7 +21,7 @@ import Codec.Picture                as JP (Image, PixelRGBA8 (..), withImage, en
 import Control.Exception.Safe       (finally, throwString, MonadCatch, MonadMask, MonadThrow)
 import Control.Monad.IO.Class       (MonadIO(..))
 import Control.Monad.Trans.Maybe    (MaybeT(..))
-import Control.Monad.Trans.Reader   (asks, ReaderT(..))
+import Control.Monad.Trans.Reader   (ReaderT(..))
 import Control.Monad.Trans.Resource (MonadResource(..), allocate, ResourceT, runResourceT)
 import Data.Bits                    (zeroBits, (.|.), (.&.))
 import Data.ByteString.Lazy         as BSL (writeFile)
@@ -60,28 +60,14 @@ import VulkanMemoryAllocator         as AllocationCreateInfo (AllocationCreateIn
 
 -- | @V@ keeps track of a bunch of "global" handles and performs resource
 -- management.
-newtype V a = V { unV :: ReaderT GlobalHandles (ResourceT IO) a }
+newtype V a = V { unV :: ReaderT () (ResourceT IO) a }
   deriving newtype (Functor, Applicative, Monad, MonadFail, MonadThrow, MonadCatch, MonadMask, MonadIO, MonadResource)
 
-runV :: Instance -> PhysicalDevice -> Word32 -> Device -> Allocator -> V a -> ResourceT IO a
-runV ghInstance ghPhysicalDevice ghComputeQueueFamilyIndex ghDevice ghAllocator v =
-  runReaderT (unV v) GlobalHandles {..}
-
-data GlobalHandles = GlobalHandles
-  { ghInstance                :: Instance
-  , ghPhysicalDevice          :: PhysicalDevice
-  , ghDevice                  :: Device
-  , ghAllocator               :: Allocator
-  , ghComputeQueueFamilyIndex :: Word32
-  }
+runV :: V a -> ResourceT IO a
+runV v =
+  runReaderT (unV v) ()
 
 -- Getters for global handles
-
-getDevice :: V Device
-getDevice = V (asks ghDevice)
-
-getAllocator :: V Allocator
-getAllocator = V (asks ghAllocator)
 
 noAllocationCallbacks :: Maybe AllocationCallbacks
 noAllocationCallbacks = Nothing
@@ -94,18 +80,13 @@ noAllocationCallbacks = Nothing
 --
 autoapplyDecs
   (<> "'")
-  [ 'getDevice
-  , 'getAllocator
-  , 'noAllocationCallbacks
+  [ 'noAllocationCallbacks
   ]
   -- Allocate doesn't subsume the continuation type on the "with" commands, so
   -- put it in the unifying group.
   ['allocate]
   [ 'invalidateAllocation
   , 'withBuffer
-  , 'deviceWaitIdle
-  , 'getDeviceQueue
-  , 'waitForFences
   , 'withCommandBuffers
   , 'withCommandPool
   , 'withFence
@@ -116,7 +97,6 @@ autoapplyDecs
   , 'withDescriptorPool
   , 'allocateDescriptorSets
   , 'withDescriptorSetLayout
-  , 'updateDescriptorSets
   ]
 
 ----------------------------------------------------------------
@@ -155,17 +135,17 @@ graphics = runResourceT $ do
 
   -- Run our application
   -- Wait for the device to become idle before tearing down any resourecs.
-  runV inst phys (pdiComputeQueueFamilyIndex pdi) dev allocator
-    . (`finally` deviceWaitIdle')
+  runV
+    . (`finally` deviceWaitIdle dev)
     $ do
-        image <- render
+        image <- render dev pdi allocator
         let filename = "julia.png"
         sayErr $ "Writing " <> T.pack filename
         liftIO $ BSL.writeFile filename (JP.encodePng image)
 
 -- Render the Julia set
-render :: V (JP.Image JP.PixelRGBA8)
-render = do
+render :: Device -> PhysicalDeviceInfo -> Allocator -> V (JP.Image PixelRGBA8)
+render device pdi allocator = do
   -- Some things to reuse, make sure these are the same as the values in the
   -- compute shader. TODO: reduce this duplication.
   let width, height, workgroupX, workgroupY :: Int
@@ -179,6 +159,7 @@ render = do
   -- Use ALLOCATION_CREATE_MAPPED_BIT and MEMORY_USAGE_GPU_TO_CPU to make sure
   -- it's readable on the host and starts in the mapped state
   (_, (buffer, bufferAllocation, bufferAllocationInfo)) <- withBuffer'
+    allocator
     zero { size  = fromIntegral $ width * height * 4 * sizeOf (0 :: Float)
          , usage = BUFFER_USAGE_STORAGE_BUFFER_BIT
          }
@@ -188,11 +169,11 @@ render = do
 
   -- Create a descriptor set and layout for this buffer
   (descriptorSet, descriptorSetLayout) <- do
-    (_, descriptorPool) <- withDescriptorPool' zero
+    (_, descriptorPool) <- withDescriptorPool' device zero
       { maxSets   = 1
       , poolSizes = [DescriptorPoolSize DESCRIPTOR_TYPE_STORAGE_BUFFER 1]
       }
-    (_, descriptorSetLayout) <- withDescriptorSetLayout' zero
+    (_, descriptorSetLayout) <- withDescriptorSetLayout' device zero
       { bindings = [ zero { binding         = 0
                           , descriptorType  = DESCRIPTOR_TYPE_STORAGE_BUFFER
                           , descriptorCount = 1
@@ -204,14 +185,14 @@ render = do
     -- Allocate a descriptor set from the pool with that layout
     -- Don't use `withDescriptorSets` here as the set will be cleaned up when
     -- the pool is destroyed.
-    [descriptorSet] <- allocateDescriptorSets' zero
+    [descriptorSet] <- allocateDescriptorSets' device zero
       { descriptorPool = descriptorPool
       , setLayouts     = [descriptorSetLayout]
       }
     pure (descriptorSet, descriptorSetLayout)
 
   -- Assign the buffer in this descriptor set
-  updateDescriptorSets'
+  updateDescriptorSets device
     [ SomeStruct zero { dstSet          = descriptorSet
                       , dstBinding      = 0
                       , descriptorType  = DESCRIPTOR_TYPE_STORAGE_BUFFER
@@ -222,23 +203,24 @@ render = do
     []
 
   -- Create our shader and compute pipeline
-  shader              <- createShader
-  (_, pipelineLayout) <- withPipelineLayout' zero { PipelineLayoutCreateInfo.setLayouts = [descriptorSetLayout] }
+  shader              <- createShader device
+  (_, pipelineLayout) <- withPipelineLayout' device zero { PipelineLayoutCreateInfo.setLayouts = [descriptorSetLayout] }
   let pipelineCreateInfo :: ComputePipelineCreateInfo '[]
       pipelineCreateInfo = zero { layout             = pipelineLayout
                                 , stage              = shader
                                 , basePipelineHandle = zero
                                 }
   (_, (_, [computePipeline])) <- withComputePipelines'
+    device
     zero
     [SomeStruct pipelineCreateInfo]
 
   -- Create a command buffer
-  computeQueueFamilyIndex <- V (asks ghComputeQueueFamilyIndex)
-  (_, commandPool) <- withCommandPool' zero{CommandPoolCreateInfo.queueFamilyIndex = computeQueueFamilyIndex}
+  (_, commandPool) <- withCommandPool' device zero{CommandPoolCreateInfo.queueFamilyIndex = pdiComputeQueueFamilyIndex pdi}
 
   (_, [commandBuffer]) <-
     withCommandBuffers'
+      device
       zero{commandPool = commandPool, level = COMMAND_BUFFER_LEVEL_PRIMARY, commandBufferCount = 1}
 
   -- Fill command buffer
@@ -253,20 +235,20 @@ render = do
       1
 
   -- Create a fence so we can know when render is finished
-  (_, fence) <- withFence' zero
+  (_, fence) <- withFence' device zero
   -- Submit the command buffer and wait for it to execute
   let submitInfo =
         zero { commandBuffers = [commandBufferHandle commandBuffer] }
-  computeQueue <- getDeviceQueue' computeQueueFamilyIndex 0
+  computeQueue <- getDeviceQueue device (pdiComputeQueueFamilyIndex pdi) 0
   queueSubmit computeQueue [SomeStruct submitInfo] fence
   let fenceTimeout = 1e9 -- 1 second
-  waitForFences' [fence] True fenceTimeout >>= \case
+  waitForFences device [fence] True fenceTimeout >>= \case
     TIMEOUT -> throwString "Timed out waiting for compute"
     _       -> pure ()
 
   -- If the buffer allocation is not HOST_COHERENT this will ensure the changes
   -- are present on the CPU.
-  invalidateAllocation' bufferAllocation 0 WHOLE_SIZE
+  invalidateAllocation' allocator bufferAllocation 0 WHOLE_SIZE
 
   -- TODO: speed this bit up, it's hopelessly slow
   let pixelAddr :: Int -> Int -> Ptr (FixedArray 4 Float)
@@ -283,8 +265,8 @@ render = do
     )
 
 -- | Create a compute shader
-createShader :: V (SomeStruct PipelineShaderStageCreateInfo)
-createShader = do
+createShader :: Device -> V (SomeStruct PipelineShaderStageCreateInfo)
+createShader device = do
   let compCode = [comp|
         #version 450
         #extension GL_ARB_separate_shader_objects : enable
@@ -348,7 +330,7 @@ createShader = do
           }
         }
       |]
-  (_, compModule) <- withShaderModule' zero { code = compCode }
+  (_, compModule) <- withShaderModule' device zero { code = compCode }
   let compShaderStageCreateInfo = zero { stage   = SHADER_STAGE_COMPUTE_BIT
                                        , module' = compModule
                                        , name    = "main"
