@@ -80,6 +80,7 @@
           "nvidia-x11"
           "nvidia-settings"
         ];
+        i18n.defaultLocale = "en_US.UTF-8";
         time.timeZone = "Europe/Moscow";
         # Before changing this value read the documentation for this option
         # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).

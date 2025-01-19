@@ -71,7 +71,6 @@
             systemModules = [
               inputs.sops-nix.nixosModules.sops
               ./modules/system/hyprland.nix
-              ./modules/system/i18n.nix
               ./modules/system/nix.nix
             ];
             homeModules = [
@@ -87,7 +86,6 @@
             systemModules = [
               inputs.sops-nix.nixosModules.sops
               ./modules/system/hyprland.nix
-              ./modules/system/i18n.nix
               ./modules/system/nix.nix
             ];
             homeModules = [
@@ -103,7 +101,6 @@
             systemModules = [
               inputs.sops-nix.nixosModules.sops
               inputs.nix-bitcoin.nixosModules.default
-              ./modules/system/i18n.nix
               ./modules/system/nix.nix
             ];
             homeModules = [
