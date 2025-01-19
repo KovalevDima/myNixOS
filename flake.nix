@@ -75,7 +75,7 @@
             ];
             homeModules = [
               inputs.nix-colors.homeManagerModules.default
-              ./modules/home/tui.nix
+              ./modules/home/nvim.nix
               ./modules/home/gui.nix
             ];
           }
@@ -90,7 +90,7 @@
             ];
             homeModules = [
               inputs.nix-colors.homeManagerModules.default
-              ./modules/home/tui.nix
+              ./modules/home/nvim.nix
               ./modules/home/gui.nix
             ];
           }
@@ -105,7 +105,7 @@
             ];
             homeModules = [
               inputs.nix-colors.homeManagerModules.default
-              ./modules/home/tui.nix
+              ./modules/home/nvim.nix
             ];
           }
         );
