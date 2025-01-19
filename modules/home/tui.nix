@@ -30,26 +30,5 @@ in
         }
       ];
     };
-
-    home.packages = with pkgs; [
-      # system info
-      btop
-      fastfetch
-
-      # fun
-      cmatrix
-      cbonsai
-      ### cava
-
-      # files processing
-      gnutar
-      ffmpeg-full
-
-      # network
-      wget
-      tcpdump
-      tcpflow
-      termshark
-    ];
   };
 }

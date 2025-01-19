@@ -73,7 +73,6 @@
               ./modules/system/hyprland.nix
               ./modules/system/i18n.nix
               ./modules/system/nix.nix
-              ./modules/system/k8s-dev.nix
             ];
             homeModules = [
               inputs.nix-colors.homeManagerModules.default
@@ -90,7 +89,6 @@
               ./modules/system/hyprland.nix
               ./modules/system/i18n.nix
               ./modules/system/nix.nix
-              ./modules/system/k8s-dev.nix
             ];
             homeModules = [
               inputs.nix-colors.homeManagerModules.default

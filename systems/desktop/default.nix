@@ -58,7 +58,15 @@
           google-chrome
           dig
           nix-tree
+          k9s
+          kubernetes-helm
+          kubectl
+          yandex-cloud
+          awscli2
+          minikube
+          postgresql
         ];
+        virtualisation.docker.enable = true;
         nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
           "vscode"
           "yandex-cloud"
@@ -107,6 +115,18 @@
                 vesktop
                 yarn
                 nodejs
+                # system info
+                btop
+                fastfetch
+                # fun
+                cmatrix
+                cbonsai
+                cava
+                # files processing
+                gnutar
+                ffmpeg-full
+                # network
+                wget
               ];
             };
             colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
