@@ -124,7 +124,7 @@ graphics = runResourceT $ do
         (_, [commandBuffer]) <- withCommandBuffers device (commandBufferAllocateInfo commandPool) allocate
 
         -- Fill command buffer
-        useCommandBuffer commandBuffer zero{CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} $
+        useCommandBuffer commandBuffer сommandBufferBeginInfo $
           do
           cmdBindPipeline commandBuffer PIPELINE_BIND_POINT_COMPUTE computePipeline
           cmdBindDescriptorSets commandBuffer PIPELINE_BIND_POINT_COMPUTE pipelineLayout 0 [descriptorSet] []
@@ -138,9 +138,8 @@ graphics = runResourceT $ do
         (_, fence) <- withFence device zero Nothing allocate
 
         -- Submit the command buffer and wait for it to execute
-        let submitInfo = zero{commandBuffers = [commandBufferHandle commandBuffer]}
         computeQueue <- getDeviceQueue device (pdiComputeQueueFamilyIndex pdi) 0
-        queueSubmit computeQueue [SomeStruct submitInfo] fence
+        queueSubmit computeQueue [submitInfo commandBuffer] fence
 
         let fenceTimeout = 1e9 -- 1 second
         waitForFences device [fence] True fenceTimeout >>= \case
@@ -343,6 +342,12 @@ instanceCreateInfo layers extensions = zero
   ::& debugMessengerCreateInfo
   :&  ValidationFeaturesEXT [VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT] []
   :&  ()
+
+сommandBufferBeginInfo :: CommandBufferBeginInfo '[]
+сommandBufferBeginInfo = zero{CommandBufferBeginInfo.flags = COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT}
+
+submitInfo :: CommandBuffer -> SomeStruct SubmitInfo
+submitInfo commandBuffer = SomeStruct zero{commandBuffers = [commandBufferHandle commandBuffer]}
 
 ----------------------------------------------------------------
 -- Physical device tools
