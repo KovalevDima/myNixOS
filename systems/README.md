@@ -14,6 +14,10 @@ nixos-rebuild \
     switch
 ```
 
+```bash
+nixos-rebuild --flake .#homeserver --target-host root@boot.directory switch
+```
+
 ## Remote machine NixOS installation
 ```bash
 export PASS= #Enter your password here

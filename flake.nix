@@ -97,7 +97,7 @@
         );
       homeserver = inputs.nixpkgs.lib.nixosSystem
         (import ./systems/homeserver
-          { inherit inputs disko;
+          { inherit inputs disko self;
             systemModules = [
               inputs.sops-nix.nixosModules.sops
               inputs.nix-bitcoin.nixosModules.default

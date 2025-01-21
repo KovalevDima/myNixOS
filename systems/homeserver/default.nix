@@ -1,4 +1,5 @@
 { inputs
+, self
 , systemModules
 , homeModules
 , disko
@@ -15,8 +16,23 @@
     (
       {inputs, config, pkgs, ...} : {
         imports = systemModules;
+        # Tmp hosting
+        services.nginx = {
+          enable = true;
+          virtualHosts."boot.directory" = {
+            enableACME = true;
+            forceSSL = true;
+            root = "${self.packages.x86_64-linux."personal-page"}/_site";
+          };
+        };
+        security.acme = { 
+          acceptTerms = true;
+          certs = {
+            "boot.directory".email = "letsencrypt@boot.directory";
+          };
+        };
         networking.hostName = "server";
-        networking.firewall.allowedTCPPorts = [ config.services.btcpayserver.port ];
+        networking.firewall.allowedTCPPorts = [ config.services.btcpayserver.port 80 443 ];
         services.openssh = {
           enable = true;
           ports = [22];

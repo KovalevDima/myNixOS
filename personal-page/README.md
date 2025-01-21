@@ -31,8 +31,8 @@ Home infrastructure and personal page source code
 
 Key features:
 
-- CI/CD with GitHub pages hosting
 - Modularization for configuring 3 hosts
+- Hosting for personal web page
 - Hyprland wayland compositor
 - Wireguard VPN configuration hidden via sops
 - Full disk encryption
