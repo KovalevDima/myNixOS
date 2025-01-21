@@ -28,4 +28,4 @@ executable graphics
     , vector
     , vulkan
     , vulkan-utils
-  default-language: GHC2021
+  default-language: Haskell2010

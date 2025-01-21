@@ -10,7 +10,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE Strict #-}
-{-# LANGUAGE OverloadedRecordDot #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TupleSections #-}
 
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
@@ -39,6 +40,7 @@ import Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeg
 import Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
 import Vulkan.Core10                 as PipelineLayoutCreateInfo (PipelineLayoutCreateInfo(..))
 import Vulkan.Core10                 as ShaderModuleCreateInfo (ShaderModuleCreateInfo(..))
+import Vulkan.Core10                 as MemoryHeap (MemoryHeap(size)) 
 import Vulkan.Dynamic                (DeviceCmds(..), InstanceCmds(..))
 import Vulkan.Extensions
 import Vulkan.Utils.Debug            (debugCallbackPtr)
@@ -368,7 +370,7 @@ data PhysicalDeviceInfo = PhysicalDeviceInfo
 
 physicalDeviceInfo :: MonadIO m => PhysicalDevice -> m (Maybe PhysicalDeviceInfo)
 physicalDeviceInfo phys = runMaybeT $ do
-  pdiTotalMemory <- sum . fmap (.size) . memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
+  pdiTotalMemory <- sum . fmap MemoryHeap.size . memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
   pdiComputeQueueFamilyIndex <- do
     queueFamilyProperties <- getPhysicalDeviceQueueFamilyProperties phys
     let isComputeQueue q = (QUEUE_COMPUTE_BIT .&. queueFlags q /= zeroBits) && (queueCount q > 0)
