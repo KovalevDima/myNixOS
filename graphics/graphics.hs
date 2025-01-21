@@ -10,11 +10,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE Strict #-}
+{-# LANGUAGE OverloadedRecordDot #-}
 
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
-module Main (graphics)
-where
+module Main (graphics) where
 
 import Codec.Picture                as JP (PixelRGBA8 (..), withImage, encodePng)
 import Control.Exception.Safe       (finally, throwString)
@@ -38,11 +38,10 @@ import Vulkan.Core10                 as Vk hiding (withBuffer, withImage)
 import Vulkan.Core10                 as CommandBufferBeginInfo (CommandBufferBeginInfo(..))
 import Vulkan.Core10                 as CommandPoolCreateInfo (CommandPoolCreateInfo(..))
 import Vulkan.Core10                 as PipelineLayoutCreateInfo (PipelineLayoutCreateInfo(..))
-import Vulkan.Core10.DeviceInitialization as DI
+import Vulkan.Core10                 as ShaderModuleCreateInfo (ShaderModuleCreateInfo(..))
 import Vulkan.Dynamic                (DeviceCmds(..), InstanceCmds(..))
-import Vulkan.Extensions.VK_EXT_debug_utils
-import Vulkan.Extensions.VK_EXT_validation_features
-import Vulkan.Utils.Debug (debugCallbackPtr)
+import Vulkan.Extensions
+import Vulkan.Utils.Debug            (debugCallbackPtr)
 import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
 import Vulkan.Zero                   (Zero(..))
 import VulkanMemoryAllocator         as VMA hiding (getPhysicalDeviceProperties)
@@ -114,7 +113,7 @@ graphics = runResourceT $ do
         updateDescriptorSets device [descriptor descriptorSet buffer] []
 
         -- Create our shader and compute pipeline
-        (_, shaderModule) <- withShaderModule device zero{code = shaderCode} Nothing allocate
+        (_, shaderModule) <- withShaderModule device zero{ShaderModuleCreateInfo.code = shaderCode} Nothing allocate
 
         (_, pipelineLayout) <- withPipelineLayout device (pipelineLayoutCreateInfo descriptorSetLayout) Nothing allocate
         (_, (_, [computePipeline])) <- withComputePipelines device zero [pipelineCreateInfo pipelineLayout shaderModule] Nothing allocate
@@ -359,7 +358,7 @@ data PhysicalDeviceInfo = PhysicalDeviceInfo
 
 physicalDeviceInfo :: MonadIO m => PhysicalDevice -> m (Maybe PhysicalDeviceInfo)
 physicalDeviceInfo phys = runMaybeT $ do
-  pdiTotalMemory <- sum . fmap DI.size . memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
+  pdiTotalMemory <- sum . fmap (.size) . memoryHeaps <$> getPhysicalDeviceMemoryProperties phys
   pdiComputeQueueFamilyIndex <- do
     queueFamilyProperties <- getPhysicalDeviceQueueFamilyProperties phys
     let isComputeQueue q = (QUEUE_COMPUTE_BIT .&. queueFlags q /= zeroBits) && (queueCount q > 0)
