@@ -16,11 +16,11 @@
 
 module Main (graphics) where
 
-import Codec.Picture                as JP (PixelRGBA8 (..), withImage, encodePng)
+import Codec.Picture                as JP (Image, PixelRGBA8 (..), withImage, encodePng)
 import Control.Exception.Safe       (finally, throwString)
 import Control.Monad.IO.Class       (MonadIO(..))
 import Control.Monad.Trans.Maybe    (MaybeT(..))
-import Control.Monad.Trans.Resource (allocate, runResourceT)
+import Control.Monad.Trans.Resource (allocate, runResourceT, ResourceT)
 import Data.ByteString              (StrictByteString, ByteString)
 import Data.ByteString.Lazy         as BSL (writeFile)
 import Data.List                    (partition, maximumBy)
@@ -54,23 +54,7 @@ import VulkanMemoryAllocator         as AllocationCreateInfo (AllocationCreateIn
 graphics :: IO ()
 graphics = runResourceT $ do
   -- Create Instance, PhysicalDevice, Device and Allocator
-  inst <- do
-    availableLayers <- map layerName . toList . snd <$> enumerateInstanceLayerProperties
-
-    let (layers, missingLayers) = partition (`elem` availableLayers) ["VK_LAYER_KHRONOS_validation"]
-    sayErr $ "Missing optional layer: " <> (T.pack . show) missingLayers
-
-    availableExtensions <- map extensionName . toList . snd <$> enumerateInstanceExtensionProperties Nothing
-
-    let (optExtsHave, optMissing) = partition (`elem` availableExtensions) [EXT_VALIDATION_FEATURES_EXTENSION_NAME]
-    sayErr $ "Missing optional extension: " <> (T.pack . show) optMissing
-
-    let (reqExtsHave, reqMissing) = partition (`elem` availableExtensions) [EXT_DEBUG_UTILS_EXTENSION_NAME]
-    sayErr $ "Missing required extension: " <> (T.pack . show) reqMissing
-
-    (_, inst) <- withInstance (instanceCreateInfo layers (reqExtsHave <> optExtsHave)) Nothing allocate
-    _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
-    pure inst
+  inst <- initializeInstance
 
   (_, devs) <- enumeratePhysicalDevices inst
   (pdi, phys) <-
@@ -85,82 +69,7 @@ graphics = runResourceT $ do
   -- Wait for the device to become idle before tearing down any resourecs.
   finally (do
       -- Render the Julia set
-      image <- do
-        -- Some things to reuse, make sure these are the same as the values in the
-        -- compute shader. TODO: reduce this duplication.
-        let width, height, workgroupX, workgroupY :: Int
-            width      = 512
-            height     = width
-            workgroupX = 32
-            workgroupY = 4
-
-        -- Create a buffer into which to render
-        (_, (buffer, bufferAllocation, bufferAllocationInfo)) <-
-          withBuffer allocator (bufferCreateInfo width height) allocationCreateInfo allocate
-
-        -- Create a descriptor set and layout for this buffer
-        (descriptorSet, descriptorSetLayout) <- do
-          (_, descriptorPool) <- withDescriptorPool device descriptorPoolCreateInfo Nothing allocate
-          (_, descriptorSetLayout) <- withDescriptorSetLayout device descriptorSetLayoutCreateInfo Nothing allocate
-
-          -- Allocate a descriptor set from the pool with that layout
-          -- Don't use `withDescriptorSets` here as the set will be cleaned up when
-          -- the pool is destroyed.
-          [descriptorSet] <- allocateDescriptorSets device (descriptorSetAllocateInfo descriptorPool descriptorSetLayout)
-          pure (descriptorSet, descriptorSetLayout)
-
-        -- Assign the buffer in this descriptor set
-        updateDescriptorSets device [descriptor descriptorSet buffer] []
-
-        -- Create our shader and compute pipeline
-        (_, shaderModule) <- withShaderModule device zero{ShaderModuleCreateInfo.code = shaderCode} Nothing allocate
-
-        (_, pipelineLayout) <- withPipelineLayout device (pipelineLayoutCreateInfo descriptorSetLayout) Nothing allocate
-        (_, (_, [computePipeline])) <- withComputePipelines device zero [pipelineCreateInfo pipelineLayout shaderModule] Nothing allocate
-
-        -- Create a command buffer
-        (_, commandPool) <- withCommandPool device (commandPoolCreateInfo pdi) Nothing allocate
-
-        (_, [commandBuffer]) <- withCommandBuffers device (commandBufferAllocateInfo commandPool) allocate
-
-        -- Fill command buffer
-        useCommandBuffer commandBuffer сommandBufferBeginInfo $
-          do
-          cmdBindPipeline commandBuffer PIPELINE_BIND_POINT_COMPUTE computePipeline
-          cmdBindDescriptorSets commandBuffer PIPELINE_BIND_POINT_COMPUTE pipelineLayout 0 [descriptorSet] []
-          cmdDispatch
-            commandBuffer
-            (ceiling (realToFrac width / realToFrac @_ @Float workgroupX))
-            (ceiling (realToFrac height / realToFrac @_ @Float workgroupY))
-            1
-
-        -- Create a fence so we can know when render is finished
-        (_, fence) <- withFence device zero Nothing allocate
-
-        -- Submit the command buffer and wait for it to execute
-        computeQueue <- getDeviceQueue device (pdiComputeQueueFamilyIndex pdi) 0
-        queueSubmit computeQueue [submitInfo commandBuffer] fence
-
-        let fenceTimeout = 1e9 -- 1 second
-        waitForFences device [fence] True fenceTimeout >>= \case
-          TIMEOUT -> throwString "Timed out waiting for compute"
-          _       -> pure ()
-
-        -- If the buffer allocation is not HOST_COHERENT this will ensure the changes
-        -- are present on the CPU.
-        invalidateAllocation allocator bufferAllocation 0 WHOLE_SIZE
-
-        -- TODO: speed this bit up, it's hopelessly slow
-        let pixelAddr :: Int -> Int -> Ptr (FixedArray 4 Float)
-            pixelAddr x y = plusPtr (mappedData bufferAllocationInfo)
-              (((y * width) + x) * 4 * sizeOf (0 :: Float))
-        liftIO $ JP.withImage width height
-          (\x y -> do
-            let ptr = pixelAddr x y
-            [r, g, b, a] <- fmap (\f -> round (f * 255))
-              <$> peekArray 4 (lowerArrayPtr ptr)
-            pure $ JP.PixelRGBA8 r g b a
-          )
+      image <- calculateImage device allocator pdi
       sayErr "Writing file"
       liftIO $ BSL.writeFile "julia.png" (JP.encodePng image)
     )
@@ -168,6 +77,102 @@ graphics = runResourceT $ do
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_0
+
+initializeInstance = do
+  availableLayers <- map layerName . toList . snd <$> enumerateInstanceLayerProperties
+
+  let (layers, missingLayers) = partition (`elem` availableLayers) ["VK_LAYER_KHRONOS_validation"]
+  sayErr $ "Missing optional layer: " <> (T.pack . show) missingLayers
+
+  availableExtensions <- map extensionName . toList . snd <$> enumerateInstanceExtensionProperties Nothing
+
+  let (optExtsHave, optMissing) = partition (`elem` availableExtensions) [EXT_VALIDATION_FEATURES_EXTENSION_NAME]
+  sayErr $ "Missing optional extension: " <> (T.pack . show) optMissing
+
+  let (reqExtsHave, reqMissing) = partition (`elem` availableExtensions) [EXT_DEBUG_UTILS_EXTENSION_NAME]
+  sayErr $ "Missing required extension: " <> (T.pack . show) reqMissing
+
+  (_, inst) <- withInstance (instanceCreateInfo layers (reqExtsHave <> optExtsHave)) Nothing allocate
+  _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
+  pure inst
+
+calculateImage :: Device -> Allocator -> PhysicalDeviceInfo -> ResourceT IO (JP.Image PixelRGBA8)
+calculateImage device allocator pdi = do
+  -- Some things to reuse, make sure these are the same as the values in the
+  -- compute shader. TODO: reduce this duplication.
+  let width, height, workgroupX, workgroupY :: Int
+      width      = 512
+      height     = width
+      workgroupX = 32
+      workgroupY = 4
+
+  -- Create a buffer into which to render
+  (_, (buffer, bufferAllocation, bufferAllocationInfo)) <-
+    withBuffer allocator (bufferCreateInfo width height) allocationCreateInfo allocate
+
+  -- Create a descriptor set and layout for this buffer
+  (descriptorSet, descriptorSetLayout) <- do
+    (_, descriptorPool) <- withDescriptorPool device descriptorPoolCreateInfo Nothing allocate
+    (_, descriptorSetLayout) <- withDescriptorSetLayout device descriptorSetLayoutCreateInfo Nothing allocate
+
+    -- Allocate a descriptor set from the pool with that layout
+    -- Don't use `withDescriptorSets` here as the set will be cleaned up when
+    -- the pool is destroyed.
+    [descriptorSet] <- allocateDescriptorSets device (descriptorSetAllocateInfo descriptorPool descriptorSetLayout)
+    pure (descriptorSet, descriptorSetLayout)
+
+  -- Assign the buffer in this descriptor set
+  updateDescriptorSets device [descriptor descriptorSet buffer] []
+
+  -- Create our shader and compute pipeline
+  (_, shaderModule) <- withShaderModule device zero{ShaderModuleCreateInfo.code = shaderCode} Nothing allocate
+
+  (_, pipelineLayout) <- withPipelineLayout device (pipelineLayoutCreateInfo descriptorSetLayout) Nothing allocate
+  (_, (_, [computePipeline])) <- withComputePipelines device zero [pipelineCreateInfo pipelineLayout shaderModule] Nothing allocate
+
+  -- Create a command buffer
+  (_, commandPool) <- withCommandPool device (commandPoolCreateInfo pdi) Nothing allocate
+
+  (_, [commandBuffer]) <- withCommandBuffers device (commandBufferAllocateInfo commandPool) allocate
+
+  -- Fill command buffer
+  useCommandBuffer commandBuffer сommandBufferBeginInfo $
+    do
+    cmdBindPipeline commandBuffer PIPELINE_BIND_POINT_COMPUTE computePipeline
+    cmdBindDescriptorSets commandBuffer PIPELINE_BIND_POINT_COMPUTE pipelineLayout 0 [descriptorSet] []
+    cmdDispatch
+      commandBuffer
+      (ceiling (realToFrac width / realToFrac @_ @Float workgroupX))
+      (ceiling (realToFrac height / realToFrac @_ @Float workgroupY))
+      1
+
+  -- Create a fence so we can know when render is finished
+  (_, fence) <- withFence device zero Nothing allocate
+
+  -- Submit the command buffer and wait for it to execute
+  computeQueue <- getDeviceQueue device (pdiComputeQueueFamilyIndex pdi) 0
+  queueSubmit computeQueue [submitInfo commandBuffer] fence
+
+  let fenceTimeout = 1e9 -- 1 second
+  waitForFences device [fence] True fenceTimeout >>= \case
+    TIMEOUT -> throwString "Timed out waiting for compute"
+    _       -> pure ()
+
+  -- If the buffer allocation is not HOST_COHERENT this will ensure the changes
+  -- are present on the CPU.
+  invalidateAllocation allocator bufferAllocation 0 WHOLE_SIZE
+
+  -- TODO: speed this bit up, it's hopelessly slow
+  let pixelAddr :: Int -> Int -> Ptr (FixedArray 4 Float)
+      pixelAddr x y = plusPtr (mappedData bufferAllocationInfo)
+        (((y * width) + x) * 4 * sizeOf (0 :: Float))
+  liftIO $ JP.withImage width height
+    (\x y -> do
+      let ptr = pixelAddr x y
+      [r, g, b, a] <- fmap (\f -> round (f * 255))
+        <$> peekArray 4 (lowerArrayPtr ptr)
+      pure $ JP.PixelRGBA8 r g b a
+    )
 
 
 shaderCode :: ByteString
