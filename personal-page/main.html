@@ -19,15 +19,18 @@
                 flex-direction: column;
             }
         }
-        h2{margin: 10px 0 10px 0;}
+        h2{margin: 10px 0 10px 0; text-align: center;}
         h3,ul{margin: 5px 0 5px 0;}
         .projects {
             flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
             display: flex;
             gap: 20px;
         }
         .project {
             min-width: 350px;
+            max-width: 350px;
             margin-bottom: 8px;
         }
         .project, table {
