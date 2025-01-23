@@ -17,63 +17,48 @@
     sops-nix.url = "github:Mic92/sops-nix";
     nix-colors.url = "github:misterio77/nix-colors";
     nix-bitcoin.url = "github:fort-nix/nix-bitcoin";
-
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    haskell-flake.url = "github:srid/haskell-flake";
   };
 
-  outputs = { self, nixpkgs, flake-parts, disko, ... } @ inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" ];
-      imports = [ inputs.haskell-flake.flakeModule ];
-
-      perSystem = { self', pkgs, lib, config, ... }: {
-
-        haskellProjects.default = {
-          autoWire = [ "packages" ];
-          projectRoot = ./.;
-          settings = {
-            graphics = {
-              justStaticExecutables = true;
-              extraBuildDepends = [ pkgs.glslang ];
-            };
-          };
-        };
-        devShells.default = pkgs.mkShell {
-          inputsFrom = [
-            config.haskellProjects.default.outputs.devShell
-          ];
-          packages = with pkgs; [ glslang ];
-        };
-
-        packages = {
-          personal-page = pkgs.stdenv.mkDerivation {
-            name = "personal-page";
-            buildInputs = [];
-            src = pkgs.nix-gitignore.gitignoreSourcePure [] ./.;
-
-            buildPhase = ''
-              ${lib.getExe' self'.packages.compiler "compiler"} build --verbose
-            '';
-
-            installPhase = ''
-              mkdir -p "$out"
-              cp -r ./_site "$out"
-            '';
-          };
-          image = let shaderPath = ./graphics/julia.glsl; in
-            pkgs.writeShellScriptBin "mkImage" ''
-              glslangValidator -S comp -V ${shaderPath} -o ./~compiledShader.spirv
-              ${lib.getExe' self'.packages.graphics "graphics"} ./~compiledShader.spirv
-              rm ./~compiledShader.spirv
-            '';
-        };
+  outputs = { self, nixpkgs, disko, ... } @ inputs:
+    let
+      pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
+      haskellPackages = pkgs.haskellPackages;
+      lib = inputs.nixpkgs.lib;
+    in {
+    devShells.x86_64-linux.default = pkgs.mkShell {
+      buildInputs = with haskellPackages; [
+        haskell-language-server
+        ghcid
+        cabal-install
+        pkgs.glslang
+      ];
+      inputsFrom = with self.packages.x86_64-linux; [ graphics compiler ];
     };
-  }
-  //
-  {
+    packages.x86_64-linux = {
+      compiler = haskellPackages.callCabal2nix "compiler" ./personal-page {};
+      graphics = pkgs.haskell.lib.addBuildDepends 
+        (haskellPackages.callCabal2nix "graphics" ./graphics {}) [pkgs.glslang]; 
+      personal-page = pkgs.stdenv.mkDerivation {
+        name = "personal-page";
+        
+        src = pkgs.nix-gitignore.gitignoreSourcePure [] ./.;
+        buildPhase = ''
+          ${lib.getExe' self.packages.x86_64-linux.compiler "compiler"} build --verbose
+        '';
+
+        installPhase = ''
+          mkdir -p "$out"
+          cp -r ./_site "$out"
+        '';
+      };
+      image = let shaderPath = ./graphics/julia.glsl; in
+        pkgs.writeShellScriptBin "mkImage" ''
+          glslangValidator -S comp -V ${shaderPath} -o ./~compiledShader.spirv
+          ${lib.getExe' self.packages.x86_64-linux.graphics "graphics"} ./~compiledShader.spirv
+          rm ./~compiledShader.spirv
+        '';
     nixosConfigurations = {
-      desktop = inputs.nixpkgs.lib.nixosSystem
+      desktop = lib.nixosSystem
         (import ./systems/desktop
           { inherit inputs;
             systemModules = [
@@ -88,7 +73,7 @@
             ];
           }
         );
-      laptop = inputs.nixpkgs.lib.nixosSystem
+      laptop = lib.nixosSystem
         (import ./systems/laptop
           { inherit inputs;
             systemModules = [
@@ -103,7 +88,7 @@
             ];
           }
         );
-      homeserver = inputs.nixpkgs.lib.nixosSystem
+      homeserver = lib.nixosSystem
         (import ./systems/homeserver
           { inherit inputs disko self;
             systemModules = [
@@ -119,4 +104,5 @@
         );
       };
     };
+  };
 }
