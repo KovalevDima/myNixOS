@@ -22,7 +22,7 @@ import Control.Exception.Safe       (finally, throwString)
 import Control.Monad.IO.Class       (MonadIO(..))
 import Control.Monad.Trans.Maybe    (MaybeT(..))
 import Control.Monad.Trans.Resource (allocate, runResourceT, ResourceT)
-import Data.ByteString              (StrictByteString, ByteString)
+import Data.ByteString              as BS (StrictByteString, ByteString, readFile)
 import Data.ByteString.Lazy         as BSL (writeFile)
 import Data.List                    (partition, maximumBy)
 import Data.Maybe                   (catMaybes)
@@ -32,6 +32,7 @@ import Data.Text.Encoding           (decodeUtf8)
 import Data.Vector                  as Vec (toList, fromList, filter, indexed, (!?))
 import Foreign                      (Word32, Word64, Ptr, Bits(..), Storable(..), peekArray, castFunPtr, plusPtr)
 import Say                          (sayErr)
+import System.Environment           (getArgs)
 
 import Vulkan.CStruct.Extends
 import Vulkan.CStruct.Utils          (FixedArray, lowerArrayPtr)
@@ -44,7 +45,6 @@ import Vulkan.Core10                 as MemoryHeap (MemoryHeap(size))
 import Vulkan.Dynamic                (DeviceCmds(..), InstanceCmds(..))
 import Vulkan.Extensions
 import Vulkan.Utils.Debug            (debugCallbackPtr)
-import Vulkan.Utils.ShaderQQ.GLSL.Glslang (comp)
 import Vulkan.Zero                   (Zero(..))
 import VulkanMemoryAllocator         as VMA hiding (getPhysicalDeviceProperties)
 import VulkanMemoryAllocator         as AllocationCreateInfo (AllocationCreateInfo(..))
@@ -55,6 +55,11 @@ import VulkanMemoryAllocator         as AllocationCreateInfo (AllocationCreateIn
 
 graphics :: IO ()
 graphics = runResourceT $ do
+  args <- liftIO getArgs
+  spirvCode <- case args of
+    [] -> error "You sould pass 2 arguments: spirv shader filepath, source image to transform filepath"
+    spirv:_ -> liftIO (BS.readFile spirv)
+
   -- Create Instance, PhysicalDevice, Device and Allocator
   inst <- initializeInstance
 
@@ -71,15 +76,16 @@ graphics = runResourceT $ do
   -- Wait for the device to become idle before tearing down any resourecs.
   finally (do
       -- Render the Julia set
-      image <- calculateImage device allocator pdi
+      image <- calculateImage spirvCode device allocator pdi
       sayErr "Writing file"
-      liftIO $ BSL.writeFile "julia.png" (JP.encodePng image)
+      liftIO $ BSL.writeFile "~julia.png" (JP.encodePng image)
     )
     (deviceWaitIdle device)
 
 myApiVersion :: Word32
 myApiVersion = API_VERSION_1_0
 
+initializeInstance :: ResourceT IO Instance
 initializeInstance = do
   availableLayers <- map layerName . toList . snd <$> enumerateInstanceLayerProperties
 
@@ -98,8 +104,8 @@ initializeInstance = do
   _ <- withDebugUtilsMessengerEXT inst debugMessengerCreateInfo Nothing allocate
   pure inst
 
-calculateImage :: Device -> Allocator -> PhysicalDeviceInfo -> ResourceT IO (JP.Image PixelRGBA8)
-calculateImage device allocator pdi = do
+calculateImage :: ByteString -> Device -> Allocator -> PhysicalDeviceInfo -> ResourceT IO (JP.Image PixelRGBA8)
+calculateImage shaderCode device allocator pdi = do
   -- Some things to reuse, make sure these are the same as the values in the
   -- compute shader. TODO: reduce this duplication.
   let width, height, workgroupX, workgroupY :: Int
@@ -176,71 +182,6 @@ calculateImage device allocator pdi = do
       pure $ JP.PixelRGBA8 r g b a
     )
 
-
-shaderCode :: ByteString
-shaderCode = [comp|
-  #version 450
-  #extension GL_ARB_separate_shader_objects : enable
-
-  const int width = 512;
-  const int height = width;
-  const int workgroup_x = 32;
-  const int workgroup_y = 4;
-
-  // r^2 - r = |c|
-  const vec2 c = vec2(-0.8, 0.156);
-  const float r = 0.5 * (1 + sqrt (4 * dot(c,c) + 1));
-
-  layout (local_size_x = workgroup_x, local_size_y = workgroup_y, local_size_z = 1 ) in;
-  layout(std140, binding = 0) buffer buf
-  {
-     vec4 imageData[];
-  };
-
-
-  // From https://iquilezles.org/www/articles/palettes/palettes.htm
-  //
-  // Traditional Julia blue and orange
-  vec3 color(const float t) {
-    const vec3 a = vec3(0.5);
-    const vec3 b = vec3(0.5);
-    const vec3 c = vec3(8);
-    const vec3 d = vec3(0.5, 0.6, 0.7);
-    return a + b * cos(6.28318530718 * (c * t + d));
-  }
-
-  // complex multiplication
-  vec2 mulC(const vec2 a, const vec2 b) {
-    return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
-  }
-
-  vec2 f(const vec2 z) {
-    return mulC(z,z) + c;
-  }
-
-  // Algorithm from https://en.wikipedia.org/wiki/Julia_set
-  void main() {
-    vec2 z = vec2
-      ( float(gl_GlobalInvocationID.y) / float(height) * 2 * r - r
-      , float(gl_GlobalInvocationID.x) / float(width) * 2 * r - r
-      );
-
-    uint iteration = 0;
-    const int max_iteration = 1000;
-
-    while (dot(z,z) < dot(r,r) && iteration < max_iteration) {
-      z = f(z);
-      iteration++;
-    }
-
-    const uint i = width * gl_GlobalInvocationID.y + gl_GlobalInvocationID.x;
-    if (iteration == max_iteration) {
-      imageData[i] = vec4(0,0,0,1);
-    } else {
-      imageData[i] = vec4(color(float(iteration) / float(max_iteration)),1);
-    }
-  }
-|]
 
 deviceQueueCreateInfo :: PhysicalDeviceInfo -> DeviceCreateInfo '[]
 deviceQueueCreateInfo pdi = 
