@@ -78,7 +78,7 @@ graphics = runResourceT $ do
       -- Render the Julia set
       image <- calculateImage spirvCode device allocator pdi
       sayErr "Writing file"
-      liftIO $ BSL.writeFile "~julia.png" (JP.encodePng image)
+      liftIO $ BSL.writeFile "result.png" (JP.encodePng image)
     )
     (deviceWaitIdle device)
 

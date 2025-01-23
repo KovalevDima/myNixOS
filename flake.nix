@@ -46,21 +46,29 @@
           packages = with pkgs; [ glslang ];
         };
 
-        packages."personal-page" = pkgs.stdenv.mkDerivation {
-          name = "personal-page";
-          buildInputs = [];
-          src = pkgs.nix-gitignore.gitignoreSourcePure [] ./.;
+        packages = {
+          personal-page = pkgs.stdenv.mkDerivation {
+            name = "personal-page";
+            buildInputs = [];
+            src = pkgs.nix-gitignore.gitignoreSourcePure [] ./.;
 
-          buildPhase = ''
-            ${lib.getExe' self'.packages.compiler "compiler"} build --verbose
-          '';
+            buildPhase = ''
+              ${lib.getExe' self'.packages.compiler "compiler"} build --verbose
+            '';
 
-          installPhase = ''
-            mkdir -p "$out"
-            cp -r ./_site "$out"
-          '';
+            installPhase = ''
+              mkdir -p "$out"
+              cp -r ./_site "$out"
+            '';
+          };
+          image = let shaderPath = ./graphics/julia.glsl; in
+            pkgs.writeShellScriptBin "mkImage" ''
+              glslangValidator -S comp -V ${shaderPath} -o ./~compiledShader.spirv
+              ${lib.getExe' self'.packages.graphics "graphics"} ./~compiledShader.spirv
+              rm ./~compiledShader.spirv
+            '';
         };
-      };
+    };
   }
   //
   {
