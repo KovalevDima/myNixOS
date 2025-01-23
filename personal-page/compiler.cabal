@@ -24,6 +24,3 @@ executable compiler
   build-depends:
       base
     , hakyll
-    , bytestring
-    , filepath
-    , time
