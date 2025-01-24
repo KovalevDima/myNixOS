@@ -31,6 +31,10 @@
         ghcid
         cabal-install
         pkgs.glslang
+        pkgs.zlib
+        pkgs.vulkan-loader
+        pkgs.vulkan-headers
+        pkgs.pkg-config
       ];
       inputsFrom = with self.packages.x86_64-linux; [ graphics compiler ];
     };
