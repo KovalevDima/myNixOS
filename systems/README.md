@@ -1,24 +1,13 @@
 ## Deploy to remote NixOS machine after installation
 
 ```bash
-nixos-rebuild \
-    --flake .#homeserver \
-    --target-host root@192.168.0.213 \
-    switch
-```
-
-```bash
-nixos-rebuild \
-    --flake .#laptop \
-    --target-host root@192.168.0.147 \
-    switch
-```
-
-```bash
+nixos-rebuild --flake .#homeserver --target-host root@192.168.0.213 switch
+nixos-rebuild --flake .#laptop     --target-host root@192.168.0.147 switch
 nixos-rebuild --flake .#homeserver --target-host root@boot.directory switch
 ```
 
 ## Remote machine NixOS installation
+
 ```bash
 export PASS= #Enter your password here
 nix run nixpkgs#nixos-anywhere -- \
