@@ -19,23 +19,25 @@
             "network/wireguardConfigFile" = {};
           };
         };
-        module.gui =  {
-          initialUser = "dmitry";
-        };
-        programs.amnezia-vpn.enable = true;
-        programs.steam = {
-          enable = true;
-          remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-          dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-          localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+        module.gui.initialUser = "dmitry";
+        programs = {
+          amnezia-vpn.enable = true;
+          steam = {
+            enable = true;
+            remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+            dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+            localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+          };
         };
         networking.hostName = "desktop";
-        services.xserver.videoDrivers = ["nvidia"];
-        services.udisks2.enable = true;
-        services.openssh = {
-          enable = true;
-          ports = [22];
-          settings.AllowUsers = null;
+        services = {
+          openssh = {
+            enable = true;
+            ports = [22];
+            settings.AllowUsers = null;
+          };
+          xserver.videoDrivers = ["nvidia"];
+          udisks2.enable = true;
         };
         hardware.nvidia = {
           modesetting.enable = true;
@@ -44,13 +46,15 @@
         };
         boot.loader.systemd-boot.enable = true;
         boot.loader.efi.canTouchEfiVariables = true;
-        users.users.dmitry = {
-          isNormalUser = true;
-          description = "dmitry";
-          extraGroups = [ "networkmanager" "wheel" "docker" ];
-          openssh.authorizedKeys.keys = [
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKlwdqhLRKjVCv6+DMxw3GiOCE2qK6o9I8Ed9OTTwVQG dmitry@nixos"
-          ];
+        users.users = {
+          dmitry = {
+            isNormalUser = true;
+            description = "dmitry";
+            extraGroups = [ "networkmanager" "wheel" "docker" ];
+            openssh.authorizedKeys.keys = [
+              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKlwdqhLRKjVCv6+DMxw3GiOCE2qK6o9I8Ed9OTTwVQG dmitry@nixos"
+            ];
+          };
         };
         environment.systemPackages = with pkgs; [
           google-chrome
