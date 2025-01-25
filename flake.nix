@@ -25,18 +25,63 @@
       haskellPackages = pkgs.haskellPackages;
       lib = inputs.nixpkgs.lib;
     in {
-    devShells.x86_64-linux.default = pkgs.mkShell {
-      buildInputs = with haskellPackages; [
-        haskell-language-server
-        ghcid
-        cabal-install
-        pkgs.glslang
-        pkgs.zlib
-        pkgs.vulkan-loader
-        pkgs.vulkan-headers
-        pkgs.pkg-config
-      ];
-      inputsFrom = with self.packages.x86_64-linux; [ graphics compiler ];
+    nixosConfigurations = {
+      desktop = lib.nixosSystem (import ./systems/desktop
+        { inherit inputs;
+          systemModules = [
+            inputs.sops-nix.nixosModules.sops
+            ./modules/system/hyprland.nix
+            ./modules/system/nix.nix
+          ];
+          homeModules = [
+            inputs.nix-colors.homeManagerModules.default
+            ./modules/home/nvim.nix
+            ./modules/home/gui.nix
+          ];
+        }
+      );
+      laptop = lib.nixosSystem (import ./systems/laptop
+        { inherit inputs;
+          systemModules = [
+            inputs.sops-nix.nixosModules.sops
+            ./modules/system/hyprland.nix
+            ./modules/system/nix.nix
+          ];
+          homeModules = [
+            inputs.nix-colors.homeManagerModules.default
+            ./modules/home/nvim.nix
+            ./modules/home/gui.nix
+          ];
+        }
+      );
+      homeserver = lib.nixosSystem (import ./systems/homeserver
+        { inherit inputs disko self;
+          systemModules = [
+            inputs.sops-nix.nixosModules.sops
+            inputs.nix-bitcoin.nixosModules.default
+            ./modules/system/nix.nix
+          ];
+          homeModules = [
+            inputs.nix-colors.homeManagerModules.default
+            ./modules/home/nvim.nix
+          ];
+        }
+      );
+    };
+    devShells.x86_64-linux = {
+      default = pkgs.mkShell {
+        buildInputs = with haskellPackages; [
+          haskell-language-server
+          ghcid
+          cabal-install
+          pkgs.glslang
+          pkgs.zlib
+          pkgs.vulkan-loader
+          pkgs.vulkan-headers
+          pkgs.pkg-config
+        ];
+        inputsFrom = with self.packages.x86_64-linux; [ graphics compiler ];
+      };
     };
     packages.x86_64-linux = {
       compiler = haskellPackages.callCabal2nix "compiler" ./personal-page {};
@@ -44,11 +89,9 @@
         (haskellPackages.callCabal2nix "graphics" ./graphics {}) [pkgs.glslang]; 
       personal-page = pkgs.stdenv.mkDerivation {
         name = "personal-page";
-        
+
         src = pkgs.nix-gitignore.gitignoreSourcePure [] ./.;
-        buildPhase = ''
-          ${lib.getExe' self.packages.x86_64-linux.compiler "compiler"} build --verbose
-        '';
+        buildPhase = "${lib.getExe' self.packages.x86_64-linux.compiler "compiler"} build --verbose";
 
         installPhase = ''
           mkdir -p "$out"
@@ -61,52 +104,6 @@
           ${lib.getExe' self.packages.x86_64-linux.graphics "graphics"} ./~compiledShader.spirv
           rm ./~compiledShader.spirv
         '';
-    nixosConfigurations = {
-      desktop = lib.nixosSystem
-        (import ./systems/desktop
-          { inherit inputs;
-            systemModules = [
-              inputs.sops-nix.nixosModules.sops
-              ./modules/system/hyprland.nix
-              ./modules/system/nix.nix
-            ];
-            homeModules = [
-              inputs.nix-colors.homeManagerModules.default
-              ./modules/home/nvim.nix
-              ./modules/home/gui.nix
-            ];
-          }
-        );
-      laptop = lib.nixosSystem
-        (import ./systems/laptop
-          { inherit inputs;
-            systemModules = [
-              inputs.sops-nix.nixosModules.sops
-              ./modules/system/hyprland.nix
-              ./modules/system/nix.nix
-            ];
-            homeModules = [
-              inputs.nix-colors.homeManagerModules.default
-              ./modules/home/nvim.nix
-              ./modules/home/gui.nix
-            ];
-          }
-        );
-      homeserver = lib.nixosSystem
-        (import ./systems/homeserver
-          { inherit inputs disko self;
-            systemModules = [
-              inputs.sops-nix.nixosModules.sops
-              inputs.nix-bitcoin.nixosModules.default
-              ./modules/system/nix.nix
-            ];
-            homeModules = [
-              inputs.nix-colors.homeManagerModules.default
-              ./modules/home/nvim.nix
-            ];
-          }
-        );
-      };
     };
   };
 }
