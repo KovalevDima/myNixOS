@@ -40,7 +40,6 @@
           };
         };
         window = {
-          opacity = 0.80;
           dimensions = {lines = 27; columns = 115;};
           padding = {x = 4; y = 4;};
         };
