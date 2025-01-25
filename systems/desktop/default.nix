@@ -22,16 +22,14 @@
         module.gui =  {
           initialUser = "dmitry";
         };
+        programs.amnezia-vpn.enable = true;
         programs.steam = {
           enable = true;
           remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
           dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
           localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
         };
-        networking = {
-          hostName = "desktop";
-          wg-quick.interfaces.wg0.configFile = "${config.sops.secrets."network/wireguardConfigFile".path}";
-        };
+        networking.hostName = "desktop";
         services.xserver.videoDrivers = ["nvidia"];
         services.udisks2.enable = true;
         services.openssh = {
