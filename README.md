@@ -1,7 +1,7 @@
 # KovalevDima
 
 My personal page located at:\
-https://kovalevdima.github.io/KovalevDima/
+https://boot.directory/
 
 In repository you can find:
 
