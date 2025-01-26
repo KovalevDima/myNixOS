@@ -54,7 +54,7 @@
           ];
         }
       );
-      homeserver = lib.nixosSystem (import ./systems/homeserver
+      server = lib.nixosSystem (import ./systems/server
         { inherit inputs disko self;
           systemModules = [
             inputs.sops-nix.nixosModules.sops
