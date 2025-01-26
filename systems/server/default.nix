@@ -17,6 +17,7 @@
       {inputs, config, pkgs, ...} : {
         imports = systemModules;
         # Tmp hosting
+        #module.mail-server.hostname = "boot.directory";
         services.nginx = {
           enable = true;
           virtualHosts."boot.directory" = {

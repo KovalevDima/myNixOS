@@ -60,6 +60,7 @@
             inputs.sops-nix.nixosModules.sops
             inputs.nix-bitcoin.nixosModules.default
             ./modules/system/nix.nix
+            ./modules/system/mail-server.nix
           ];
           homeModules = [
             inputs.nix-colors.homeManagerModules.default
