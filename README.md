@@ -1,16 +1,9 @@
 # KovalevDima
-
-My personal page located at:\
-https://boot.directory/
-
-In repository you can find:
-
-1. Source code for personal page
-2. My NixOS machines configuration
+My personal page: https://boot.directory/\
+GPG: `DDBB 4A1F A6E8 FFE7 6601 5C9D F5C0 AE01 8670 DEBC`
 
 ```text
 ├personal-page/      Personal page source code
-├graphics/           My own graphics related applications
 ├modules/
 |├home/              Home manager modules
 |└system/            System modules

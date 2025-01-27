@@ -12,21 +12,51 @@
             background-color: #121212;
             display: flex;
             justify-self: center;
+            margin-top: 0px;
         }
-
         @media (max-width: 803px) {
-            .project {justify-self: center;}
-            .projects {justify-content: center;}
+            section {justify-self: center;}
+            header {justify-self: center;}
+            article {justify-content: center;}
         }
         h2{margin: 10px 0 10px 0; text-align: center;}
         h3,ul{margin: 5px 0 5px 0;}
-        .projects {
+        p {margin: 4px;}
+        article {
             flex-direction: row;
             flex-wrap: wrap;
             display: flex;
             gap: 20px;
         }
-        .project {
+        header {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            background-color: rgb(30, 30, 30);
+            height: 40px;
+            min-width: 384px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+        }
+        header a {
+            display: flex;
+            font-size:24px;
+            color: rgb(240, 246, 252);
+            text-decoration: none;
+        }
+        header div {
+            display: flex;
+            flex-direction: row;
+        }
+        header div a {
+            column-gap:3px; padding: 6px;
+            border: 2px solid; border-radius: 5px; border-color: rgb(30, 30, 30);
+            background-color: #121212;
+        }
+        section {
+            display: flex;
+            flex-direction: column;
             min-width: 350px;
             max-width: 350px;
             margin-bottom: 8px;
@@ -47,6 +77,13 @@
     <style type="text/css">
     </style>
     <main role="main">
+        <header>
+            <a href="/">Dmitry Kovalev</a>
+            <div>
+                <a href="https://t.me/onarainydayillwinanyway"><img width="28" src="./assets/social-networks/telegram.svg"></a>
+                <a href="https://github.com/KovalevDima"> <img width="28" src="./assets/social-networks/github.svg"></a>
+            </div>
+        </header>
         $body$
     </main>
     <footer>
