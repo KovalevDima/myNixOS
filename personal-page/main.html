@@ -14,17 +14,15 @@
             justify-self: center;
         }
 
-        @media (max-width: 700px) {
-            body {
-                flex-direction: column;
-            }
+        @media (max-width: 803px) {
+            .project {justify-self: center;}
+            .projects {justify-content: center;}
         }
         h2{margin: 10px 0 10px 0; text-align: center;}
         h3,ul{margin: 5px 0 5px 0;}
         .projects {
             flex-direction: row;
             flex-wrap: wrap;
-            justify-content: center;
             display: flex;
             gap: 20px;
         }
@@ -32,12 +30,11 @@
             min-width: 350px;
             max-width: 350px;
             margin-bottom: 8px;
-        }
-        .project, table {
             padding: 5px 15px 5px 15px;
+        }
+        .bordered {
             border: solid 2px;
             box-shadow: 8px 8px 0px 0px rgba(155, 155, 155, 0.25);
-            width: 100%;
         }
         a {color: rgb(155, 155, 155);};
         a:link {color: rgb(155, 155, 155);};

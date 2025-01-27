@@ -1,3 +1,5 @@
+
+<div class="project">
 <h1>
 Kovalev Dmitry
 <a href="https://t.me/onarainydayillwinanyway"><img width="24" src="./assets/social-networks/telegram.svg"></a>
@@ -6,10 +8,11 @@ Kovalev Dmitry
 
 Infrastructure engineer\
 Passionate about software, hardware and mathematics
+</div>
 
 <div class="projects">
 
-<div class="project">
+<div class="project bordered">
 
 ### [ClickHaskell](https://github.com/GetShopTV/ClickHaskell): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/databases/clickhouse.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
 
@@ -24,7 +27,7 @@ Key features:
 - Well automated contribution environment
 </div>
 
-<div class="project">
+<div class="project bordered">
 
 ### [KovalevDima](https://github.com/KovalevDima/KovalevDima): <img width="24" src="./assets/programming-languages/haskell.svg"> <img width="24" src="./assets/programming-languages/nix.svg">
 Home infrastructure and personal page source code
