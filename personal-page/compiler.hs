@@ -2,7 +2,7 @@
 
 module Main where
 
-import GHC.IO.Encoding as Encoding (setLocaleEncoding, utf8)
+import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Hakyll
 
 configuration :: Configuration
@@ -10,7 +10,7 @@ configuration = defaultConfiguration{providerDirectory = "./personal-page/"}
 
 compiler :: IO ()
 compiler = do
-  Encoding.setLocaleEncoding Encoding.utf8
+  setLocaleEncoding utf8
 
   hakyllWith configuration $ do
     match "README.md" $ do
