@@ -13,69 +13,85 @@
         default = null;
         description = "Sets mail server domain";
       };
+      mailServerSecret = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        description = "Sets mail server admin secret";
+      };
     };
   };
   
   config =
-  let hostname = config.module.mail-server.hostname;
+  let
+    hostname = config.module.mail-server.hostname;
+    mailServerSecret = config.module.mail-server.mailServerSecret;
   in lib.mkIf (hostname != null) {
     users.groups.acme.members = [ "stalwart-mail" ];
-    networking.firewall.allowedTCPPorts = [
-      25 # smtp
-      465 # submission tls
-      993 # imap tls
-      8050 # manage sieve
-    ];
-
     services.stalwart-mail = {
       enable = true;
+      openFirewall = true;
       settings =
       let certDir = config.security.acme.certs.${hostname}.directory;
       in {
+        certificate.default = {
+          default = true;
+          cert        = "%{file:${certDir}/cert.pem}%";
+          private-key = "%{file:${certDir}/key.pem}%";
+        };
+        lookup.default.hostname = "mail.${hostname}";
+        lookup.default.domain = "${hostname}";
         server = {
-          hostname = "${hostname}";
-          certificate.${hostname} = {
-            cert        = "${certDir} + /fullchain.pem";
-            private-key = "${certDir} + /key.pem";
+          hostname = "mail.${hostname}";
+          tls = {
+            enable = true;
+            implicit = true;
           };
           listener = {
             smtp = {
               protocol = "smtp";
-              bind = "[::]:25";
+              bind = "0.0.0.0:25";
             };
             submissions = {
               protocol = "smtp";
-              bind = "127.0.0.1:465";
+              bind = "0.0.0.0:465";
               tls.implicit = true;
             };
             imaptls = {
               protocol = "imap";
-              bind = "127.0.0.1:993";
+              bind = "0.0.0.0:993";
               tls.implicit = true;
             };
             management = {
               protocol = "http";
-              bind = "127.0.0.1:8050";
+              bind = "0.0.0.0:8050";
             };
           };
-
-          storage = {
-            blob = "rocksdb";
-            data = "rocksdb";
-            fts = "rocksdb";
-            lookup = "rocksdb";
-            directory = "internal";
+        };
+        directory."memory" = {
+          type = "memory";
+          principals = [
+            {
+              name = "dmitry";
+              class = "individual";
+              email = [ "dmitry@boot.directory" ];
+              secret = "{plain}%{file:${mailServerSecret}}%";
+            }
+          ];
+        };
+        tracer."stdout" = {
+          type = "stdout";
+          level = "info";
+          ansi = false;
+          enable = true;
+        };
+        authentication = {
+          fallback-admin = {
+            user = "admin";
+            secret = "{plain}%{file:${mailServerSecret}}%";
           };
-
-          directory."internal" = {
-            store = "rocksdb";
-            type = "internal";
-          };
-
-          store."rocksdb" = {
-            compression = "lz4";
-            path = "/var/lib/stalwart-mail/data";
-            type = "rocksdb";
+          master = {
+            user = "master";
+            secret = "%{file:${mailServerSecret}}%";
           };
         };
       };

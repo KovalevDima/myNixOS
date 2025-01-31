@@ -16,8 +16,18 @@
     (
       {inputs, config, pkgs, ...} : {
         imports = systemModules;
-        # Tmp hosting
-        #module.mail-server.hostname = "boot.directory";
+        # sops = {
+        #   age.keyFile = "/root/.config/sops/age/keys.txt";
+        #   defaultSopsFile = ../../secrets.yaml;
+        #   secrets = {
+        #     "mailServerSecret" = { owner="stalwart-mail"; };
+        #   };
+        # };
+        # module.mail-server = {
+        #   hostname = "boot.directory";
+        #   mailServerSecret = "${config.sops.secrets."mailServerSecret".path}";
+        # };
+        # users.users.stalwart-mail.extraGroups = [ "acme" ];
         services.nginx = {
           enable = true;
           virtualHosts."boot.directory" = {
@@ -26,10 +36,14 @@
             root = "${self.packages.x86_64-linux."personal-page"}/_site";
           };
         };
+        users.users.nginx.extraGroups = [ "acme" ];
         security.acme = { 
           acceptTerms = true;
           certs = {
-            "boot.directory".email = "letsencrypt@boot.directory";
+            "boot.directory" = {
+              email = "letsencrypt@boot.directory";
+              group = "acme";
+            };
           };
         };
         networking.hostName = "server";
