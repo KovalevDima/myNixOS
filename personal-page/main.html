@@ -7,6 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dima Kovalev</title>
     <style type="text/css">
+        html {
+            justify-content: center;
+            display: flex;
+            font-family: Hasklig, Monospace;
+        }
         body {
             color: rgb(155, 155, 155);
             background-color: #121212;
@@ -14,13 +19,18 @@
             justify-self: center;
             margin-top: 0px;
         }
+        main { display: flex; flex-direction: column; row-gap: 20px;}
         @media (max-width: 803px) {
             section {justify-self: center;}
             header {justify-self: center;}
             article {justify-content: center;}
         }
         h2{margin: 10px 0 10px 0; text-align: center;}
-        h3,ul{margin: 5px 0 5px 0;}
+        h3{margin: 5px 0 5px 0;}
+        ul{
+            margin: 5px 0 5px 0;
+            padding-inline-start: 25px;
+        }
         p {margin: 4px;}
         article {
             flex-direction: row;
@@ -64,8 +74,9 @@
         }
         .bordered {
             border: solid 2px;
-            box-shadow: 8px 8px 0px 0px rgba(155, 155, 155, 0.25);
+            box-shadow: 6px 6px 0px 0px rgba(155, 155, 155, 0.25);
         }
+        img {vertical-align: bottom;}
         a {color: rgb(155, 155, 155);};
         a:link {color: rgb(155, 155, 155);};
         a:hover {color: rgb(155, 155, 155);};
@@ -80,8 +91,8 @@
         <header>
             <a href="/">Dmitry Kovalev</a>
             <div>
-                <a href="https://t.me/onarainydayillwinanyway"><img width="28" src="./assets/social-networks/telegram.svg"></a>
-                <a href="https://github.com/KovalevDima"> <img width="28" src="./assets/social-networks/github.svg"></a>
+                <a href="https://t.me/onarainydayillwinanyway"><img width="28" src="./icons/telegram.svg"></a>
+                <a href="https://github.com/KovalevDima"> <img width="28" src="./icons/github.svg"></a>
             </div>
         </header>
         $body$

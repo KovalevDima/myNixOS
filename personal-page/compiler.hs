@@ -23,5 +23,8 @@ compiler = do
     match "assets/**" $ do
         route idRoute
         compile copyFileCompiler
+    match "icons/**" $ do
+        route idRoute
+        compile copyFileCompiler
 
     match "main.html" $ compile templateCompiler

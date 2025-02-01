@@ -11,9 +11,10 @@ copyright:       2024 Kovalev Dmitry
 
 build-type:      Simple
 
-data-files:
+extra-source-files:
   ./README.md
-  ./assets/**/*.svg
+  ./assets/**
+  ./icons/**
   ./*.html
 
 executable compiler
