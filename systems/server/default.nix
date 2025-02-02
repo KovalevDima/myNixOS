@@ -16,37 +16,40 @@
     (
       {inputs, config, pkgs, ...} : {
         imports = systemModules;
-        # sops = {
-        #   age.keyFile = "/root/.config/sops/age/keys.txt";
-        #   defaultSopsFile = ../../secrets.yaml;
-        #   secrets = {
-        #     "mailServerSecret" = { owner="stalwart-mail"; };
-        #   };
-        # };
+        sops = {
+          age.keyFile = "/root/.config/sops/age/keys.txt";
+          defaultSopsFile = ../../secrets.yaml;
+          secrets = {
+          "matrix/sharedSecret" = { owner = "matrix-synapse"; };
+          #  "mailServerSecret" = { owner="stalwart-mail"; };
+          };
+        };
         # module.mail-server = {
         #   hostname = "boot.directory";
         #   mailServerSecret = "${config.sops.secrets."mailServerSecret".path}";
         # };
         # users.users.stalwart-mail.extraGroups = [ "acme" ];
+        module.matrix.shared_secret = "${config.sops.secrets."matrix/sharedSecret".path}";
         services.nginx = {
           enable = true;
-          virtualHosts."boot.directory" = {
+          virtualHosts."${config.networking.domain}" = {
             enableACME = true;
             forceSSL = true;
             root = "${self.packages.x86_64-linux."personal-page"}/_site";
           };
         };
         users.users.nginx.extraGroups = [ "acme" ];
-        security.acme = { 
+        security.acme = {
           acceptTerms = true;
           certs = {
-            "boot.directory" = {
-              email = "letsencrypt@boot.directory";
+            "${config.networking.domain}" = {
+              email = "letsencrypt@${config.networking.domain}";
               group = "acme";
             };
           };
         };
         networking.hostName = "server";
+        networking.domain = "boot.directory";
         networking.firewall.allowedTCPPorts = [ config.services.btcpayserver.port 80 443 ];
         services.openssh = {
           enable = true;

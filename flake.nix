@@ -61,6 +61,7 @@
             inputs.nix-bitcoin.nixosModules.default
             ./modules/system/nix.nix
             ./modules/system/mail-server.nix
+            ./modules/system/matrix.nix
           ];
           homeModules = [
             inputs.nix-colors.homeManagerModules.default
