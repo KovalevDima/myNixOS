@@ -75,10 +75,7 @@
           haskell-language-server
           ghcid
           cabal-install
-          pkgs.glslang
           pkgs.zlib
-          pkgs.vulkan-loader
-          pkgs.vulkan-headers
           pkgs.pkg-config
         ];
         inputsFrom = with self.packages.x86_64-linux; [ graphics compiler ];
@@ -89,7 +86,7 @@
       graphics =
         pkgs.haskell.lib.addBuildDepends 
           (haskellPackages.callCabal2nix "graphics" ./packages/graphics {})
-          [pkgs.glslang]; 
+          [pkgs.glslang pkgs.vulkan-headers pkgs.vulkan-loader]; 
       personal-page = pkgs.stdenv.mkDerivation {
         name = "personal-page";
 
