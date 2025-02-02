@@ -20,11 +20,9 @@ compiler = do
           >>= loadAndApplyTemplate "./main.html" defaultContext
           >>= relativizeUrls
 
-    match "assets/**" $ do
-        route idRoute
-        compile copyFileCompiler
-    match "icons/**" $ do
-        route idRoute
-        compile copyFileCompiler
+    match ("assets/**" .&&. "icons/**") $ do
+      route idRoute
+      compile copyFileCompiler
 
-    match "main.html" $ compile templateCompiler
+    match "main.html" $ do
+      compile templateCompiler
