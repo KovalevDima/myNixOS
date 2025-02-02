@@ -61,6 +61,7 @@
           awscli2
           minikube
           postgresql
+          element-desktop
         ];
         virtualisation.docker.enable = true;
         nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
