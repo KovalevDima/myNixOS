@@ -85,9 +85,11 @@
       };
     };
     packages.x86_64-linux = {
-      compiler = haskellPackages.callCabal2nix "compiler" ./personal-page {};
-      graphics = pkgs.haskell.lib.addBuildDepends 
-        (haskellPackages.callCabal2nix "graphics" ./graphics {}) [pkgs.glslang]; 
+      compiler = haskellPackages.callCabal2nix "compiler" ./packages/personal-page {};
+      graphics =
+        pkgs.haskell.lib.addBuildDepends 
+          (haskellPackages.callCabal2nix "graphics" ./packages/graphics {})
+          [pkgs.glslang]; 
       personal-page = pkgs.stdenv.mkDerivation {
         name = "personal-page";
 
@@ -99,7 +101,7 @@
           cp -r ./_site "$out"
         '';
       };
-      image = let shaderPath = ./graphics/julia.glsl; in
+      image = let shaderPath = ./packages/graphics/julia.glsl; in
         pkgs.writeShellScriptBin "mkImage" ''
           glslangValidator -S comp -V ${shaderPath} -o ./~compiledShader.spirv
           ${lib.getExe' self.packages.x86_64-linux.graphics "graphics"} ./~compiledShader.spirv
