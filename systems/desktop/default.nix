@@ -57,7 +57,6 @@
           };
         };
         environment.systemPackages = with pkgs; [
-          google-chrome
           dig
           nix-tree
           k9s
@@ -73,7 +72,6 @@
         nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
           "vscode"
           "yandex-cloud"
-          "google-chrome"
           "telegram-desktop"
           "discord"
           "steam"

@@ -50,7 +50,6 @@
           extraGroups = [ "networkmanager" "wheel" "docker" ];
         };
         environment.systemPackages = with pkgs; [
-          google-chrome
           dig
           k9s
           kubernetes-helm
@@ -65,7 +64,6 @@
         nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
           "vscode"
           "yandex-cloud"
-          "google-chrome"
           "telegram-desktop"
           "discord"
           "steam"
