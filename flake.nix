@@ -76,6 +76,7 @@
           haskell-language-server
           ghcid
           cabal-install
+          pkgs.nil
           pkgs.zlib
           pkgs.pkg-config
         ];

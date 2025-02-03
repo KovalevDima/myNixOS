@@ -19,9 +19,7 @@
             "network/wireguardConfigFile2" = {};
           };
         };
-        module.gui =  {
-          initialUser = "dmitry";
-        };
+        module.gui.initialUser = "dmitry";
         programs.steam = {
           enable = true;
           remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play

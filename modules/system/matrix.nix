@@ -1,6 +1,4 @@
-{ inputs
-, pkgs
-, lib
+{ lib
 , config
 , ...
 }:
@@ -34,7 +32,7 @@ in
           }
         ];
     };
-    systemd.services.postgresql.postStart = with config.services.matrix-synapse.settings.database; 
+    systemd.services.postgresql.postStart = with config.services.matrix-synapse.settings.database;
       lib.mkAfter ''
       $PSQL -tAc "SELECT 1 FROM pg_database WHERE datname = '${args.database}'" | grep -q 1 ||
         $PSQL -tAc '

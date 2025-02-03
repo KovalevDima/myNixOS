@@ -106,7 +106,7 @@
             home = {
               homeDirectory = "/home/dmitry";
               stateVersion = "24.05";
-              packages = with pkgs; [];
+              packages = [];
             };
             colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
           };
