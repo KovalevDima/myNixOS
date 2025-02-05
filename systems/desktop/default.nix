@@ -125,6 +125,7 @@
                 cbonsai
                 cava
                 # files processing
+                unzip
                 gnutar
                 ffmpeg-full
                 # network
