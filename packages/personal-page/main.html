@@ -10,7 +10,7 @@
         html {
             justify-content: center;
             display: flex;
-            font-family: Hasklig, Monospace;
+            font-family: 'Hasklig', monospace;
         }
         body {
             color: rgb(155, 155, 155);
@@ -23,6 +23,12 @@
             section {justify-self: center;}
             header {justify-self: center;}
             article {justify-content: center;}
+        }
+        @font-face {
+            font-family: 'Hasklig';
+            src:
+                local('Hasklig'),
+                url('/assets/Hasklig-Regular.ttf') format('truetype');
         }
         h2{margin: 10px 0 10px 0; text-align: center;}
         h3{margin: 5px 0 5px 0;}

@@ -99,7 +99,7 @@ Implemented ClickHouse DBMS **Native protocol** and **client** in Haskell
 
 <section class="bordered">
 
-<h3> [Homelab](https://github.com/KovalevDima/KovalevDima): <img width="24" src="./icons/nix.svg"> <img width="24" src="./icons/haskell.svg"> <img width="24" src="./icons/bitcoin.svg"> <img width="24" src="./icons/matrix.svg">
+<h3> [Homelab](https://github.com/KovalevDima/KovalevDima): <img width="24" src="./icons/nix.svg"> <img width="24" src="./icons/haskell.svg"> <img width="24" src="./icons/bitcoin.svg"> <img height="24" src="./icons/btcpay-server.svg"> <img width="24" src="./icons/matrix.svg">
 </h3>
 
 Selfhosting with best **Everything as a Code** approach tool
