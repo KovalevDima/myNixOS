@@ -16,10 +16,9 @@
             color: rgb(155, 155, 155);
             background-color: #121212;
             display: flex;
-            justify-self: center;
             margin-top: 0px;
         }
-        main { display: flex; flex-direction: column; row-gap: 20px;}
+        main { display: flex; justify-content: center; flex-direction: column; row-gap: 20px;}
         @media (max-width: 803px) {
             section {justify-self: center;}
             header {justify-self: center;}
@@ -30,6 +29,7 @@
         ul{
             margin: 5px 0 5px 0;
             padding-inline-start: 25px;
+            list-style-type: square;
         }
         p {margin: 4px;}
         article {
@@ -44,7 +44,7 @@
             gap: 10px;
             background-color: rgb(30, 30, 30);
             height: 40px;
-            min-width: 384px;
+            min-width: 324px;
             justify-content: space-between;
             align-items: center;
             padding: 4px 8px;
@@ -67,10 +67,10 @@
         section {
             display: flex;
             flex-direction: column;
-            min-width: 350px;
-            max-width: 350px;
+            min-width: 320px;
+            max-width: 320px;
             margin-bottom: 8px;
-            padding: 5px 15px 5px 15px;
+            padding: 5px 10px 5px 10px;
         }
         .bordered {
             border: solid 2px;
