@@ -6,7 +6,6 @@ author:          Kovalev Dmitry
 maintainer:      joe@example.com
 
 license:         BSD-3-Clause
-license-file:    ./LICENSE
 copyright:       2024 Kovalev Dmitry
 
 build-type:      Simple

@@ -77,17 +77,16 @@
           pkgs.nil
           pkgs.zlib
           pkgs.pkg-config
+          pkgs.glslang
+          pkgs.vulkan-tools
+          pkgs.vulkan-loader
         ];
-        inputsFrom = with self.packages.x86_64-linux; [ graphics personal-page ];
+        inputsFrom = with self.packages.x86_64-linux; [image personal-page];
       };
     };
     packages.x86_64-linux = {
-      personal-page = import ./packages/personal-page/page.nix {inherit nixpkgs pkgs;};
-      graphics = import ./packages/graphics/graphics.nix {inherit pkgs;};
-      image = import ./packages/graphics/image.nix {
-        inherit nixpkgs pkgs;
-        graphics = self.packages.x86_64-linux.graphics;
-      };
+      personal-page = import ./packages/personal-page/page.nix {inherit pkgs;};
+      image         = import ./packages/graphics/image.nix {inherit pkgs;};
     };
   };
 }
