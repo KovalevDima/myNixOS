@@ -21,12 +21,10 @@
 
   outputs = { self, nixpkgs, disko, ... } @ inputs:
     let
-      pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-      haskellPackages = pkgs.haskellPackages;
-      lib = inputs.nixpkgs.lib;
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
     in {
     nixosConfigurations = {
-      desktop = lib.nixosSystem (import ./systems/desktop
+      desktop = nixpkgs.lib.nixosSystem (import ./systems/desktop
         { inherit inputs;
           systemModules = [
             inputs.sops-nix.nixosModules.sops
@@ -40,7 +38,7 @@
           ];
         }
       );
-      laptop = lib.nixosSystem (import ./systems/laptop
+      laptop = nixpkgs.lib.nixosSystem (import ./systems/laptop
         { inherit inputs;
           systemModules = [
             inputs.sops-nix.nixosModules.sops
@@ -54,7 +52,7 @@
           ];
         }
       );
-      server = lib.nixosSystem (import ./systems/server
+      server = nixpkgs.lib.nixosSystem (import ./systems/server
         { inherit inputs disko self;
           systemModules = [
             inputs.sops-nix.nixosModules.sops
@@ -72,7 +70,7 @@
     };
     devShells.x86_64-linux = {
       default = pkgs.mkShell {
-        buildInputs = with haskellPackages; [
+        buildInputs = with pkgs.haskellPackages; [
           haskell-language-server
           ghcid
           cabal-install
@@ -80,32 +78,16 @@
           pkgs.zlib
           pkgs.pkg-config
         ];
-        inputsFrom = with self.packages.x86_64-linux; [ graphics compiler ];
+        inputsFrom = with self.packages.x86_64-linux; [ graphics personal-page ];
       };
     };
     packages.x86_64-linux = {
-      compiler = haskellPackages.callCabal2nix "compiler" ./packages/personal-page {};
-      graphics =
-        pkgs.haskell.lib.addBuildDepends 
-          (haskellPackages.callCabal2nix "graphics" ./packages/graphics {})
-          [pkgs.glslang pkgs.vulkan-headers pkgs.vulkan-loader]; 
-      personal-page = pkgs.stdenv.mkDerivation {
-        name = "personal-page";
-
-        src = pkgs.nix-gitignore.gitignoreSourcePure [] ./.;
-        buildPhase = "${lib.getExe' self.packages.x86_64-linux.compiler "compiler"} build --verbose";
-
-        installPhase = ''
-          mkdir -p "$out"
-          cp -r ./_site "$out"
-        '';
+      personal-page = import ./packages/personal-page/page.nix {inherit nixpkgs pkgs;};
+      graphics = import ./packages/graphics/graphics.nix {inherit pkgs;};
+      image = import ./packages/graphics/image.nix {
+        inherit nixpkgs pkgs;
+        graphics = self.packages.x86_64-linux.graphics;
       };
-      image = let shaderPath = ./packages/graphics/julia.glsl; in
-        pkgs.writeShellScriptBin "mkImage" ''
-          glslangValidator -S comp -V ${shaderPath} -o ./~compiledShader.spirv
-          ${lib.getExe' self.packages.x86_64-linux.graphics "graphics"} ./~compiledShader.spirv
-          rm ./~compiledShader.spirv
-        '';
     };
   };
 }

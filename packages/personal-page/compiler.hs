@@ -6,7 +6,7 @@ import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Hakyll
 
 configuration :: Configuration
-configuration = defaultConfiguration{providerDirectory = "./packages/personal-page/"}
+configuration = defaultConfiguration{providerDirectory = "./"}
 
 compiler :: IO ()
 compiler = do
