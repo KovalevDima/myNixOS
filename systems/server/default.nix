@@ -35,7 +35,7 @@
           virtualHosts."${config.networking.domain}" = {
             enableACME = true;
             forceSSL = true;
-            root = "${self.packages.x86_64-linux."personal-page"}/_site";
+            root = "${self.packages.x86_64-linux."personal-page"}";
           };
         };
         users.users.nginx.extraGroups = [ "acme" ];
