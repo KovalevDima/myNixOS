@@ -113,7 +113,7 @@ in
         "$mainMod, C, killactive,"
         "$mainMod, M, exit,"
         "$mainMod, D, exec, discord"
-        "$mainMod, B, exec, firefox"
+        "$mainMod, B, exec, firefox -p"
         "$mainMod, E, exec, yazi"
         "$mainMod, V, togglefloating,"
         "$mainMod, R, exec, wofi --show drun"
