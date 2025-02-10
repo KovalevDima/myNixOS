@@ -128,6 +128,7 @@
                 unzip
                 gnutar
                 ffmpeg-full
+                tree
                 # network
                 wget
               ];
