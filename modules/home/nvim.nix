@@ -1,14 +1,26 @@
 { config
 , pkgs
-, inputs
+, lib
 , ...
 }:
 
-let
-  inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) vimThemeFromScheme;
-in
 {
-  config = {
+  options = {
+    module.nvim = {
+      theme = lib.mkOption {
+        type = lib.types.nullOr (lib.types.attrsOf lib.types.anything);
+        default = null;
+        description = "Custom theme for neovim";
+         # ToDo: Pass to systems configurations
+         # inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) vimThemeFromScheme;
+         # a = vimThemeFromScheme {scheme = config.colorScheme;};
+      };
+    };
+  };
+  config =
+  let
+    theme = config.module.nvim.theme;
+  in {
     programs.neovim = {
       enable = true;
       plugins = with pkgs.vimPlugins; [
@@ -23,10 +35,12 @@ in
             p.tree-sitter-haskell
           ])
         )
-        {
-          plugin = vimThemeFromScheme {scheme = config.colorScheme;};
-          config = "colorscheme nix-${config.colorScheme.slug}";
-        }
+        (pkgs.lib.mkIf (theme != null)
+          {
+            plugin = theme;
+            config = "colorscheme nix-${config.colorScheme.slug}";
+          }
+        )
       ];
 
       extraConfig = ''
