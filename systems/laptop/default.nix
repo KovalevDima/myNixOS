@@ -95,7 +95,7 @@
               stateVersion = "24.05";
               packages = with pkgs; [
                 telegram-desktop
-                vesktop
+                discord
                 # system info
                 btop
                 fastfetch

@@ -115,6 +115,7 @@
               packages = with pkgs; [
                 telegram-desktop
                 vesktop
+                discord
                 yarn
                 nodejs
                 # system info
