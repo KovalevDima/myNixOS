@@ -3,7 +3,9 @@
 , lib
 , ...
 }:
-
+let
+  theme = config.module.nvim.theme;
+in
 {
   options = {
     module.nvim = {
@@ -11,16 +13,11 @@
         type = lib.types.nullOr (lib.types.attrsOf lib.types.anything);
         default = null;
         description = "Custom theme for neovim";
-         # ToDo: Pass to systems configurations
-         # inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) vimThemeFromScheme;
-         # a = vimThemeFromScheme {scheme = config.colorScheme;};
       };
     };
   };
   config =
-  let
-    theme = config.module.nvim.theme;
-  in {
+   {
     programs.neovim = {
       enable = true;
       plugins = with pkgs.vimPlugins; [
@@ -35,12 +32,7 @@
             p.tree-sitter-haskell
           ])
         )
-        (pkgs.lib.mkIf (theme != null)
-          {
-            plugin = theme;
-            config = "colorscheme nix-${config.colorScheme.slug}";
-          }
-        )
+        (pkgs.lib.mkIf (theme != null) theme)
       ];
 
       extraConfig = ''

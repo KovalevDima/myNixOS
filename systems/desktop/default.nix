@@ -57,7 +57,7 @@
           };
         };
         environment.systemPackages = with pkgs; [
-          dig
+          # dev
           nix-tree
           k9s
           kubernetes-helm
@@ -66,7 +66,27 @@
           awscli2
           minikube
           postgresql
+          yarn
+          nodejs
+          # system info
+          btop
+          fastfetch
+          # network
+          wget
+          dig
+          # files processing
+          unzip
+          gnutar
+          ffmpeg-full
+          tree
+          # communication
+          discord
           element-desktop
+          telegram-desktop
+          # fun
+          cmatrix
+          cbonsai
+          cava
         ];
         virtualisation.docker.enable = true;
         nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
@@ -89,15 +109,45 @@
       }
     )
     (
-      {inputs, config, pkgs, ...} : {
+      {inputs, config, pkgs, ...}:
+      let
+        theme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
+        nixColors = inputs.nix-colors.lib-contrib {inherit pkgs;};
+      in
+      {
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
           extraSpecialArgs = {inherit inputs;};
           users.dmitry = {
             imports = homeModules;
+            colorScheme = theme;
+            module = {
+              hyprland = {
+                palette = theme.palette;
+                monitors = [
+                  "DP-1, 2560x1440@165, 0x0, 1"
+                  "DP-2, 2560x1440@165, 2560x0, 1"
+                ];
+                wallpaper = nixColors.nixWallpaperFromScheme {
+                  scheme = theme;
+                  width = 2560;
+                  height = 1440;
+                  logoScale = 15.0;
+                };
+                gtkTheme = {
+                  name = theme.slug;
+                  package = nixColors.gtkThemeFromScheme { scheme = theme; };
+                };
+              };
+              waybar.palette = theme.palette;
+              alacritty.palette = theme.palette;
+              nvim.theme ={
+                plugin = nixColors.vimThemeFromScheme {scheme = theme;};
+                config = "colorscheme nix-${theme.slug}";
+              };
+            };
             programs = {
-              home-manager.enable = true;
               vscode.enable = true;
               firefox.enable = true; 
               obs-studio = {
@@ -112,33 +162,8 @@
             home = {
               homeDirectory = "/home/dmitry";
               stateVersion = "24.05";
-              packages = with pkgs; [
-                telegram-desktop
-                vesktop
-                discord
-                yarn
-                nodejs
-                # system info
-                btop
-                fastfetch
-                # fun
-                cmatrix
-                cbonsai
-                cava
-                # files processing
-                unzip
-                gnutar
-                ffmpeg-full
-                tree
-                # network
-                wget
-              ];
+              packages = [];
             };
-            colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
-            wayland.windowManager.hyprland.settings.monitor = [
-              "DP-1, 2560x1440@165, 0x0, 1"
-              "DP-2, 2560x1440@165, 2560x0, 1"
-            ];
           };
         };
       }

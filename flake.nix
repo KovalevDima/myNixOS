@@ -33,8 +33,10 @@
           ];
           homeModules = [
             inputs.nix-colors.homeManagerModules.default
+            ./modules/home/hyprland.nix
+            ./modules/home/waybar.nix
+            ./modules/home/alacritty.nix
             ./modules/home/nvim.nix
-            ./modules/home/gui.nix
           ];
         }
       );
@@ -47,8 +49,10 @@
           ];
           homeModules = [
             inputs.nix-colors.homeManagerModules.default
+            ./modules/home/hyprland.nix
+            ./modules/home/alacritty.nix
+            ./modules/home/waybar.nix
             ./modules/home/nvim.nix
-            ./modules/home/gui.nix
           ];
         }
       );

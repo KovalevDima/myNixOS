@@ -79,13 +79,39 @@
       }
     )
     (
-      {inputs, config, pkgs, lib, ...} : {
+      {inputs, config, pkgs, lib, ...} : 
+      let
+        theme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
+        nixColors = inputs.nix-colors.lib-contrib {inherit pkgs;};
+      in
+      {
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
           extraSpecialArgs = {inherit inputs;};
           users.dmitry = {
             imports = homeModules;
+            module = {
+              hyprland = {
+                palette = theme.palette;
+                wallpaper = nixColors.nixWallpaperFromScheme {
+                  scheme = theme;
+                  width = 2560;
+                  height = 1440;
+                  logoScale = 15.0;
+                };
+                gtkTheme = {
+                  name = theme.slug;
+                  package = nixColors.gtkThemeFromScheme {scheme = theme;};
+                };
+              };
+              waybar.palette = theme.palette;
+              alacritty.palette = theme.palette;
+              nvim.theme = {
+                plugin = nixColors.vimThemeFromScheme {scheme = theme;};
+                config = "colorscheme nix-${theme.slug}";
+              };
+            };
             programs = {
               home-manager.enable = true;
               vscode.enable = true;
@@ -111,7 +137,6 @@
               ];
             };
             colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
-            wayland.windowManager.hyprland.settings.monitor = ",preferred,auto,auto";
           };
         };
       }
