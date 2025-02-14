@@ -34,6 +34,7 @@
           homeModules = [
             inputs.nix-colors.homeManagerModules.default
             ./modules/home/hyprland.nix
+            ./modules/home/k8s-dev.nix
             ./modules/home/waybar.nix
             ./modules/home/alacritty.nix
             ./modules/home/nvim.nix

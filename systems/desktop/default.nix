@@ -142,6 +142,7 @@
               };
               waybar.palette = theme.palette;
               alacritty.palette = theme.palette;
+              k9s.palette = theme.palette;
               nvim.theme ={
                 plugin = nixColors.vimThemeFromScheme {scheme = theme;};
                 config = "colorscheme nix-${theme.slug}";
