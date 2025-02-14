@@ -96,19 +96,29 @@
       }
     )
     (
-      {inputs, config, pkgs, ...} : {
+      {inputs, config, pkgs, ...}:
+      let
+        theme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
+        nixColors = inputs.nix-colors.lib-contrib {inherit pkgs;};
+      in
+      {
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
           extraSpecialArgs = {inherit inputs;};
           users.dmitry = {
             imports = homeModules;
+            module = {
+              nvim.theme = {
+                plugin = nixColors.vimThemeFromScheme {scheme = theme;};
+                config = "colorscheme nix-${theme.slug}";
+              };
+            };
             home = {
               homeDirectory = "/home/dmitry";
               stateVersion = "24.05";
               packages = [];
             };
-            colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
           };
         };
       }
