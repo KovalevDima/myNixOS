@@ -74,11 +74,6 @@ in
           rounding = 0;
           active_opacity = 1.0;
           inactive_opacity = 1.0;
-          shadow = {
-            range = 4;
-            render_power = 3;
-            color = "rgba(11111111)";
-          };
           blur = {
             enabled = true;
             size = 3;
