@@ -51,6 +51,7 @@
         };
         environment.systemPackages = with pkgs; [
           dig
+          chromium
           k9s
           kubernetes-helm
           kubectl

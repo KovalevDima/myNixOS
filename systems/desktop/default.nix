@@ -72,6 +72,7 @@
           btop
           fastfetch
           # network
+          chromium
           wget
           dig
           # files processing
