@@ -17,6 +17,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
     nix-colors.url = "github:misterio77/nix-colors";
     nix-bitcoin.url = "github:fort-nix/nix-bitcoin";
+    ClickHaskell.url = "github:KovalevDima/ClickHaskell?ref=preparing-system-module";
   };
 
   outputs = { self, nixpkgs, disko, ... } @ inputs:
@@ -62,6 +63,7 @@
           systemModules = [
             inputs.sops-nix.nixosModules.sops
             inputs.nix-bitcoin.nixosModules.default
+            inputs.ClickHaskell.nixosModules.default
             ./modules/system/nix.nix
             ./modules/system/mail-server.nix
             ./modules/system/matrix.nix

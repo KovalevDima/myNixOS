@@ -32,13 +32,27 @@
         module.matrix.shared_secret = "${config.sops.secrets."matrix/sharedSecret".path}";
         services.nginx = {
           enable = true;
-          virtualHosts."${config.networking.domain}" = {
-            enableACME = true;
-            forceSSL = true;
-            root = "${self.packages.x86_64-linux."personal-page"}";
+          virtualHosts = {
+            "${config.networking.domain}" = {
+              enableACME = true;
+              forceSSL = true;
+              root = "${self.packages.x86_64-linux."personal-page"}";
+            };
+            "${config.ClickHaskell.domain}" = {
+              enableACME = true;
+              forceSSL = true;
+              root = "${inputs.ClickHaskell.packages.x86_64-linux."documentation"}";
+            };
+            "git.${config.ClickHaskell.domain}" = {
+              forceSSL = true;
+              useACMEHost = "${config.ClickHaskell.domain}";
+              locations."/" = {
+                return = "301 https://github.com/KovalevDima/ClickHaskell";
+              };
+            };
           };
         };
-        users.users.nginx.extraGroups = [ "acme" ];
+        users.users.nginx.extraGroups = [ "ClickHaskell" "acme" ];
         security.acme = {
           acceptTerms = true;
           certs = {
