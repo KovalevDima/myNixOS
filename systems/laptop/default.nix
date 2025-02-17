@@ -34,7 +34,6 @@
           dhcpcd.enable = false;
           dhcpcd.extraConfig = "nohook resolv.conf";
           nameservers = [ "8.8.8.8" "8.8.4.4"];
-          wg-quick.interfaces.wg0.configFile = "${config.sops.secrets."network/wireguardConfigFile2".path}";
         };
         users.users.root = {
           openssh.authorizedKeys.keys = [
@@ -115,6 +114,7 @@
             };
             programs = {
               home-manager.enable = true;
+              firefox.enable = true;
               vscode.enable = true;
             };
             home = {
