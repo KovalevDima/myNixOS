@@ -17,7 +17,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
     nix-colors.url = "github:misterio77/nix-colors";
     nix-bitcoin.url = "github:fort-nix/nix-bitcoin";
-    ClickHaskell.url = "github:KovalevDima/ClickHaskell?ref=preparing-system-module";
+    ClickHaskell.url = "github:KovalevDima/ClickHaskell";
   };
 
   outputs = { self, nixpkgs, disko, ... } @ inputs:
