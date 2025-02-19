@@ -41,7 +41,7 @@
             "${config.ClickHaskell.domain}" = {
               enableACME = true;
               forceSSL = true;
-              root = "${inputs.ClickHaskell.packages.x86_64-linux."documentation"}";
+              root = "${config.ClickHaskell.pagePackage}";
             };
             "git.${config.ClickHaskell.domain}" = {
               forceSSL = true;
