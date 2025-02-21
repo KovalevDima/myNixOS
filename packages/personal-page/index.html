@@ -102,24 +102,28 @@
       </div>
     </header>
     <article>
-      <section class="bordered" style="flex-direction: row; justify-content: space-between;">
-        <div >
+      <section class="bordered" style="flex-direction: row; justify-content: space-between; gap:5px;">
+        <div style="justify-self: center;;">
           <img
             height="120px" width="105px"
-            style="border: solid 1px; border-radius: 5px 3px 0 0;"
+            style="border: solid 1px;"
             src="./assets/avatar.jpg"
             >
         </div>
-        <p>
-          <img width="24" src="./icons/nix.svg">
-          Nix enthusiast and opensource geek<br><br>
-          Optimizations addict<br><br>
-          DM me for consulting
-        </p>
+        <div>
+          <img width="20" src="./icons/nix.svg">
+          Nix enthusiast<br>
+          Experienced in
+          <ul style="padding-inline-start: 15px;">
+            <li>Software development</li>
+            <li>Data processing</li>
+            <li>Linux and DevOps</li>
+          </ul>
+        </div>
       </section>
       <section class="bordered" style="flex-direction: row; justify-content: space-between;">
         <div style="display: flex; flex-direction: column;">
-          <h3>Tip me: <img width="24" src="./icons/bitcoin.svg"></h3>
+          <h3>Wishlist: <img width="24" src="./icons/bitcoin.svg"></h3>
           <ul>
             <li>200$ lab upgrade</li>
             <li>50$ hosting bill</li>
@@ -156,7 +160,8 @@
             <b>1/week -> 2-4/day</b>
           </li>
           <li>Improved <b>SLA 85% -> +98%</b></li>
-          <li>Hired 1 dev, interviewed 6</li>
+          <li>Hired 1 developer</li>
+          <li>Managed a team of 4 people</li>
         </ul>
       </section>
       <section class="bordered">
@@ -171,11 +176,14 @@
         <p>Continued my career as an Infrastructure engineer</p>
         <ul>
           <li>
-            Integrated 2 AWS clusters<br>
+            Optimized AWS EKS cost<br>
             <b>8000$ -> 4000$ monthly bill</b>
           </li>
+          <li>Built automated QA environment</li>
+          <li>Implemented daily databases backups
+            and its testing
+          </li>
           <li>Configured metrics and alerts</li>
-          <li>Built dev environment</li>
         </ul>
       </section>
     </article>
@@ -191,9 +199,8 @@
         <ul>
           <li>Compile time verification</li>
           <li>Low dependency footprint</li>
-          <li>Pretty simple design</li>
           <li>Documentation as a code</li>
-          <li>Nextgen CI/CD</li>
+          <li>Rich CI/CD and QA</li>
         </ul>
       </section>
       <section class="bordered">
