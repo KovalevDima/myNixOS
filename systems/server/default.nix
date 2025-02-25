@@ -41,7 +41,14 @@
             "${config.ClickHaskell.domain}" = {
               enableACME = true;
               forceSSL = true;
-              root = "${config.ClickHaskell.pagePackage}";
+              locations."/" = {
+                proxyPass = "http://unix:${config.ClickHaskell.path}/ClickHaskell.sock:";
+                extraConfig = ''
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                '';
+              };
             };
             "git.${config.ClickHaskell.domain}" = {
               forceSSL = true;
@@ -52,7 +59,7 @@
             };
           };
         };
-        users.users.nginx.extraGroups = [ "ClickHaskell" "acme" ];
+        users.users.nginx.extraGroups = [ config.ClickHaskell.group "acme" ];
         security.acme = {
           acceptTerms = true;
           certs = {
