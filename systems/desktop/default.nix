@@ -70,6 +70,7 @@
           nodejs
           # system info
           btop
+          smartmontools
           fastfetch
           # network
           chromium

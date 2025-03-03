@@ -59,6 +59,7 @@
           minikube
           postgresql
           element-desktop
+          smartmontools
         ];
         virtualisation.docker.enable = true;
         nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [

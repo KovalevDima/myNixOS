@@ -110,6 +110,7 @@
         };
         environment.systemPackages = with pkgs; [
           dig
+          smartmontools
         ];
         i18n.defaultLocale = "en_US.UTF-8";
         time.timeZone = "Europe/Moscow";
