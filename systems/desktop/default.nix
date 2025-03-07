@@ -57,6 +57,9 @@
           };
         };
         environment.systemPackages = with pkgs; [
+          # 3d
+          blender-hip
+          freecad-wayland
           # dev
           nix-tree
           k9s
