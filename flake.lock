@@ -9,11 +9,11 @@
         "services-flake": "services-flake"
       },
       "locked": {
-        "lastModified": 1741222690,
-        "narHash": "sha256-rXrAHFSiY0j3f3Jb1juPLGIrRL0q5JjA9fPMa0N+Gd0=",
+        "lastModified": 1741304573,
+        "narHash": "sha256-9yuwh9feX3jlwup/c17SWQjCmxaCxKgLVTJ2ELeFoIU=",
         "owner": "KovalevDima",
         "repo": "ClickHaskell",
-        "rev": "c928c082d69dcc0ac7ada2c45c11fddebd02e68f",
+        "rev": "ebdb6b84d4a0c89956e407686fb3eb6e5dc0269a",
         "type": "github"
       },
       "original": {
@@ -142,11 +142,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1741217763,
-        "narHash": "sha256-g/TrltIjFHIjtzKY5CJpoPANfHQWDD43G5U1a/v5oVg=",
+        "lastModified": 1741461731,
+        "narHash": "sha256-BBQfGvO3GWOV+5tmqH14gNcZrRaQ7Q3tQx31Frzoip8=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "486b066025dccd8af7fbe5dd2cc79e46b88c80da",
+        "rev": "7f4c60a3d6e548dbc13666565c22cb3f8dcdad44",
         "type": "github"
       },
       "original": {
@@ -365,11 +365,11 @@
     },
     "unstable": {
       "locked": {
-        "lastModified": 1741173522,
-        "narHash": "sha256-k7VSqvv0r1r53nUI/IfPHCppkUAddeXn843YlAC5DR0=",
+        "lastModified": 1741246872,
+        "narHash": "sha256-Q6pMP4a9ed636qilcYX8XUguvKl/0/LGXhHcRI91p0U=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d69ab0d71b22fa1ce3dbeff666e6deb4917db049",
+        "rev": "10069ef4cf863633f57238f179a0297de84bd8d3",
         "type": "github"
       },
       "original": {
