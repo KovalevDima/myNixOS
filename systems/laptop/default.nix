@@ -20,27 +20,27 @@
           };
         };
         module.gui.initialUser = "dmitry";
-        programs.steam = {
-          enable = true;
-          remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-          dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-          localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+        programs = {
+          amnezia-vpn.enable = true;
+          steam = {
+            enable = true;
+            remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+            dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+            localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+          };
         };
         networking = {
           hostName = "nixos";
           networkmanager.enable = true;
-          networkmanager.dns = "none";
           useDHCP = false;
           dhcpcd.enable = false;
           dhcpcd.extraConfig = "nohook resolv.conf";
-          nameservers = [ "8.8.8.8" "8.8.4.4"];
         };
         users.users.root = {
           openssh.authorizedKeys.keys = [
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAMRId+WDlD6u83HZx62o0PrCS0aZSnSJT5kXbKI9CaV dmitry@desktop"
           ];
         };
-        services.resolved.enable = false;
         boot.loader.systemd-boot.enable = true;
         boot.loader.efi.canTouchEfiVariables = true;
         users.users.dmitry = {
