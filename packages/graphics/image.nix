@@ -9,7 +9,7 @@ let
       (with pkgs; [glslang vulkan-headers vulkan-loader]);
   shaderRunner = pkgs.lib.getExe' graphics "graphics";
 
-  icdPath = pkgs.mesa.drivers + /share/vulkan/icd.d/lvp_icd.x86_64.json;
+  icdPath = pkgs.mesa + /share/vulkan/icd.d/lvp_icd.x86_64.json;
 in
 
 pkgs.stdenv.mkDerivation {
@@ -17,7 +17,7 @@ pkgs.stdenv.mkDerivation {
 
   src = pkgs.nix-gitignore.gitignoreSourcePure [] ./.;
 
-  buildInputs = [ pkgs.mesa.drivers ];
+  buildInputs = [ pkgs.mesa ];
 
   buildPhase = ''
     ${glslangValidator} -S comp -V ${./julia.glsl} -o shader.spirv
