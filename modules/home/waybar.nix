@@ -2,9 +2,17 @@
 , lib
 , ...
 }:
+let
+  enable = config.module.waybar.enable;
+  palette = config.module.waybar.palette;
+in 
 {
   options = {
     module.waybar = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+      };
       palette = lib.mkOption {
         type = lib.types.nullOr (lib.types.attrsOf lib.types.anything);
         default = null;
@@ -13,10 +21,7 @@
     };
   };
 
-  config = 
-  let
-    palette = config.module.waybar.palette;
-  in {
+  config = lib.mkIf enable {
     programs = {
       waybar = {
         enable = true;

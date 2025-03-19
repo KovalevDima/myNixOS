@@ -139,6 +139,7 @@
             colorScheme = theme;
             module = {
               hyprland = {
+                enable = true;
                 palette = theme.palette;
                 monitors = [
                   "DP-1, 2560x1440@165, 0x0, 1"
@@ -155,7 +156,10 @@
                   package = nixColors.gtkThemeFromScheme { scheme = theme; };
                 };
               };
-              waybar.palette = theme.palette;
+              waybar = {
+                enable = true;
+                palette = theme.palette;
+              };
               alacritty.palette = theme.palette;
               k9s.palette = theme.palette;
               nvim.theme ={

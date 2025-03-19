@@ -3,6 +3,7 @@
 , ...
 }:
 let
+  enable = config.module.hyprland.enable;
   wallpaper = config.module.hyprland.wallpaper;
   palette   = config.module.hyprland.palette;
   monitors  = config.module.hyprland.monitors;
@@ -11,6 +12,10 @@ in
 {
   options = {
     module.hyprland = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+      };
       wallpaper = lib.mkOption {
         type = lib.types.nullOr lib.types.anything;
         default = null;
@@ -33,7 +38,7 @@ in
       };
     };
   };
-  config = {
+  config = lib.mkIf enable {
     gtk = {
       enable = true;
       theme = lib.mkIf (gtkTheme != null) gtkTheme;

@@ -94,6 +94,7 @@
             imports = homeModules;
             module = {
               hyprland = {
+                enable = true;
                 palette = theme.palette;
                 wallpaper = nixColors.nixWallpaperFromScheme {
                   scheme = theme;
@@ -106,7 +107,10 @@
                   package = nixColors.gtkThemeFromScheme {scheme = theme;};
                 };
               };
-              waybar.palette = theme.palette;
+              waybar = {
+                enable = true;
+                palette = theme.palette;
+              };
               alacritty.palette = theme.palette;
               nvim.theme = {
                 plugin = nixColors.vimThemeFromScheme {scheme = theme;};
