@@ -8,3 +8,5 @@ dist-newstyle
 _cache
 _site
 result.png
+
+cert1.pem
