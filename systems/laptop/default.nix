@@ -19,9 +19,18 @@
             "network/wireguardConfigFile2" = {};
           };
         };
+        security = {
+          pki.certificateFiles = [
+            (builtins.fetchurl {
+              url = "file:///home/dmitry/hobby/KovalevDima/systems/cert1.pem";
+              sha256 = "sha256:0bp1bni073wnym8pwnw43ns3m2swb6zw6q6wxpwgwgg44v0092ay";
+            })
+          ];
+        };
         module.gui.initialUser = "dmitry";
         programs = {
           amnezia-vpn.enable = true;
+          openvpn3.enable = true;
           steam = {
             enable = true;
             remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -35,6 +44,11 @@
           useDHCP = false;
           dhcpcd.enable = false;
           dhcpcd.extraConfig = "nohook resolv.conf";
+        };
+        services.openssh = {
+          enable = true;
+          ports = [22];
+          settings.AllowUsers = null;
         };
         users.users.root = {
           openssh.authorizedKeys.keys = [
