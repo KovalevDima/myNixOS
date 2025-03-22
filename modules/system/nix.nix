@@ -6,6 +6,9 @@
   config = {
     nix = {
       extraOptions = "experimental-features = nix-command flakes";
+      settings = {
+        trusted-users = ["@wheel"];
+      };
     };
 
     environment.systemPackages = with pkgs; [sops age git];
