@@ -47,7 +47,7 @@ in
       enable = true;
       settings = {
         exec-once = [
-          "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+          "dbus-update-activation-environment --systemd XDG_CURRENT_DESKTOP XDG_CONFIG_DIRS DISPLAY WAYLAND_DISPLAY MOZ_DBUS_REMOTE XCURSOR_SIZE XCURSOR_THEME"
           (lib.mkIf (wallpaper != null) "swww-daemon & sleep 1 && swww img ${wallpaper}")
           "swaynotificationcenter"
         ];

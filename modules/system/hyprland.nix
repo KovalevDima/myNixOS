@@ -41,12 +41,17 @@
 
     environment = {
       sessionVariables = {
+        EDITOR = "nvim";
+        ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+        MOZ_ENABLE_WAYLAND = "1";
+        MOZ_DBUS_REMOTE="1";
         NIXOS_OZONE_WL = "1";
         SDL_VIDEODRIVER = "wayland";
         XDG_CURRENT_DESKTOP = "Hyprland";
         XDG_SESSION_TYPE = "wayland";
         XDG_SESSION_DESKTOP = "Hyprland";
         GDK_BACKEND = "wayland";
+        GDK_GL = "disable";
         CLUTTER_BACKEND = "wayland";
         WLR_RENDERER = "vulkan";
       };
@@ -67,10 +72,6 @@
       hyprland.enable = true;
     };
 
-    xdg.portal = {
-      enable = true;
-      xdgOpenUsePortal = true;
-      extraPortals = [pkgs.xdg-desktop-portal-hyprland];
-    };
+    xdg.portal.enable = true;
   };
 }
