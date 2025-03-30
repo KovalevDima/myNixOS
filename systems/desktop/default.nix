@@ -89,6 +89,7 @@
           chromium
           wget
           dig
+          nmap
           # files processing
           unzip
           gnutar
