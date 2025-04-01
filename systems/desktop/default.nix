@@ -95,6 +95,7 @@
           gnutar
           ffmpeg-full
           tree
+          cloc
           # communication
           discord
           element-desktop

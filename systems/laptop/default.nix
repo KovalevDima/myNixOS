@@ -74,6 +74,7 @@
           postgresql
           element-desktop
           smartmontools
+          cloc
           # networking
           nmap
         ];
