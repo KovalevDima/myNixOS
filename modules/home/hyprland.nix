@@ -74,6 +74,10 @@ in
           layout = "dwindle";
         };
 
+        ecosystem = {
+          no_update_news = true;
+        };
+
         # https://wiki.hyprland.org/Configuring/Variables/#decoration
         decoration = {
           rounding = 0;
