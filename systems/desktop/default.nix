@@ -97,7 +97,6 @@
           tree
           cloc
           # communication
-          discord
           element-desktop
           telegram-desktop
           # fun
@@ -110,10 +109,7 @@
           "vscode"
           "yandex-cloud"
           "telegram-desktop"
-          "discord"
           "steam"
-          "steam-original"
-          "steam-run"
           "steam-unwrapped"
           "nvidia-x11"
           "nvidia-settings"

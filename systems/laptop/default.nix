@@ -83,10 +83,7 @@
           "vscode"
           "yandex-cloud"
           "telegram-desktop"
-          "discord"
           "steam"
-          "steam-original"
-          "steam-run"
           "steam-unwrapped"
         ];
         i18n.defaultLocale = "en_US.UTF-8";
@@ -144,7 +141,6 @@
               stateVersion = "24.05";
               packages = with pkgs; [
                 telegram-desktop
-                discord
                 # system info
                 btop
                 fastfetch
