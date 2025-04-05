@@ -9,11 +9,11 @@
         "services-flake": "services-flake"
       },
       "locked": {
-        "lastModified": 1743877288,
-        "narHash": "sha256-/IlM9a7xfUW3YqCrNYWKTI2G8fXxqb6h0v26DlGHDR8=",
+        "lastModified": 1743892590,
+        "narHash": "sha256-oyDVGS75U6bOup3W4/cnfEyrbhbU2aG2EhVmBS4xbC0=",
         "owner": "KovalevDima",
         "repo": "ClickHaskell",
-        "rev": "5e8c2d9b45da3a4c19eca41d03cc8fd3fff89f79",
+        "rev": "966330c734317e2e159ab79d1d6528bc5f87fb70",
         "type": "github"
       },
       "original": {
