@@ -18,14 +18,17 @@
   config = {
     hardware.graphics.enable = true;
 
+    programs.hyprland.enable = true;
+
+    xdg.portal.enable = true;
+
     services = {
-      xserver = {
-        enable = true;
-        xkb.layout = "us,ru";
-      };
-      displayManager.autoLogin = {
-        enable = true;
-        user = "${config.module.gui.initialUser}";
+      xserver.enable = true;
+      displayManager = {
+        autoLogin = {
+          enable = true;
+          user = "${config.module.gui.initialUser}";
+        };
       };
       pipewire = {
         enable = true;
@@ -59,19 +62,11 @@
       systemPackages = with pkgs; [
         swww
         wofi
-        yazi
         swaynotificationcenter
         hyprshot
         amberol
         brightnessctl
       ];
     };
-
-    programs = {
-      xwayland.enable = true;
-      hyprland.enable = true;
-    };
-
-    xdg.portal.enable = true;
   };
 }
