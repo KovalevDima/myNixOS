@@ -57,6 +57,7 @@
         GDK_GL = "disable";
         CLUTTER_BACKEND = "wayland";
         WLR_RENDERER = "vulkan";
+        NVD_BACKEND = "direct";
       };
 
       systemPackages = with pkgs; [
