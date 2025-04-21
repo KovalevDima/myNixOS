@@ -38,7 +38,10 @@
             localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
           };
         };
-        networking.hostName = "desktop";
+        networking = {
+          hostName = "desktop";
+          firewall.allowedTCPPorts = [3001];
+        };
         services = {
           openssh = {
             enable = true;
@@ -46,6 +49,15 @@
             settings.AllowUsers = null;
           };
           xserver.videoDrivers = ["nvidia"];
+          ollama = {
+            enable = true;
+            acceleration = "cuda";
+          };
+          open-webui = {
+            enable = true;
+            host = "0.0.0.0";
+            port = 3001;
+          };
         };
         hardware.nvidia = {
           modesetting.enable = true;
@@ -114,6 +126,10 @@
           "steam-unwrapped"
           "nvidia-x11"
           "nvidia-settings"
+          "libcublas"
+          "cuda_cudart"
+          "cuda_cccl"
+          "cuda_nvcc"
         ];
         i18n.defaultLocale = "en_US.UTF-8";
         time.timeZone = "Europe/Moscow";
