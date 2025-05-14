@@ -20,7 +20,9 @@
           age.keyFile = "/root/.config/sops/age/keys.txt";
           defaultSopsFile = ../../secrets.yaml;
           secrets = {
-          "matrix/sharedSecret" = { owner = "matrix-synapse"; };
+            "matrix/sharedSecret" = { owner = "matrix-synapse"; };
+            "keycloak/admin-realm" = { owner = "keycloak"; };
+            "keycloak/databasePass" = { owner = "keycloak"; };
           #  "mailServerSecret" = { owner="stalwart-mail"; };
           };
         };
@@ -52,6 +54,13 @@
                 '';
               };
             };
+            "auth.${config.networking.domain}" = {
+              forceSSL = true;
+              useACMEHost = "${config.networking.domain}";
+              locations."/".proxyPass =
+                let kcPort = config.services.keycloak.settings.http-port;
+                in "http://127.0.0.1:${toString kcPort}";
+            };
             "git.${config.ClickHaskell.domain}" = {
               forceSSL = true;
               useACMEHost = "${config.ClickHaskell.domain}";
@@ -68,6 +77,7 @@
             "${config.networking.domain}" = {
               email = "letsencrypt@${config.networking.domain}";
               group = "acme";
+              extraDomainNames = [ "auth.${config.networking.domain}" ];
             };
           };
         };
@@ -87,6 +97,18 @@
             "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKlwdqhLRKjVCv6+DMxw3GiOCE2qK6o9I8Ed9OTTwVQG dmitry@nixos"
           ];
         };
+        services.keycloak = {
+          enable = false;
+          database.passwordFile = "${config.sops.secrets."keycloak/databasePass".path}";
+          settings = {
+            hostname = "auth.${config.networking.domain}";
+            http-port = 9080;
+            http-host = "127.0.0.1";
+            http-enabled = true;
+            proxy-headers = "xforwarded";
+          };
+        };
+        users.users.keycloak = { isNormalUser = true; };
         services.bitcoind = {
           enable = true;
           prune = 10000;
