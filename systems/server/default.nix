@@ -40,6 +40,13 @@
               forceSSL = true;
               root = "${self.packages.x86_64-linux."personal-page"}";
             };
+            "auth.${config.networking.domain}" = {
+              forceSSL = true;
+              useACMEHost = "${config.networking.domain}";
+              locations."/".proxyPass =
+                let kcPort = config.services.keycloak.settings.http-port;
+                in "http://127.0.0.1:${toString kcPort}";
+            };
             "${config.ClickHaskell.domain}" = {
               enableACME = true;
               forceSSL = true;
@@ -53,13 +60,6 @@
                   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                 '';
               };
-            };
-            "auth.${config.networking.domain}" = {
-              forceSSL = true;
-              useACMEHost = "${config.networking.domain}";
-              locations."/".proxyPass =
-                let kcPort = config.services.keycloak.settings.http-port;
-                in "http://127.0.0.1:${toString kcPort}";
             };
             "git.${config.ClickHaskell.domain}" = {
               forceSSL = true;
