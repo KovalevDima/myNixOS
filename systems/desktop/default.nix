@@ -116,6 +116,8 @@
           cmatrix
           cbonsai
           cava
+          # gaming
+          prismlauncher
         ];
         virtualisation.docker.enable = true;
         nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
