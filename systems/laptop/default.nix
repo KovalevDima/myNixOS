@@ -19,14 +19,6 @@
             "network/wireguardConfigFile2" = {};
           };
         };
-        security = {
-          pki.certificateFiles = [
-            (builtins.fetchurl {
-              url = "file:///home/dmitry/hobby/KovalevDima/systems/cert1.pem";
-              sha256 = "sha256:0bp1bni073wnym8pwnw43ns3m2swb6zw6q6wxpwgwgg44v0092ay";
-            })
-          ];
-        };
         module.gui.initialUser = "dmitry";
         programs = {
           amnezia-vpn.enable = true;
