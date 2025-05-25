@@ -66,6 +66,10 @@
             inputs.ClickHaskell.nixosModules.default
             ./modules/system/nix.nix
             ./modules/system/mail-server.nix
+            ./modules/system/minecraft.nix
+            {nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+              "minecraft-server"
+            ];}
             ./modules/system/matrix.nix
           ];
           homeModules = [
