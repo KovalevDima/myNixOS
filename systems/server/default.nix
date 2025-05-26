@@ -32,7 +32,7 @@
         # };
         # users.users.stalwart-mail.extraGroups = [ "acme" ];
         module.matrix.shared_secret = "${config.sops.secrets."matrix/sharedSecret".path}";
-        module.minecraft-server.hostname = "mc.${config.networking.domain}";
+        # module.minecraft-server.hostname = "mc.${config.networking.domain}";
         services.nginx = {
           enable = true;
           virtualHosts = {
@@ -44,9 +44,9 @@
             "auth.${config.networking.domain}" = {
               forceSSL = true;
               useACMEHost = "${config.networking.domain}";
-              locations."/".proxyPass =
-                let kcPort = config.services.keycloak.settings.http-port;
-                in "http://127.0.0.1:${toString kcPort}";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:${toString config.services.keycloak.settings.http-port}";
+              };
             };
             "${config.ClickHaskell.domain}" = {
               enableACME = true;
@@ -99,10 +99,10 @@
           ];
         };
         services.keycloak = {
-          enable = false;
+          enable = true;
           database.passwordFile = "${config.sops.secrets."keycloak/databasePass".path}";
           settings = {
-            hostname = "auth.${config.networking.domain}";
+            hostname = "https://auth.${config.networking.domain}";
             http-port = 9080;
             http-host = "127.0.0.1";
             http-enabled = true;
