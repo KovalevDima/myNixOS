@@ -32,7 +32,7 @@
         # };
         # users.users.stalwart-mail.extraGroups = [ "acme" ];
         module.matrix.shared_secret = "${config.sops.secrets."matrix/sharedSecret".path}";
-        # module.minecraft-server.hostname = "mc.${config.networking.domain}";
+        module.minecraft-server.hostname = "mc.${config.networking.domain}";
         services.nginx = {
           enable = true;
           virtualHosts = {
