@@ -17,7 +17,15 @@
     sops-nix.url = "github:Mic92/sops-nix";
     nix-colors.url = "github:misterio77/nix-colors";
     nix-bitcoin.url = "github:fort-nix/nix-bitcoin";
-    ClickHaskell.url = "github:KovalevDima/ClickHaskell";
+    haskell-flake.url = "github:srid/haskell-flake";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    services-flake.url = "github:juspay/services-flake";
+    ClickHaskell = {
+      url = "github:KovalevDima/ClickHaskell";
+      inputs.haskell-flake.follows = "haskell-flake";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.services-flake.follows = "services-flake";
+    };
   };
 
   outputs = { self, nixpkgs, disko, ... } @ inputs:
