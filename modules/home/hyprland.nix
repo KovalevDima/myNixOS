@@ -189,8 +189,8 @@ in
 
         # Move/resize windows with mainMod + LMB/RMB and dragging
         bindm = [
-          "$mainMod, mouse:272, movewindow"
-          "$mainMod, mouse:273, resizewindow"
+          "$mainMod SHIFT, mouse:272, movewindow"
+          "$mainMod SHIFT, mouse:273, resizewindow"
         ];
 
         # Laptop multimedia keys for volume and LCD brightness
