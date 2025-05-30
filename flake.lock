@@ -9,7 +9,9 @@
           "haskell-flake"
         ],
         "nixpkgs": "nixpkgs",
-        "process-compose-flake": "process-compose-flake",
+        "process-compose-flake": [
+          "process-compose-flake"
+        ],
         "services-flake": [
           "services-flake"
         ]
@@ -322,6 +324,7 @@
         "nixpkgs": [
           "unstable"
         ],
+        "process-compose-flake": "process-compose-flake",
         "services-flake": "services-flake",
         "sops-nix": "sops-nix",
         "unstable": "unstable"

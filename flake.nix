@@ -20,18 +20,50 @@
     haskell-flake.url = "github:srid/haskell-flake";
     flake-parts.url = "github:hercules-ci/flake-parts";
     services-flake.url = "github:juspay/services-flake";
+    process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
     ClickHaskell = {
       url = "github:KovalevDima/ClickHaskell";
       inputs.haskell-flake.follows = "haskell-flake";
       inputs.flake-parts.follows = "flake-parts";
       inputs.services-flake.follows = "services-flake";
+      inputs.process-compose-flake.follows = "process-compose-flake";
     };
   };
 
-  outputs = { self, nixpkgs, disko, ... } @ inputs:
-    let
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-    in {
+  outputs = {self, flake-parts, nixpkgs, disko, ...} @ inputs:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux"];
+      imports = [
+        inputs.haskell-flake.flakeModule
+      ];
+      perSystem = {self', pkgs, config, lib, ...}:
+      {
+        haskellProjects.default = import ./contrib/haskell.nix {inherit pkgs; ghc = "ghc984";};
+        devShells = {
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              haskell-language-server
+              ghcid
+              cabal-install
+              pkgs.nil
+              pkgs.zlib
+              pkgs.pkg-config
+              pkgs.glslang
+              pkgs.vulkan-tools
+              pkgs.vulkan-loader
+            ];
+            inputsFrom = [config.haskellProjects.default.outputs.devShell];
+          };
+        };
+        packages = {
+          personal-page = import ./packages/personal-page/page.nix {inherit pkgs;};
+          image = import packages/graphics/image.nix {inherit pkgs; graphics = self'.packages.graphics;};
+          
+        };
+      };
+  }
+  //
+  {
     nixosConfigurations = {
       desktop = nixpkgs.lib.nixosSystem (import ./systems/desktop
         { inherit inputs;
@@ -75,7 +107,7 @@
             ./modules/system/nix.nix
             ./modules/system/mail-server.nix
             ./modules/system/minecraft.nix
-            {nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+            {nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
               "minecraft-server"
             ];}
             ./modules/system/matrix.nix
@@ -86,26 +118,6 @@
           ];
         }
       );
-    };
-    devShells.x86_64-linux = {
-      default = pkgs.mkShell {
-        buildInputs = with pkgs.haskellPackages; [
-          haskell-language-server
-          ghcid
-          cabal-install
-          pkgs.nil
-          pkgs.zlib
-          pkgs.pkg-config
-          pkgs.glslang
-          pkgs.vulkan-tools
-          pkgs.vulkan-loader
-        ];
-        inputsFrom = with self.packages.x86_64-linux; [image personal-page];
-      };
-    };
-    packages.x86_64-linux = {
-      personal-page = import ./packages/personal-page/page.nix {inherit pkgs;};
-      image         = import ./packages/graphics/image.nix {inherit pkgs;};
     };
   };
 }
