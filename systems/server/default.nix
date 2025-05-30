@@ -138,6 +138,9 @@
           smartmontools
           fastfetch
         ];
+        nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [
+          "minecraft-server"
+        ];
         i18n.defaultLocale = "en_US.UTF-8";
         time.timeZone = "Europe/Moscow";
         # Before changing this value read the documentation for this option
