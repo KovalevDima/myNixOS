@@ -31,7 +31,7 @@
           };
         };
         networking = {
-          hostName = "nixos";
+          hostName = "laptop";
           networkmanager.enable = true;
           useDHCP = false;
           dhcpcd.enable = false;
