@@ -1,8 +1,7 @@
 # KovalevDima
-My personal page: https://boot.directory/ \
-GPG: `DDBB 4A1F A6E8 FFE7 6601 5C9D F5C0 AE01 8670 DEBC`
 
 ```text
+├contrib/            Local development enviroment
 ├packages/
 |├graphics/          Shaders workbench
 |└personal-page/     Personal page source code
