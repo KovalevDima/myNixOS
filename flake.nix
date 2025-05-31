@@ -35,9 +35,16 @@
       systems = ["x86_64-linux"];
       imports = [
         inputs.haskell-flake.flakeModule
+        inputs.process-compose-flake.flakeModule
       ];
       perSystem = {self', pkgs, config, lib, ...}:
       {
+        process-compose = {
+          default = import ./contrib/localCompose.nix {
+            inherit inputs pkgs;
+            executable = self'.apps.graphics;
+          };
+        };
         haskellProjects.default = import ./contrib/haskell.nix {inherit pkgs; ghc = "ghc984";};
         devShells = {
           default = pkgs.mkShell {
@@ -58,7 +65,6 @@
         packages = {
           personal-page = import ./packages/personal-page/page.nix {inherit pkgs;};
           image = import packages/graphics/image.nix {inherit pkgs; graphics = self'.packages.graphics;};
-          
         };
       };
   }
