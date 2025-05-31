@@ -86,6 +86,7 @@
           wget
           dig
           nmap
+          openssl
           # files processing
           unzip
           gnutar
