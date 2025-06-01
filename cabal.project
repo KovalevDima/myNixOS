@@ -1,2 +1,3 @@
 packages:
     ./packages/graphics
+    ./packages/server

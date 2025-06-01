@@ -21,7 +21,7 @@
           defaultSopsFile = ../../secrets.yaml;
           secrets = {
             "matrix/sharedSecret" = { owner = "matrix-synapse"; };
-            "keycloak/admin-realm" = { owner = "keycloak"; };
+            "keycloak/realm" = { owner = "keycloak"; };
             "keycloak/databasePass" = { owner = "keycloak"; };
           #  "mailServerSecret" = { owner="stalwart-mail"; };
           };
@@ -101,6 +101,9 @@
         services.keycloak = {
           enable = true;
           database.passwordFile = "${config.sops.secrets."keycloak/databasePass".path}";
+          realmFiles = [
+            config.sops.secrets."keycloak/realm".path
+          ];
           settings = {
             hostname = "https://auth.${config.networking.domain}";
             http-port = 9080;
