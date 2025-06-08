@@ -38,49 +38,25 @@ import Web.OIDC.Client as O
 main :: IO ()
 main = do
   oidcEnv <- initOIDC
-  run 3001 (app oidcEnv)
+  run 3001 (serve (Proxy @API) (server oidcEnv))
 
 type API = IdentityRoutes
          :<|> Get '[HTML] Homepage
-
-api :: Proxy API
-api = Proxy
 
 server :: OIDCEnv -> Server API
 server oidcEnv
   =    serveOIDC oidcEnv
   :<|> return Homepage
 
--- | Then main app
-app :: OIDCEnv -> Application
-app oidcEnv = serve (Proxy @API) (server oidcEnv)
-
-genOIDCURL :: OIDCEnv -> IO ByteString
-genOIDCURL OIDCEnv {cprg, ssm, oidc} = do
-  sid <- genSessionId cprg
-  let store = sessionStoreFromSession cprg ssm sid
-  loc <- O.prepareAuthenticationRequestUrl store oidc [O.openId, O.email, O.profile] []
-  return (BS8.pack $ show loc)
-
-sessionStoreFromSession :: IORef SystemDRG -> IORef SessionStateMap -> Text -> SessionStore IO
-sessionStoreFromSession cprg ssm sid =
-  O.SessionStore
-    { sessionStoreGenerate = gen cprg
-    , sessionStoreSave     = \st nonce -> atomicModifyIORef' ssm $ \m -> (M.insert sid (st, nonce) m, ())
-    , sessionStoreGet      = \_st -> fmap snd . M.lookup sid <$> readIORef ssm
-    , sessionStoreDelete   = atomicModifyIORef' ssm $ \m -> (M.delete sid m, ())
-    }
-
 gen :: IORef SystemDRG -> IO ByteString
 gen cprg = Base64.encode <$> atomicModifyIORef' cprg (swap . randomBytesGenerate 64)
 
-genSessionId :: IORef SystemDRG -> IO Text
-genSessionId cprg = decodeUtf8Lenient <$> gen cprg
-
-
 handleLogin :: OIDCEnv -> Handler NoContent
-handleLogin oidcenv = do
-  redirects =<< liftIO (genOIDCURL oidcenv)
+handleLogin OIDCEnv{oidc, cprg, sessionIdStore} = do
+  loc <- liftIO $ do
+    sessionId <- decodeUtf8Lenient <$> gen cprg
+    O.prepareAuthenticationRequestUrl (sessionIdStore sessionId) oidc [O.openId, O.email, O.profile] []
+  redirects $ (BS8.pack . show) loc
   return NoContent
   where
   redirects :: ByteString -> Handler ()
@@ -104,20 +80,28 @@ initOIDC  = do
 
   let redirectUri = "http://localhost:3001/login/cb"
       oidc = O.setCredentials clientId clientPassword redirectUri (O.newOIDC prov)
-  return OIDCEnv {..}
+      sessionIdStore = sessionStoreFromSession cprg ssm
+  return OIDCEnv{..}
+  where
+  sessionStoreFromSession :: IORef SystemDRG -> IORef SessionStateMap -> Text -> SessionStore IO
+  sessionStoreFromSession cprg ssm sid =
+    O.SessionStore
+      { sessionStoreGenerate = gen cprg
+      , sessionStoreSave     = \st nonce -> atomicModifyIORef' ssm $ \m -> (M.insert sid (st, nonce) m, ())
+      , sessionStoreGet      = \_st -> fmap snd . M.lookup sid <$> readIORef ssm
+      , sessionStoreDelete   = atomicModifyIORef' ssm $ \m -> (M.delete sid m, ())
+      }
 
 
 type SessionStateMap = Map Text (O.State, O.Nonce)
 
 data OIDCEnv = OIDCEnv
-  { oidc           :: O.OIDC
-  , mgr            :: Manager
-  , cprg           :: IORef SystemDRG
-  , ssm            :: IORef SessionStateMap
+  { oidc :: O.OIDC
+  , mgr  :: Manager
+  , cprg :: IORef SystemDRG
+  , sessionIdStore :: Text -> SessionStore IO
   }
 
-
--- | @AuthInfo@
 data AuthInfo = AuthInfo
   { email_verified :: Bool
   , email          :: Text
@@ -136,12 +120,19 @@ handleLoggedIn OIDCEnv{..} err mcode mstate =
   case err of
     Just errorMsg -> forbidden errorMsg
     Nothing -> case (mcode, mstate) of
+      (Nothing, _) -> forbidden "no code parameter given"
+      (_, Nothing) -> forbidden "no state parameter given"
       (Just code, Just state) -> do
-        let store = sessionStoreFromSession cprg ssm (error "ToDo: session id handling")
-        tokens <- liftIO $ O.getValidTokens store oidc mgr (encodeUtf8 state) (encodeUtf8 code)
-        let jwt = unJwt . otherClaims . O.idToken $ tokens
-            eAuthInfo = decodeClaims jwt :: Either O.JwtError (O.JwtHeader,AuthInfo)
-        case eAuthInfo of
+        tokens <-
+          liftIO (
+              O.getValidTokens
+                (sessionIdStore (error "ToDo: session id handling"))
+                oidc
+                mgr
+                (encodeUtf8 state)
+                (encodeUtf8 code)
+              )
+        case (decodeClaims . unJwt . otherClaims . idToken) tokens of
           Left jwtErr -> forbidden $ "JWT decode/check problem: " <> Text.pack (show jwtErr)
           Right (_, authInfo) ->
             if email_verified authInfo
@@ -151,8 +142,6 @@ handleLoggedIn OIDCEnv{..} err mcode mstate =
                 , userSecret = "secret!!!"
                 }
             else forbidden "Please verify your email"
-      (Nothing, _) -> forbidden "no code parameter given"
-      (_, Nothing) -> forbidden "no state parameter given"
 
 instance ToMarkup User where
   toMarkup User{..} = H.docTypeHtml $ do
@@ -167,9 +156,6 @@ instance ToMarkup User where
           <> "localStorage.setItem('user-id','" <> userId <> "');"
           <> "window.location='/';" -- redirect the user to /
           )
-
-
-
 
 type IdentityRoutes = "login" :>
   ( -- redirect User to the OpenID Provider
@@ -214,6 +200,11 @@ instance ToMarkup Homepage where
           H.span "User ID in Local storage: "
           H.script (H.toHtml ("document.write(localStorage.getItem('user-id'));" :: Text))
 
+unauthorized :: Text -> Handler a
+unauthorized = throwError . appToErr err401
+
+forbidden :: Text -> Handler a
+forbidden = throwError . appToErr err403
 
 appToErr :: ServerError -> Text -> ServerError
 appToErr err errMsg =
@@ -228,9 +219,3 @@ appToErr err errMsg =
             H.p (H.toHtml errMsg)
     , errHeaders =  [("Content-Type","text/html")]
     }
-
-unauthorized :: Text -> Handler a
-unauthorized = throwError . appToErr err401
-
-forbidden :: Text -> Handler a
-forbidden = throwError . appToErr err403
