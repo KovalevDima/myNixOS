@@ -8,6 +8,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE BangPatterns #-}
 
 module Main where
 
@@ -18,7 +19,6 @@ import Data.ByteString (ByteString)
 import Data.ByteString.Base64.URL as Base64 (encode)
 import Data.ByteString.Char8 as BS8 (pack)
 import Data.IORef (IORef, atomicModifyIORef', newIORef, readIORef)
-import Data.Map (Map)
 import Data.Map as M (delete, empty, insert, lookup)
 import Data.Text as Text (Text, pack)
 import Data.Text.Encoding (decodeUtf8Lenient, encodeUtf8)
@@ -37,14 +37,14 @@ import Web.OIDC.Client as O
 
 main :: IO ()
 main = do
-  clientPass <-
+  !clientPass <-
     maybe (error "Set env variable OIDC_PASS") BS8.pack
       <$> lookupEnv "OIDC_PASS"
-  clientId <-
+  !clientId <-
     maybe (error "Set env variable OIDC_CLIENT_ID") BS8.pack
       <$> lookupEnv "OIDC_CLIENT_ID"
 
-  manager  <- newManager tlsManagerSettings
+  manager <- newManager tlsManagerSettings
   cprg <- newIORef =<< getSystemDRG
   ssm <- newIORef M.empty
   provider <- O.discover "https://auth.boot.directory/realms/bootDir/" manager
@@ -72,12 +72,13 @@ type API =
 -----------------------------------------------------------------------------------------------------------------------
 
 serveAuthentication :: AuthArgs -> Server AuthenticationAPI
-serveAuthentication authArgs = handleLogin authArgs
-      :<|> handleLoggedIn authArgs
+serveAuthentication authArgs =
+  handleLogin authArgs
+  :<|> handleLoggedIn authArgs
 
-type AuthenticationAPI = LoginAPI :<|> LoggedInAPI
-
-type SessionStateMap = Map Text (O.State, O.Nonce)
+type AuthenticationAPI =
+  LoginAPI
+  :<|> LoggedInAPI
 
 data AuthArgs = MkAuthArgs
   { oidc :: O.OIDC
