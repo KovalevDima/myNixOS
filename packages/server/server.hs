@@ -56,11 +56,10 @@ app :: OIDCEnv -> Application
 app oidcEnv = serve (Proxy @API) (server oidcEnv)
 
 genOIDCURL :: OIDCEnv -> IO ByteString
-genOIDCURL OIDCEnv {cprg, prov, redirectUri, clientId, ssm, clientPassword} = do
+genOIDCURL OIDCEnv {cprg, ssm, oidc} = do
   sid <- genSessionId cprg
   let store = sessionStoreFromSession cprg ssm sid
-      oidcCreds = O.setCredentials clientId clientPassword redirectUri (O.newOIDC prov)
-  loc <- O.prepareAuthenticationRequestUrl store oidcCreds [O.openId, O.email, O.profile] []
+  loc <- O.prepareAuthenticationRequestUrl store oidc [O.openId, O.email, O.profile] []
   return (BS8.pack $ show loc)
 
 sessionStoreFromSession :: IORef SystemDRG -> IORef SessionStateMap -> Text -> SessionStore IO
@@ -113,10 +112,6 @@ type SessionStateMap = Map Text (O.State, O.Nonce)
 data OIDCEnv = OIDCEnv
   { oidc           :: O.OIDC
   , mgr            :: Manager
-  , prov           :: O.Provider
-  , redirectUri    :: ByteString
-  , clientId       :: ByteString
-  , clientPassword :: ByteString
   , cprg           :: IORef SystemDRG
   , ssm            :: IORef SessionStateMap
   }
@@ -144,7 +139,6 @@ handleLoggedIn OIDCEnv{..} err mcode mstate =
       (Just code, Just state) -> do
         let store = sessionStoreFromSession cprg ssm (error "ToDo: session id handling")
         tokens <- liftIO $ O.getValidTokens store oidc mgr (encodeUtf8 state) (encodeUtf8 code)
-        liftIO . putStrLn . show . O.otherClaims . O.idToken $ tokens
         let jwt = unJwt . otherClaims . O.idToken $ tokens
             eAuthInfo = decodeClaims jwt :: Either O.JwtError (O.JwtHeader,AuthInfo)
         case eAuthInfo of
@@ -194,13 +188,9 @@ serveOIDC oidcenv
 
 -- * Auth
 
-type APIKey = ByteString
-type Account = Text
-type Conf = [(APIKey,Account)]
-
 data Customer = Customer
-  { account  :: Account
-  , apiKey   :: APIKey
+  { account  :: Text
+  , apiKey   :: ByteString
   , fullname :: Maybe Text
   , mail     :: Maybe Text
   }
