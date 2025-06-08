@@ -17,11 +17,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1749254742,
-        "narHash": "sha256-lLBVCOYW38sNjsGV4HnkA1BwYJeGHZxWJ9dkhRgCOnM=",
+        "lastModified": 1749414539,
+        "narHash": "sha256-FY2fD6wbpJsXPy4camycguToWcUh9tj/FQrp9NZ31zs=",
         "owner": "KovalevDima",
         "repo": "ClickHaskell",
-        "rev": "cd7000b80187b36981df9897e60a3796ee3b5e67",
+        "rev": "97ca01a54de531338e20690c45b0ff26a0c0b048",
         "type": "github"
       },
       "original": {
