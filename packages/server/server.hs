@@ -1,17 +1,18 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE ImportQualifiedPost #-}
 {-# LANGUAGE NamedFieldPuns #-}
-{-# LANGUAGE OverloadedRecordDot #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE BangPatterns #-}
 
 module Main where
 
+import Control.Monad (when)
 import Control.Monad.IO.Class (liftIO)
 import Crypto.Random (DRG (..), SystemDRG, getSystemDRG)
 import Data.Aeson (FromJSON (..), ToJSON)
@@ -20,7 +21,7 @@ import Data.ByteString.Base64.URL as Base64 (encode)
 import Data.ByteString.Char8 as BS8 (pack)
 import Data.IORef (IORef, atomicModifyIORef', newIORef, readIORef)
 import Data.Map as M (delete, empty, insert, lookup)
-import Data.Text as Text (Text, pack)
+import Data.Text as Text (Text)
 import Data.Text.Encoding (decodeUtf8Lenient, encodeUtf8)
 import Data.Tuple (swap)
 import GHC.Generics (Generic)
@@ -33,7 +34,7 @@ import System.Environment (lookupEnv)
 import Text.Blaze.Html5 as H hiding (code)
 import Text.Blaze.Html5.Attributes as HA (href)
 import Text.Blaze.Renderer.Utf8 (renderMarkup)
-import Web.OIDC.Client as O
+import Web.OIDC.Client qualified as O
 
 main :: IO ()
 main = do
@@ -50,7 +51,7 @@ main = do
   provider <- O.discover "https://auth.boot.directory/realms/bootDir/" manager
 
   let oidc = O.setCredentials clientId clientPass "http://localhost:3001/login/cb" (O.newOIDC provider)
-      sessionIdStore = \sessionId -> O.SessionStore
+      store = \sessionId -> O.SessionStore
         { sessionStoreGenerate = gen cprg
         , sessionStoreSave     = \st nonce -> atomicModifyIORef' ssm $ \m -> (M.insert sessionId (st, nonce) m, ())
         , sessionStoreGet      = \_st -> fmap snd . M.lookup sessionId <$> readIORef ssm
@@ -84,7 +85,7 @@ data AuthArgs = MkAuthArgs
   { oidc :: O.OIDC
   , manager  :: Manager
   , cprg :: IORef SystemDRG
-  , sessionIdStore :: Text -> SessionStore IO
+  , store :: Text -> O.SessionStore IO
   }
 
 
@@ -101,15 +102,11 @@ type LoginAPI =
   :> Get '[JSON] NoContent
 
 handleLogin :: AuthArgs -> Server LoginAPI
-handleLogin MkAuthArgs{oidc, cprg, sessionIdStore} = do
+handleLogin MkAuthArgs{oidc, cprg, store} = do
   loc <- liftIO $ do
     sessionId <- decodeUtf8Lenient <$> gen cprg
-    O.prepareAuthenticationRequestUrl (sessionIdStore sessionId) oidc [O.openId, O.email, O.profile] []
-  redirects $ (BS8.pack . show) loc
-  return NoContent
-  where
-  redirects :: ByteString -> Handler ()
-  redirects url = throwError err302 {errHeaders = [("Location", url)]}
+    O.prepareAuthenticationRequestUrl (store sessionId) oidc [O.openId, O.email, O.profile] []
+  throwError err302 {errHeaders = [("Location", (BS8.pack . show) loc)]}
 
 -------------------
 -- ** LoggedIn
@@ -130,32 +127,19 @@ data User = User
   } deriving (Show, Eq, Ord)
 
 handleLoggedIn :: AuthArgs -> Server LoggedInAPI
-handleLoggedIn MkAuthArgs{..} err mcode mstate =
-  case err of
-    Just errorMsg -> forbidden errorMsg
-    Nothing -> case (mcode, mstate) of
-      (Nothing, _) -> forbidden "no code parameter given"
-      (_, Nothing) -> forbidden "no state parameter given"
-      (Just code, Just state) -> do
-        tokens <-
-          liftIO (
-            O.getValidTokens
-              (sessionIdStore (error "ToDo: session id handling"))
-              oidc
-              manager
-              (encodeUtf8 state)
-              (encodeUtf8 code)
-            )
-        case (decodeClaims . unJwt . otherClaims . idToken) tokens of
-          Left jwtErr -> forbidden $ "JWT decode/check problem: " <> Text.pack (show jwtErr)
-          Right (_, authInfo) ->
-            if email_verified authInfo
-            then pure
-              User
-                { userId     = authInfo.email
-                , userSecret = "secret!!!"
-                }
-            else forbidden "Please verify your email"
+handleLoggedIn MkAuthArgs{..} merr mcode mstate = do
+  maybe (pure ()) forbidden merr
+  !code <- maybe (forbidden "no code parameter given") (pure . encodeUtf8) mcode
+  !state <- maybe (forbidden "no state parameter given") (pure . encodeUtf8) mstate
+  AuthInfo{email, email_verified} <- liftIO $ do
+    sessionId <- decodeUtf8Lenient <$> (gen cprg)
+    (O.otherClaims . O.idToken) <$> O.getValidTokens (store sessionId) oidc manager state code
+  when
+    (not $ email_verified)
+    (forbidden "Please verify your email")
+  let userId = email
+      userSecret = "secret!!!"
+  pure User{..}
   where
   forbidden :: Text -> Handler a
   forbidden errMsg = throwError err403
