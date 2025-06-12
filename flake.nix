@@ -121,6 +121,18 @@
           ];
         }
       );
+      server2 = nixpkgs.lib.nixosSystem (import ./systems/server2
+        { inherit inputs disko self;
+          systemModules = [
+            inputs.sops-nix.nixosModules.sops
+            ./modules/system/nix.nix
+          ];
+          homeModules = [
+            inputs.nix-colors.homeManagerModules.default
+            ./modules/home/nvim.nix
+          ];
+        }
+      );
     };
   };
 }
