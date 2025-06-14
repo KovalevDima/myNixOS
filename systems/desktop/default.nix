@@ -93,6 +93,7 @@
           ffmpeg-full
           tree
           cloc
+          filezilla
           # communication
           element-desktop
           telegram-desktop
