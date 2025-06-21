@@ -63,9 +63,6 @@
         environment.systemPackages = with pkgs; [
           android-tools
           scrcpy
-          # 3d
-          blender-hip
-          freecad-wayland
           # dev
           nix-tree
           k9s
