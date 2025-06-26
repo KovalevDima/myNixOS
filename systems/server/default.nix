@@ -39,7 +39,7 @@
             "${config.networking.domain}" = {
               enableACME = true;
               forceSSL = true;
-              root = "${self.packages.x86_64-linux."personal-page"}";
+              root = "${self.packages.x86_64-linux."landing"}";
             };
             "auth.${config.networking.domain}" = {
               forceSSL = true;

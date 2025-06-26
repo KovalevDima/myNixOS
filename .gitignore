@@ -1,5 +1,7 @@
 dist-newstyle
 data
+node_modules
+dist
 
 *~
 ~*

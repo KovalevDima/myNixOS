@@ -63,7 +63,7 @@
           };
         };
         packages = {
-          personal-page = import ./packages/personal-page/page.nix {inherit pkgs;};
+          landing = import ./packages/client/page.nix {inherit pkgs;};
           image = import packages/graphics/image.nix {inherit pkgs; graphics = self'.packages.graphics;};
         };
       };

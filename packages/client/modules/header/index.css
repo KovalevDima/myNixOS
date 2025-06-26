@@ -1,0 +1,32 @@
+header {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    background-color: rgb(30, 30, 30);
+    height: 40px;
+    min-width: 324px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+}
+
+header a {
+    display: flex;
+    font-size: 24px;
+    color: rgb(240, 246, 252);
+    text-decoration: none;
+}
+
+header div {
+    display: flex;
+    flex-direction: row;
+}
+
+header div a {
+    column-gap: 3px;
+    padding: 6px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: rgb(30, 30, 30);
+    background-color: #121212;
+}
