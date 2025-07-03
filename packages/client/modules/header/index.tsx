@@ -6,8 +6,9 @@ function Header() {
         <header>
           <a href="/">/boot</a>
           <div>
-            <a href="https://t.me/onarainydayillwinanyway"><img width="28" src="./assets/icons/telegram.svg"/></a>
-            <a href="https://github.com/KovalevDima"> <img width="28" src="./assets/icons/github.svg"/></a>
+            <a href="https://github.com/boot-directory">
+              <img width="28" src="./assets/icons/github.svg"/>
+            </a>
           </div>
         </header>
     );

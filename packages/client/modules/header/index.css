@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'UnifrakturMaguntia';
+    font-weight: monospace;
+    src:
+        local('UnifrakturMaguntia'),
+        url('/assets/UM-Regular.ttf');
+}
+
 header {
     display: flex;
     flex-direction: row;
@@ -11,6 +19,7 @@ header {
 }
 
 header a {
+    font-family: 'Hasklig', monospace;
     display: flex;
     font-size: 24px;
     color: rgb(240, 246, 252);
