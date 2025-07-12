@@ -91,6 +91,7 @@
           tree
           cloc
           filezilla
+          shotcut
           # communication
           element-desktop
           telegram-desktop
