@@ -73,7 +73,6 @@
           minikube
           postgresql
           yarn
-          nodejs
           # system info
           btop
           smartmontools
