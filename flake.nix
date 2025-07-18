@@ -52,6 +52,7 @@
               haskell-language-server
               ghcid
               cabal-install
+              pkgs.nodejs
               pkgs.nil
               pkgs.zlib
               pkgs.pkg-config

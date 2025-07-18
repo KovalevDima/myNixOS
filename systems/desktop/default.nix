@@ -83,6 +83,8 @@
           dig
           nmap
           openssl
+          traceroute
+          mtr
           # files processing
           unzip
           gnutar
