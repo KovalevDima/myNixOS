@@ -23,6 +23,8 @@
         programs = {
           amnezia-vpn.enable = true;
           openvpn3.enable = true;
+          nm-applet.enable = true;
+          gnome-disks.enable = true;
           steam = {
             enable = true;
             remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -30,6 +32,7 @@
             localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
           };
         };
+        hardware.bluetooth.enable = true;
         networking = {
           hostName = "laptop";
           networkmanager.enable = true;
@@ -37,6 +40,8 @@
           dhcpcd.enable = false;
           dhcpcd.extraConfig = "nohook resolv.conf";
         };
+        services.blueman.enable = true;
+        services.udisks2.enable = true;
         services.openssh = {
           enable = true;
           ports = [22];
@@ -70,6 +75,9 @@
           # networking
           nmap
           openssl
+          networkmanagerapplet
+          # video
+          celluloid
         ];
         virtualisation.docker.enable = true;
         nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
