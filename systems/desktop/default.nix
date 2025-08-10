@@ -94,6 +94,7 @@
           filezilla
           shotcut
           # communication
+          discord
           element-desktop
           telegram-desktop
           # fun
@@ -116,6 +117,7 @@
           "cuda_cudart"
           "cuda_cccl"
           "cuda_nvcc"
+          "discord"
         ];
         i18n.defaultLocale = "en_US.UTF-8";
         time.timeZone = "Europe/Moscow";
