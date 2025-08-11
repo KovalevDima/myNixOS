@@ -59,6 +59,7 @@
               pkgs.glslang
               pkgs.vulkan-tools
               pkgs.vulkan-loader
+              pkgs.linuxPackages.perf
             ];
             inputsFrom = [config.haskellProjects.default.outputs.devShell];
           };
