@@ -72,6 +72,9 @@
           element-desktop
           smartmontools
           cloc
+          # compression
+          unrar
+          unzip
           # networking
           nmap
           openssl
@@ -86,6 +89,7 @@
           "telegram-desktop"
           "steam"
           "steam-unwrapped"
+          "unrar"
         ];
         i18n.defaultLocale = "en_US.UTF-8";
         time.timeZone = "Europe/Moscow";
