@@ -22,7 +22,6 @@
         module.gui.initialUser = "dmitry";
         programs = {
           amnezia-vpn.enable = true;
-          openvpn3.enable = true;
           steam = {
             enable = true;
             remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
