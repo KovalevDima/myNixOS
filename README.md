@@ -3,8 +3,7 @@
 ```text
 ├contrib/            Local development enviroment
 ├packages/
-|├graphics/          Shaders workbench
-|└personal-page/     Personal page source code
+|└graphics/          Shaders workbench
 ├modules/
 |├home/              Home manager modules
 |└system/            System modules

@@ -31,6 +31,7 @@ import Data.Text                    as T (pack)
 import Data.Text.Encoding           (decodeUtf8)
 import Data.Vector                  as Vec (toList, fromList, filter, indexed, (!?))
 import Foreign                      (Word32, Word64, Ptr, Bits(..), Storable(..), peekArray, castFunPtr, plusPtr)
+import GHC.Records                  (getField)
 import Say                          (sayErr)
 import System.Environment           (getArgs)
 
@@ -87,7 +88,7 @@ myApiVersion = API_VERSION_1_0
 
 initializeInstance :: ResourceT IO Instance
 initializeInstance = do
-  availableLayers <- map layerName . toList . snd <$> enumerateInstanceLayerProperties
+  availableLayers <- map (getField @"layerName") . toList . snd <$> enumerateInstanceLayerProperties
 
   let (layers, missingLayers) = partition (`elem` availableLayers) ["VK_LAYER_KHRONOS_validation"]
   sayErr $ "Missing optional layer: " <> (T.pack . show) missingLayers

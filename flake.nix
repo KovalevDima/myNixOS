@@ -65,7 +65,6 @@
           };
         };
         packages = {
-          landing = import ./packages/client/page.nix {inherit pkgs;};
           image = import packages/graphics/image.nix {inherit pkgs; graphics = self'.packages.graphics;};
         };
       };
