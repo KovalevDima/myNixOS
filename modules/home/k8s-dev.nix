@@ -1,4 +1,5 @@
 { config
+, pkgs
 , lib
 , ...
 }:
@@ -16,6 +17,14 @@ in
     };
   };
   config = {
+    home.packages = with pkgs; [
+      minikube
+      k9s
+      kubernetes-helm
+      kubectl
+      yandex-cloud
+      awscli2
+    ];
     programs = with palette; {
       k9s = {
         enable = true;

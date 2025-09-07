@@ -65,12 +65,6 @@
           scrcpy
           # dev
           nix-tree
-          k9s
-          kubernetes-helm
-          kubectl
-          yandex-cloud
-          awscli2
-          minikube
           postgresql
           yarn
           # system info
@@ -113,10 +107,6 @@
           "steam-unwrapped"
           "nvidia-x11"
           "nvidia-settings"
-          "libcublas"
-          "cuda_cudart"
-          "cuda_cccl"
-          "cuda_nvcc"
           "discord"
         ];
         i18n.defaultLocale = "en_US.UTF-8";
