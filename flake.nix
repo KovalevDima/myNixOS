@@ -31,45 +31,6 @@
   };
 
   outputs = {self, flake-parts, nixpkgs, disko, ...} @ inputs:
-    flake-parts.lib.mkFlake {inherit inputs;} {
-      systems = ["x86_64-linux"];
-      imports = [
-        inputs.haskell-flake.flakeModule
-        inputs.process-compose-flake.flakeModule
-      ];
-      perSystem = {self', pkgs, config, lib, ...}:
-      {
-        process-compose = {
-          default = import ./contrib/localCompose.nix {
-            inherit inputs pkgs;
-            executable = self'.apps.graphics;
-          };
-        };
-        haskellProjects.default = import ./contrib/haskell.nix {inherit pkgs; ghc = "ghc984";};
-        devShells = {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              haskell-language-server
-              ghcid
-              cabal-install
-              pkgs.nodejs
-              pkgs.nil
-              pkgs.zlib
-              pkgs.pkg-config
-              pkgs.glslang
-              pkgs.vulkan-tools
-              pkgs.vulkan-loader
-              pkgs.linuxPackages.perf
-            ];
-            inputsFrom = [config.haskellProjects.default.outputs.devShell];
-          };
-        };
-        packages = {
-          image = import packages/graphics/image.nix {inherit pkgs; graphics = self'.packages.graphics;};
-        };
-      };
-  }
-  //
   {
     nixosConfigurations = {
       desktop = nixpkgs.lib.nixosSystem (import ./systems/desktop
