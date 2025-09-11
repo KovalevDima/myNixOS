@@ -67,6 +67,9 @@
           nix-tree
           postgresql
           yarn
+          haskellPackages.haskell-language-server
+          haskellPackages.ghc
+          haskellPackages.cabal-install
           # system info
           btop
           smartmontools
