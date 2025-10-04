@@ -89,6 +89,8 @@
           haskellPackages.haskell-language-server
           haskellPackages.ghc
           haskellPackages.cabal-install
+          qemu
+          quickemu
           # system info
           btop
           smartmontools
