@@ -70,6 +70,7 @@
           haskellPackages.haskell-language-server
           haskellPackages.ghc
           haskellPackages.cabal-install
+          haskellPackages.eventlog2html
           qemu
           quickemu
           # system info
