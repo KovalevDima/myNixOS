@@ -74,6 +74,7 @@
           qemu
           quickemu
           # system info
+          perf
           btop
           smartmontools
           fastfetch
