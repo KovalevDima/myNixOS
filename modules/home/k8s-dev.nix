@@ -23,7 +23,7 @@ in
       kubernetes-helm
       kubectl
       yandex-cloud
-      awscli2
+      # awscli2
     ];
     programs = with palette; {
       k9s = {

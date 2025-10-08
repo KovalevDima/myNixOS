@@ -93,7 +93,7 @@
           tree
           cloc
           filezilla
-          shotcut
+          ### shotcut
           # communication
           discord
           element-desktop
