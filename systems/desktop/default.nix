@@ -69,6 +69,7 @@
           nix-tree
           postgresql
           yarn
+          zlib
           haskellPackages.haskell-language-server
           haskellPackages.ghc
           haskellPackages.cabal-install
