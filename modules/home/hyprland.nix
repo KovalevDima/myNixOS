@@ -50,11 +50,11 @@ in
           "dbus-update-activation-environment --systemd XDG_CURRENT_DESKTOP XDG_CONFIG_DIRS DISPLAY WAYLAND_DISPLAY MOZ_DBUS_REMOTE XCURSOR_THEME NVD_BACKEND"
           (lib.mkIf (wallpaper != null) "swww-daemon & sleep 1 && swww img ${wallpaper}")
           "swaynotificationcenter"
+          "hyprctl setcursor Bibata-Modern-Ice 24"
         ];
 
         env = [
           "XCURSOR_SIZE, 24"
-          "HYPRCURSOR_SIZE, 24"
         ];
 
         cursor = {

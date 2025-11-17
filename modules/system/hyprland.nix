@@ -67,6 +67,7 @@
         hyprshot
         amberol
         brightnessctl
+        bibata-cursors
       ];
     };
   };
