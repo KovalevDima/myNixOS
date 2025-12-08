@@ -66,6 +66,7 @@
           android-tools
           scrcpy
           # dev
+          gh
           nix-tree
           postgresql
           yarn
