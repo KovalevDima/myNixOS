@@ -36,6 +36,19 @@
           firewall.allowedTCPPorts = [3001];
         };
         services = {
+          zapret = {
+            enable = true;
+            udpSupport = false;
+            udpPorts = [ "0:50099" ];
+            params = [
+              "--dpi-desync=fake"
+              "--dpi-desync-fooling=datanoack"
+              "--dpi-desync-fake-tls=0x00000000"
+              "--dpi-desync-fake-tls=!"
+              "--dpi-desync-fake-tls-mod=rnd,rndsni,dupsid"
+              # "--dpi-desync-any-protocol=1"
+              ];
+          };
           openssh = {
             enable = true;
             ports = [22];
