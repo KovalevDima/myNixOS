@@ -91,6 +91,7 @@
           traceroute
           mtr
           # files processing
+          wpsoffice
           unzip
           gnutar
           ffmpeg-full
@@ -119,6 +120,7 @@
           "nvidia-x11"
           "nvidia-settings"
           "discord"
+          "wpsoffice"
         ];
         i18n.defaultLocale = "en_US.UTF-8";
         time.timeZone = "Europe/Moscow";
