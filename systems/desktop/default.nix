@@ -103,6 +103,7 @@
           openssl
           traceroute
           mtr
+          pritunl-client
           # files processing
           wpsoffice
           unzip
@@ -116,6 +117,7 @@
           discord
           element-desktop
           telegram-desktop
+          slack
           # fun
           cmatrix
           cbonsai
@@ -134,6 +136,8 @@
           "nvidia-settings"
           "discord"
           "wpsoffice"
+          "slack"
+          "pritunl-client"
         ];
         i18n.defaultLocale = "en_US.UTF-8";
         time.timeZone = "Europe/Moscow";
