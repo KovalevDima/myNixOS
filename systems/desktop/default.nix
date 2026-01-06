@@ -75,10 +75,26 @@
             ];
           };
         };
-        environment.systemPackages = with pkgs; [
+        environment.systemPackages = with pkgs;
+          let
+            pkgsOld = import inputs.nixpkgs-old {system = pkgs.stdenv.hostPlatform.system;};
+            jdk11 = pkgsOld.javaPackages.compiler.openjdk11.override {enableJavaFX = true;};
+          in [
           android-tools
           scrcpy
           # dev
+          pyenv
+          pipenv
+          python312
+          nodejs
+          pkg-config
+          gnumake
+          python313Packages.pip
+          coreutils
+          bash
+          jdk11
+          ### terraform
+          gcc
           gh
           nix-tree
           postgresql
@@ -126,19 +142,25 @@
           prismlauncher
         ];
         virtualisation.docker.enable = true;
-        nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-          "vscode"
-          "yandex-cloud"
-          "telegram-desktop"
-          "steam"
-          "steam-unwrapped"
-          "nvidia-x11"
-          "nvidia-settings"
-          "discord"
-          "wpsoffice"
-          "slack"
-          "pritunl-client"
-        ];
+        nixpkgs.config = {
+          allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+            "vscode"
+            "yandex-cloud"
+            "telegram-desktop"
+            "steam"
+            "steam-unwrapped"
+            "nvidia-x11"
+            "nvidia-settings"
+            "discord"
+            "wpsoffice"
+            "slack"
+            "pritunl-client"
+            "terraform"
+          ];
+          permittedInsecurePackages = [
+            "gradle-7.6.6"
+          ];
+        };
         i18n.defaultLocale = "en_US.UTF-8";
         time.timeZone = "Europe/Moscow";
         # Before changing this value read the documentation for this option
@@ -160,6 +182,20 @@
           users.dmitry = {
             imports = homeModules;
             colorScheme = theme;
+            xdg.desktopEntries = {
+              McSkill = {
+                name = "McSkill";
+                type = "Application";
+                genericName = "Minecraft McSkill";
+                exec =  
+                  let
+                    pkgsOld = import inputs.nixpkgs-old {system = pkgs.stdenv.hostPlatform.system;};
+                    jdk11 = pkgsOld.javaPackages.compiler.openjdk11.override {enableJavaFX = true;};
+                  in "steam-run ${jdk11}/bin/java -jar /home/dmitry/McSkill.jar"; 
+                terminal = false;
+                categories = [ "Game" ];
+              };
+            };
             module = {
               hyprland = {
                 enable = true;
