@@ -61,7 +61,7 @@
           nvidiaSettings = true;
           open = false;
         };
-        boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_17;
+        boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_18;
         boot.loader.systemd-boot.enable = true;
         boot.loader.efi.canTouchEfiVariables = true;
         boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
@@ -121,7 +121,7 @@
           mtr
           pritunl-client
           # files processing
-          wpsoffice
+          # wpsoffice
           unzip
           gnutar
           ffmpeg-full
