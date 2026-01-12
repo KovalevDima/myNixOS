@@ -29,9 +29,9 @@
             localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
           };
         };
-        systemd.network.enable = true;
+        # systemd.network.enable = true;
+        # networking.useNetworkd = true;
         networking = {
-          useNetworkd = true;
           hostName = "desktop";
           firewall.allowedTCPPorts = [3001];
         };
