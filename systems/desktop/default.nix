@@ -21,6 +21,7 @@
         };
         module.gui.initialUser = "dmitry";
         programs = {
+          gnome-disks.enable = true;
           amnezia-vpn.enable = true;
           steam = {
             enable = true;
@@ -55,6 +56,7 @@
             settings.AllowUsers = null;
           };
           xserver.videoDrivers = ["nvidia"];
+          udisks2.enable = true;
         };
         hardware.nvidia = {
           modesetting.enable = true;
