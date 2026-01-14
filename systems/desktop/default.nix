@@ -30,6 +30,21 @@
             localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
           };
         };
+        systemd.services = {
+          snx-rs = {
+            enable = true;
+            path = [pkgs.iproute2 pkgs.kmod pkgs.networkmanager]; # for ip, modprobe and nmcli commands
+            description = "SNX-RS VPN client for Linux";
+            after = [ "network-online.target" ];
+            wants = [ "network-online.target" ];
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig = {
+              ExecStart = "${pkgs.snx-rs}/bin/snx-rs -m command -l debug";
+              Type = "simple";
+            };
+          };
+
+        };
         # systemd.network.enable = true;
         # networking.useNetworkd = true;
         networking = {
@@ -122,6 +137,7 @@
           traceroute
           mtr
           pritunl-client
+          snx-rs
           # files processing
           # wpsoffice
           unzip
