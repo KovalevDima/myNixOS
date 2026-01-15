@@ -32,6 +32,20 @@
             localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
           };
         };
+        systemd.services = {
+          snx-rs = {
+            enable = true;
+            path = [pkgs.iproute2 pkgs.kmod pkgs.networkmanager]; # for ip, modprobe and nmcli commands
+            description = "SNX-RS VPN client for Linux";
+            after = [ "network-online.target" ];
+            wants = [ "network-online.target" ];
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig = {
+              ExecStart = "${pkgs.snx-rs}/bin/snx-rs -m command -l debug";
+              Type = "simple";
+            };
+          };
+        };
         hardware.bluetooth.enable = true;
         networking = {
           hostName = "laptop";
@@ -73,6 +87,10 @@
           nmap
           openssl
           networkmanagerapplet
+          pritunl-client
+          snx-rs
+          # communication
+          slack
           # video
           celluloid
         ];
@@ -80,6 +98,8 @@
         nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
           "vscode"
           "yandex-cloud"
+          "pritunl-client"
+          "slack"
           "telegram-desktop"
           "steam"
           "steam-unwrapped"
