@@ -30,6 +30,9 @@
             localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
           };
         };
+        systemd.tmpfiles.rules = [
+          "L+ /bin/bash - - - - /run/current-system/sw/bin/bash"
+        ];
         systemd.services = {
           snx-rs = {
             enable = true;
