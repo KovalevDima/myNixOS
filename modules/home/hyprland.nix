@@ -218,7 +218,11 @@ in
 
         # Example windowrule v2
         # windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
-        windowrulev2 = "suppressevent maximize, class:.*"; # You'll probably like this.
+        windowrule = {
+          name = "windowrule-1";
+          suppress_event = "maximize";
+          "match:class" = ".*";
+        };
       };
     };
   };
