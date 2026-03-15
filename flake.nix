@@ -16,6 +16,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    zapret-discord-youtube = {
+      url = "github:kartavkun/zapret-discord-youtube";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -48,6 +53,7 @@
         { inherit inputs;
           systemModules = [
             inputs.sops-nix.nixosModules.sops
+            inputs.zapret-discord-youtube.nixosModules.default
             ./modules/system/hyprland.nix
             ./modules/system/nix.nix
           ];

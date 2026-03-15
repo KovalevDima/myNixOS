@@ -135,10 +135,6 @@
                   height = 1440;
                   logoScale = 15.0;
                 };
-                gtkTheme = {
-                  name = theme.slug;
-                  package = nixColors.gtkThemeFromScheme {scheme = theme;};
-                };
               };
               waybar = {
                 enable = true;

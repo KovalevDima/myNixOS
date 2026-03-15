@@ -1,13 +1,14 @@
 { config
 , lib
+, pkgs
 , ...
 }:
 let
-  enable = config.module.hyprland.enable;
+  enable    = config.module.hyprland.enable;
   wallpaper = config.module.hyprland.wallpaper;
   palette   = config.module.hyprland.palette;
   monitors  = config.module.hyprland.monitors;
-  gtkTheme = config.module.hyprland.gtkTheme;
+  css       = import ./hyprland-gtk.nix {inherit palette pkgs;};
 in
 {
   options = {
@@ -31,18 +32,21 @@ in
         default = [",preferred,auto,auto"];
         description = "Hyprland monitors settings";
       };
-      gtkTheme = lib.mkOption {
-        type = lib.types.nullOr lib.types.anything;
-        default = null;
-        description = "GTK theme";
-      };
     };
   };
   config = lib.mkIf enable {
     gtk = {
       enable = true;
-      theme = lib.mkIf (gtkTheme != null) gtkTheme;
+      theme = {
+        name = "adw-gtk3";
+        package = pkgs.adw-gtk3;
+      };
     };
+    xdg.configFile =
+      lib.mkIf (palette != null) {
+        "gtk-3.0/gtk.css".source = css;
+        "gtk-4.0/gtk.css".source = css;
+      };
     wayland.windowManager.hyprland = {
       enable = true;
       settings = {

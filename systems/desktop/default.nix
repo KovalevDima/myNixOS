@@ -55,18 +55,9 @@
           firewall.allowedTCPPorts = [3001];
         };
         services = {
-          zapret = {
+          zapret-discord-youtube = {
             enable = true;
-            udpSupport = false;
-            udpPorts = [ "0:50099" ];
-            params = [
-              "--dpi-desync=fake"
-              "--dpi-desync-fooling=datanoack"
-              "--dpi-desync-fake-tls=0x00000000"
-              "--dpi-desync-fake-tls=!"
-              "--dpi-desync-fake-tls-mod=rnd,rndsni,dupsid"
-              # "--dpi-desync-any-protocol=1"
-              ];
+            configName = "general(ALT10)";
           };
           openssh = {
             enable = true;
@@ -105,7 +96,7 @@
           # dev
           pyenv
           pipenv
-          python312
+          python313
           nodejs
           pkg-config
           gnumake
@@ -230,10 +221,6 @@
                   width = 2560;
                   height = 1440;
                   logoScale = 15.0;
-                };
-                gtkTheme = {
-                  name = theme.slug;
-                  package = nixColors.gtkThemeFromScheme { scheme = theme; };
                 };
               };
               waybar = {
