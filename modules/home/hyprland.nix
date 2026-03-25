@@ -37,6 +37,7 @@ in
   config = lib.mkIf enable {
     gtk = {
       enable = true;
+      gtk4.theme = config.gtk.theme;
       theme = {
         name = "adw-gtk3";
         package = pkgs.adw-gtk3;
