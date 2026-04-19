@@ -96,10 +96,13 @@
           # dev
           pyenv
           pipenv
-          python313
           nodejs
           pkg-config
           gnumake
+          (python313.withPackages (ps: with ps; [
+            pytz
+            ansible-core
+          ]))
           python313Packages.pip
           coreutils
           bash
