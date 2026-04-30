@@ -55,6 +55,8 @@
           firewall.allowedTCPPorts = [3001];
         };
         services = {
+          lact.enable = true;
+
           zapret-discord-youtube = {
             enable = true;
             configName = "general(ALT10)";
@@ -64,18 +66,11 @@
             ports = [22];
             settings.AllowUsers = null;
           };
-          xserver.videoDrivers = ["nvidia"];
+          xserver.videoDrivers = ["amdgpu"];
           udisks2.enable = true;
         };
-        hardware.nvidia = {
-          modesetting.enable = true;
-          nvidiaSettings = true;
-          open = false;
-        };
-        boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_18;
         boot.loader.systemd-boot.enable = true;
         boot.loader.efi.canTouchEfiVariables = true;
-        boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
         users.users = {
           dmitry = {
             isNormalUser = true;
@@ -122,6 +117,9 @@
           quickemu
           # system info
           perf
+          mesa-demos
+          pciutils
+          amdgpu_top
           btop
           smartmontools
           fastfetch
@@ -164,8 +162,6 @@
             "telegram-desktop"
             "steam"
             "steam-unwrapped"
-            "nvidia-x11"
-            "nvidia-settings"
             "discord"
             "wpsoffice"
             "slack"
@@ -217,7 +213,7 @@
                 palette = theme.palette;
                 monitors = [
                   "DP-1, 2560x1440@165, 0x0, 1"
-                  "DP-2, 2560x1440@165, 2560x0, 1"
+                  "DP-2, 2560x1440@165, 2560x0,w 1"
                 ];
                 wallpaper = nixColors.nixWallpaperFromScheme {
                   scheme = theme;
@@ -240,6 +236,7 @@
             programs = {
               vscode.enable = true;
               firefox.enable = true; 
+              mangohud.enable = true;
               obs-studio = {
                 enable = true;
                 plugins = with pkgs.obs-studio-plugins; [

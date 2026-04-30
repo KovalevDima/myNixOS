@@ -16,7 +16,10 @@
   };
 
   config = {
-    hardware.graphics.enable = true;
+    hardware.graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
 
     programs.hyprland.enable = true;
 
@@ -57,11 +60,12 @@
         GDK_GL = "disable";
         CLUTTER_BACKEND = "wayland";
         WLR_RENDERER = "vulkan";
-        NVD_BACKEND = "direct";
+        LIBVA_DRIVER_NAME = "radeonsi";
       };
 
       systemPackages = with pkgs; [
-        swww
+        vulkan-tools
+        awww
         wofi
         swaynotificationcenter
         hyprshot
