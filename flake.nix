@@ -11,11 +11,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     zapret-discord-youtube = {
       url = "github:kartavkun/zapret-discord-youtube";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,11 +21,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-colors.url = "github:misterio77/nix-colors";
-    nix-bitcoin.url = "github:fort-nix/nix-bitcoin";
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = {self, flake-parts, nixpkgs, disko, ...} @ inputs:
+  outputs = {self, flake-parts, nixpkgs, ...} @ inputs:
     flake-parts.lib.mkFlake {inherit inputs;} {
       systems = ["x86_64-linux"];
       imports = [];
