@@ -35,7 +35,7 @@
         ];
         systemd.services = {
           snx-rs = {
-            enable = true;
+            enable = false;
             path = [pkgs.iproute2 pkgs.kmod pkgs.networkmanager]; # for ip, modprobe and nmcli commands
             description = "SNX-RS VPN client for Linux";
             after = [ "network-online.target" ];
@@ -52,14 +52,16 @@
         # networking.useNetworkd = true;
         networking = {
           hostName = "desktop";
-          firewall.allowedTCPPorts = [3001];
+          firewall.allowedTCPPorts = [ 3001 37299 ];
+          firewall.allowedUDPPorts = [ 3001 37299 ];
         };
         services = {
+          resolved.enable = true;
           lact.enable = true;
 
           zapret-discord-youtube = {
             enable = true;
-            configName = "general(ALT10)";
+            configName = "general(ALT11)";
           };
           openssh = {
             enable = true;
@@ -124,6 +126,7 @@
           smartmontools
           fastfetch
           # network
+          iptables
           chromium
           wget
           dig
