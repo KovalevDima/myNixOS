@@ -10,7 +10,12 @@
     (import ./hardware.nix)
     inputs.home-manager.nixosModules.home-manager
     (
-      {inputs, config, pkgs, lib, ...} : {
+      {inputs, config, pkgs, lib, ...}:
+      let
+        pkgsOld = import inputs.nixpkgs-old {system = pkgs.stdenv.hostPlatform.system;};
+        pkgsOld2 = import inputs.nixpkgs-old2 {system = pkgs.stdenv.hostPlatform.system;};
+      in
+      {
         imports = systemModules;
         sops = {
           age.keyFile = "/root/.config/sops/age/keys.txt";
@@ -42,7 +47,7 @@
             wants = [ "network-online.target" ];
             wantedBy = [ "multi-user.target" ];
             serviceConfig = {
-              ExecStart = "${pkgs.snx-rs}/bin/snx-rs -m command -l debug";
+              ExecStart = "${pkgsOld2.snx-rs}/bin/snx-rs -m command -l debug";
               Type = "simple";
             };
           };
@@ -52,11 +57,16 @@
         # networking.useNetworkd = true;
         networking = {
           hostName = "desktop";
-          firewall.allowedTCPPorts = [ 3001 37299 ];
-          firewall.allowedUDPPorts = [ 3001 37299 ];
+          networkmanager.enable = true;
+          firewall.allowedTCPPorts = [ 443 3001 37299 ];
+          firewall.allowedUDPPorts = [ 443 3001 37299 ];
         };
         services = {
-          resolved.enable = true;
+          llama-cpp = {
+            enable = false;
+            package = pkgs.llama-cpp-rocm;
+            extraFlags = ["--models-dir" "/etc/models/"];
+          };
           lact.enable = true;
 
           zapret-discord-youtube = {
@@ -73,6 +83,8 @@
         };
         boot.loader.systemd-boot.enable = true;
         boot.loader.efi.canTouchEfiVariables = true;
+        boot.extraModulePackages = with config.boot.kernelPackages; [ zenpower ];
+        boot.kernelModules = [ "zenpower" ];
         users.users = {
           dmitry = {
             isNormalUser = true;
@@ -85,22 +97,28 @@
         };
         environment.systemPackages = with pkgs;
           let
-            pkgsOld = import inputs.nixpkgs-old {system = pkgs.stdenv.hostPlatform.system;};
             jdk11 = pkgsOld.javaPackages.compiler.openjdk11.override {enableJavaFX = true;};
+            python =
+              python313.withPackages (ps: with ps; [
+                pytz
+                hvac
+              ]);
           in [
           android-tools
           scrcpy
+          ##########################################
           # dev
+          ##########################################
+          jq
+          vault
           pyenv
           pipenv
           nodejs
           pkg-config
           gnumake
-          (python313.withPackages (ps: with ps; [
-            pytz
-            ansible-core
-          ]))
+          python
           python313Packages.pip
+          (ansible.override {inherit python;})
           coreutils
           bash
           jdk11
@@ -117,15 +135,20 @@
           haskellPackages.eventlog2html
           qemu
           quickemu
+          ##########################################
           # system info
+          ##########################################
           perf
+          zenmonitor
           mesa-demos
           pciutils
           amdgpu_top
           btop
           smartmontools
           fastfetch
+          ##########################################
           # network
+          ##########################################
           iptables
           chromium
           wget
@@ -135,8 +158,10 @@
           traceroute
           mtr
           pritunl-client
-          snx-rs
+          pkgsOld2.snx-rs
+          ##########################################
           # files processing
+          ##########################################
           # wpsoffice
           unzip
           gnutar
@@ -144,17 +169,23 @@
           tree
           cloc
           filezilla
-          ### shotcut
+          # shotcut
+          ##########################################
           # communication
+          ##########################################
           discord
           element-desktop
           telegram-desktop
           slack
+          ##########################################
           # fun
+          ##########################################
           cmatrix
           cbonsai
           cava
+          ##########################################
           # gaming
+          ##########################################
           prismlauncher
         ];
         virtualisation.docker.enable = true;
@@ -170,6 +201,7 @@
             "slack"
             "pritunl-client"
             "terraform"
+            "vault"
           ];
           permittedInsecurePackages = [
             "gradle-7.6.6"
@@ -251,7 +283,7 @@
             };
             home = {
               homeDirectory = "/home/dmitry";
-              stateVersion = "25.11";
+              stateVersion = "26.05";
               packages = [];
             };
           };

@@ -153,7 +153,7 @@
             };
             home = {
               homeDirectory = "/home/dmitry";
-              stateVersion = "24.05";
+              stateVersion = "26.05";
               packages = with pkgs; [
                 telegram-desktop
                 # system info

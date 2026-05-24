@@ -34,6 +34,8 @@ in
         )
         (pkgs.lib.mkIf (theme != null) theme)
       ];
+      withPython3 = true;
+      withRuby = false;
 
       extraConfig = ''
         " Tabs/spaces
