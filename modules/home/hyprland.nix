@@ -50,6 +50,7 @@ in
       };
     wayland.windowManager.hyprland = {
       enable = true;
+      configType = "hyprlang";
       settings = {
         exec-once = [
           "dbus-update-activation-environment --systemd XDG_CURRENT_DESKTOP XDG_CONFIG_DIRS DISPLAY WAYLAND_DISPLAY MOZ_DBUS_REMOTE XCURSOR_THEME NVD_BACKEND"
@@ -113,7 +114,6 @@ in
 
         # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
         dwindle = {
-          pseudotile = true; # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
           preserve_split = true; # You probably want this
         };
 
@@ -153,8 +153,6 @@ in
           "$mainMod, E, exec, yazi"
           "$mainMod, V, togglefloating,"
           "$mainMod, R, exec, wofi --show drun"
-          "$mainMod, P, pseudo," # dwindle
-          "$mainMod, J, togglesplit," # dwindle
           "$mainMod, N, exec, swaync-client -t -sw"
 
           ", PRINT, exec, hyprshot -m region --clipboard-only --freeze"
