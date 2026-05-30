@@ -95,6 +95,10 @@
             ];
           };
         };
+        environment.etc."/ansible/ansible.cfg".text = ''
+          [defaults]
+          interpreter_python = /run/current-system/sw/bin/python3
+        '';
         environment.systemPackages = with pkgs;
           let
             jdk11 = pkgsOld.javaPackages.compiler.openjdk11.override {enableJavaFX = true;};
@@ -102,6 +106,7 @@
               python313.withPackages (ps: with ps; [
                 pytz
                 hvac
+                psycopg2
               ]);
           in [
           android-tools
