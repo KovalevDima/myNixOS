@@ -65,7 +65,7 @@
           llama-cpp = {
             enable = false;
             package = pkgs.llama-cpp-rocm;
-            extraFlags = ["--models-dir" "/etc/models/"];
+            # extraFlags = ["--models-dir" "/etc/models/"];
           };
           lact.enable = true;
 
@@ -99,11 +99,12 @@
           [defaults]
           interpreter_python = /run/current-system/sw/bin/python3
         '';
+        environment.sessionVariables.TZ = config.time.timeZone;
         environment.systemPackages = with pkgs;
           let
             jdk11 = pkgsOld.javaPackages.compiler.openjdk11.override {enableJavaFX = true;};
             python =
-              python313.withPackages (ps: with ps; [
+              python314.withPackages (ps: with ps; [
                 pytz
                 hvac
                 psycopg2
@@ -114,16 +115,17 @@
           ##########################################
           # dev
           ##########################################
+          autoconf
           jq
-          vault
+          # vault
           pyenv
-          pipenv
           nodejs
           pkg-config
           gnumake
-          python
-          python313Packages.pip
-          (ansible.override {inherit python;})
+          # pipenv
+          # python
+          # python314Packages.pip
+          # (ansible.override {inherit python;})
           coreutils
           bash
           jdk11
