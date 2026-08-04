@@ -104,7 +104,7 @@
           let
             jdk11 = pkgsOld.javaPackages.compiler.openjdk11.override {enableJavaFX = true;};
             python =
-              python314.withPackages (ps: with ps; [
+              python3.withPackages (ps: with ps; [
                 pytz
                 hvac
                 psycopg2
@@ -122,9 +122,9 @@
           nodejs
           pkg-config
           gnumake
-          # pipenv
-          # python
-          # python314Packages.pip
+          pipenv
+          python
+          python3Packages.pip
           # (ansible.override {inherit python;})
           coreutils
           bash
@@ -142,6 +142,7 @@
           haskellPackages.eventlog2html
           qemu
           quickemu
+          steamcmd
           ##########################################
           # system info
           ##########################################
@@ -209,6 +210,7 @@
             "pritunl-client"
             "terraform"
             "vault"
+            "steamcmd"
           ];
           permittedInsecurePackages = [
             "gradle-7.6.6"
