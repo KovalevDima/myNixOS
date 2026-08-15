@@ -9,6 +9,10 @@ let
   palette   = config.module.hyprland.palette;
   monitors  = config.module.hyprland.monitors;
   css       = import ./hyprland-gtk.nix {inherit palette pkgs;};
+  theme = {
+    name = "adw-gtk3";
+    package = pkgs.adw-gtk3;
+  };
 in
 {
   options = {
@@ -35,13 +39,10 @@ in
     };
   };
   config = lib.mkIf enable {
-    gtk = {
+    gtk =  {
       enable = true;
-      gtk4.theme = config.gtk.theme;
-      theme = {
-        name = "adw-gtk3";
-        package = pkgs.adw-gtk3;
-      };
+      colorScheme = "dark";
+      theme = theme;
     };
     xdg.configFile =
       lib.mkIf (palette != null) {

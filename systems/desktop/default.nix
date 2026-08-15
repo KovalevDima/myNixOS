@@ -110,26 +110,17 @@
                 psycopg2
               ]);
           in [
-          android-tools
-          scrcpy
           ##########################################
           # dev
           ##########################################
           autoconf
           jq
-          # vault
-          pyenv
           nodejs
           pkg-config
           gnumake
-          pipenv
-          python
-          python3Packages.pip
-          # (ansible.override {inherit python;})
           coreutils
           bash
           jdk11
-          ### terraform
           gcc
           gh
           nix-tree
@@ -191,10 +182,22 @@
           cmatrix
           cbonsai
           cava
-          ##########################################
-          # gaming
-          ##########################################
           prismlauncher
+          ##########################################
+          # job
+          ##########################################
+          code-cursor
+          # (ansible.override {inherit python;})
+          # pipenv
+          python
+          python3Packages.pip
+          pyenv
+          # vault
+          # terraform
+          ##########################################
+          # personal
+          ##########################################
+          keepassxc
         ];
         virtualisation.docker.enable = true;
         nixpkgs.config = {
@@ -211,6 +214,7 @@
             "terraform"
             "vault"
             "steamcmd"
+            "cursor"
           ];
           permittedInsecurePackages = [
             "gradle-7.6.6"

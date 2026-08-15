@@ -21,7 +21,6 @@ in
       minikube
       k9s
       kubernetes-helm
-      kubectl
       yandex-cloud
       awscli2
     ];
