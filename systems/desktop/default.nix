@@ -208,6 +208,7 @@
             "steam"
             "steam-unwrapped"
             "discord"
+            "discord-unwrapped"
             "wpsoffice"
             "slack"
             "pritunl-client"
