@@ -125,6 +125,8 @@
           gh
           nix-tree
           postgresql
+          zookeeper
+          clickhouse
           yarn
           zlib
           haskellPackages.haskell-language-server
