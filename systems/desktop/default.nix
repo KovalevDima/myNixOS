@@ -10,15 +10,10 @@
     (import ./hardware.nix)
     inputs.home-manager.nixosModules.home-manager
     (
-      {inputs, config, pkgs, lib, ...}:
-      let
-        pkgsOld = import inputs.nixpkgs-old {system = pkgs.stdenv.hostPlatform.system;};
-        pkgsOld2 = import inputs.nixpkgs-old2 {system = pkgs.stdenv.hostPlatform.system;};
-      in
-      {
+      {inputs, config, pkgs, lib, ...}:{
         imports = systemModules;
         sops = {
-          age.keyFile = "/root/.config/sops/age/keys.txt";
+          age.keyFile = "/home/dmitry/.config/sops/age/keys.txt";
           defaultSopsFile = ../../secrets.yaml;
           secrets = {
             "network/wireguardConfigFile" = {};
@@ -38,28 +33,14 @@
         systemd.tmpfiles.rules = [
           "L+ /bin/bash - - - - /run/current-system/sw/bin/bash"
         ];
-        systemd.services = {
-          snx-rs = {
-            enable = false;
-            path = [pkgs.iproute2 pkgs.kmod pkgs.networkmanager]; # for ip, modprobe and nmcli commands
-            description = "SNX-RS VPN client for Linux";
-            after = [ "network-online.target" ];
-            wants = [ "network-online.target" ];
-            wantedBy = [ "multi-user.target" ];
-            serviceConfig = {
-              ExecStart = "${pkgsOld2.snx-rs}/bin/snx-rs -m command -l debug";
-              Type = "simple";
-            };
-          };
-
-        };
         # systemd.network.enable = true;
         # networking.useNetworkd = true;
         networking = {
+          firewall.enable = false;
           hostName = "desktop";
           networkmanager.enable = true;
-          firewall.allowedTCPPorts = [ 443 3001 37299 ];
-          firewall.allowedUDPPorts = [ 443 3001 37299 ];
+          firewall.allowedTCPPorts = [ 443 3001 ];
+          firewall.allowedUDPPorts = [ 443 3001 ];
         };
         services = {
           llama-cpp = {
@@ -71,7 +52,7 @@
 
           zapret-discord-youtube = {
             enable = true;
-            configName = "general(ALT11)";
+            configName = "general(ALT13)";
           };
           openssh = {
             enable = true;
@@ -102,7 +83,6 @@
         environment.sessionVariables.TZ = config.time.timeZone;
         environment.systemPackages = with pkgs;
           let
-            jdk11 = pkgsOld.javaPackages.compiler.openjdk11.override {enableJavaFX = true;};
             python =
               python3.withPackages (ps: with ps; [
                 pytz
@@ -120,7 +100,6 @@
           gnumake
           coreutils
           bash
-          jdk11
           gcc
           gh
           nix-tree
@@ -147,6 +126,7 @@
           btop
           smartmontools
           fastfetch
+          hwinfo
           ##########################################
           # network
           ##########################################
@@ -159,7 +139,8 @@
           traceroute
           mtr
           pritunl-client
-          pkgsOld2.snx-rs
+          snx-rs
+          iperf
           ##########################################
           # files processing
           ##########################################
@@ -244,20 +225,6 @@
           users.dmitry = {
             imports = homeModules;
             colorScheme = theme;
-            xdg.desktopEntries = {
-              McSkill = {
-                name = "McSkill";
-                type = "Application";
-                genericName = "Minecraft McSkill";
-                exec =  
-                  let
-                    pkgsOld = import inputs.nixpkgs-old {system = pkgs.stdenv.hostPlatform.system;};
-                    jdk11 = pkgsOld.javaPackages.compiler.openjdk11.override {enableJavaFX = true;};
-                  in "steam-run ${jdk11}/bin/java -jar /home/dmitry/McSkill.jar"; 
-                terminal = false;
-                categories = [ "Game" ];
-              };
-            };
             module = {
               hyprland = {
                 enable = true;
