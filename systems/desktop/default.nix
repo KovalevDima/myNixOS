@@ -49,7 +49,18 @@
             # extraFlags = ["--models-dir" "/etc/models/"];
           };
           lact.enable = true;
-
+          pcscd.enable = true;
+          udev = {
+            packages = [
+              pkgs.yubikey-personalization
+              pkgs.libfido2
+            ];
+            extraRules = ''
+              # RS-Key own identity (pid.codes 0x1209:0x0001) — FIDO HID + CCID access.
+              SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="0001", TAG+="uaccess"
+              SUBSYSTEM=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="0001", TAG+="uaccess"
+            '';
+          };
           zapret-discord-youtube = {
             enable = true;
             configName = "general(ALT13)";
@@ -62,6 +73,17 @@
           xserver.videoDrivers = ["amdgpu"];
           udisks2.enable = true;
         };
+
+        security.polkit.extraConfig = ''
+          polkit.addRule(function(action, subject) {
+            if ((action.id == "org.debian.pcsc-lite.access_pcsc" ||
+                 action.id == "org.debian.pcsc-lite.access_card") &&
+                subject.user == "dmitry") {
+              return polkit.Result.YES;
+            }
+          });
+        '';
+
         boot.loader.systemd-boot.enable = true;
         boot.loader.efi.canTouchEfiVariables = true;
         boot.extraModulePackages = with config.boot.kernelPackages; [ zenpower ];
@@ -113,8 +135,6 @@
           haskellPackages.cabal-install
           haskellPackages.eventlog2html
           qemu
-          quickemu
-          steamcmd
           ##########################################
           # system info
           ##########################################
@@ -127,6 +147,8 @@
           smartmontools
           fastfetch
           hwinfo
+          dmidecode
+          usbutils
           ##########################################
           # network
           ##########################################
@@ -159,6 +181,7 @@
           element-desktop
           telegram-desktop
           slack
+          pulseaudio
           ##########################################
           # fun
           ##########################################
@@ -180,7 +203,11 @@
           ##########################################
           # personal
           ##########################################
-          keepassxc
+          yubikey-manager
+          libfido2
+          opensc
+          pcsc-tools
+          picotool
         ];
         virtualisation.docker.enable = true;
         nixpkgs.config = {
@@ -197,7 +224,6 @@
             "pritunl-client"
             "terraform"
             "vault"
-            "steamcmd"
             "cursor"
           ];
           permittedInsecurePackages = [
